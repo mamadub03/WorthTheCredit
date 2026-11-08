@@ -236,7 +236,7 @@ Everything is on `main`: course search and details, JWT validation (#8), review 
 
 ## 10. Git workflow between us
 
-- `main` is the integration branch: #66 brought together FE1's pages, FE2's stack (#45 to #56), and the backend, and `frontend_v1` is retired. Open frontend PRs against `main`, one per issue.
+- #66 brought FE1's pages, FE2's stack (#45 to #56), and the backend together on `main`, and `frontend_v1` is retired. Frontend PRs now go to `test/full-product`, which started from the same commit as `main`, one per issue.
 - Shared-file edits: tell the other person first, keep them minimal, merge them early.
 - We review each other's frontend PRs; project.mdc requires human approval before a merge.
 
