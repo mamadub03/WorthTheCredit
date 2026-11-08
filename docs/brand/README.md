@@ -1,21 +1,23 @@
 # worth the cRedIT: logo
 
-Proposed by FE2 (Rameen) for the team to approve. Design canvas with every variant and the earlier directions: https://claude.ai/artifact/QaiuKSDLiGiMM155133TYe (Rameen shares it from its Share menu).
+Approved by the team on 7 November 2026, as drawn: the W, the wordmark, the icons and the seal. Design canvas with every variant and the earlier directions: https://claude.ai/artifact/QaiuKSDLiGiMM155133TYe (Rameen shares it from its Share menu).
 
 ## The idea
 
 The mark is a W made of two checks. The ink half is a check mirrored: a student who took the course. The orange half is a check: you, matched to your goals. Your check rises higher than theirs, because a course with a lower Community Worth Score can still be your strongest personal match. Together they spell Worth, and the W can sit next to every Worth Score in the app.
 
-The wordmark keeps the pun from the first round: RIT hides in cRedIT. It is set in Fraunces Bold, with R, I and T in the app's accent. One typeface and one color carry the pun, so it reads as a wink rather than as RIT's own logo.
+The wordmark keeps the pun from the first round: RIT hides in cRedIT. It is set in Fraunces Bold, with R, I and T in the logo's orange. One typeface and one color carry the pun, so it reads as a wink rather than as RIT's own logo.
 
 ## Colors
 
-| Use | Hex | Source |
-|---|---|---|
-| Ink | `#1c1917` | FE1's `--text` (#33) |
-| Orange on light | `#c2410c` | FE1's `--accent` (#33) |
-| Cream ground | `#faf7f2` | FE1's `--bg` (#33) |
-| Orange on dark | `#f97316` | new, only for dark backgrounds |
+| Use | Hex |
+|---|---|
+| Ink | `#1c1917` |
+| Orange on light | `#c2410c` |
+| Cream ground (tiles, seal) | `#faf7f2` |
+| Orange on dark | `#f97316` |
+
+These are the logo's own colors, approved as drawn. They began as FE1's scaffold tokens (#33). The app's Example B UI uses ink `#1E2124` and RIT orange `#F76902` around the logo, so the logo's orange is a shade darker than the buttons next to it. To match them exactly, change `INK` and `ORANGE` in `source/wtc_logo.py` and rebuild.
 
 ## Files
 
@@ -40,7 +42,7 @@ All text is outlined, so no file needs a font installed.
 <meta property="og:image" content="/og-image.png" />
 ```
 
-In the header, use `svg/wtc-logo-horizontal.svg` as an `<img>` about 24 px tall with `alt="worth the cRedIT"`. Below about 360 px of header width, the mark alone works.
+In the header, use `svg/wtc-logo-horizontal.svg` as an `<img>` about 24 px tall with `alt="worth the cRedIT"`, in place of Example B's placeholder (the orange circle with a check and the word WorthTheCredit). Below about 360 px of header width, the mark alone works.
 
 ## Rules
 
