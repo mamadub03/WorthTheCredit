@@ -26,6 +26,12 @@ describe('errorFromResponse', () => {
     })
   })
 
+  it('keeps a sentence detail as the message and takes the code from the status', () => {
+    const error = errorFromResponse(404, { detail: 'Course not found' })
+    expect(error.code).toBe('not_found')
+    expect(error.message).toBe('Course not found')
+  })
+
   it('accepts a {code, message} detail object', () => {
     const error = errorFromResponse(409, { detail: { code: 'duplicate_review', message: 'Already reviewed.' } })
     expect(error.code).toBe('duplicate_review')

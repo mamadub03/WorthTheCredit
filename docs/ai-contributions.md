@@ -66,3 +66,14 @@ The FE1 and FE2 frontend coordination proposal was drafted with Claude Code (Cla
 ### Suggested citation
 
 The frontend API client, schemas, and mock API were generated with Claude Code (Claude Opus 5.5) on 7 November 2026 against BE2's API contract, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: API layer aligned with the contracts on main (FE2, #25)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/25-api-contracts`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **Why:** the backend merged into main (#43) with BE1's course routes and BE2's #10 contracts, which use `docs/DATABASE_SCHEMA.md` names. The first version of this layer followed BE2's earlier `BackPart2` app.
+- **What the AI changed:** UUID course ids and the `{results, total, limit, offset}` envelope; review fields `concept_difficulty`, `weekly_hours_range`, `skills_gained`, `instructor_name`; nested `POST /courses/{id}/reviews` and `GET /courses/{id}/worth-score`; recommendations with four match levels and an `explanation`; removed the profile and resend-verification calls, which main's contract doesn't have; rewrote the mock and the tests to match; updated `docs/frontend-coordination.md`, the Cursor rule, and `frontend/.env.example`.
+
+### Suggested citation
+
+The FE2 API layer was realigned to the merged backend contracts with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.

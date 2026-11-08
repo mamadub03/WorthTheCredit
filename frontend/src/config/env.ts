@@ -4,7 +4,7 @@
  * Owner: FE2 (#25).
  */
 
-export const MOCK_DOMAINS = ['courses', 'reviews', 'profile', 'recommendations', 'auth'] as const
+export const MOCK_DOMAINS = ['courses', 'reviews', 'recommendations'] as const
 export type MockDomain = (typeof MOCK_DOMAINS)[number]
 
 export interface Auth0Config {

@@ -38,11 +38,15 @@ const STATUS_CODES: Record<number, string> = {
   429: 'rate_limited',
 }
 
+// A detail like "already_reviewed" is a code; one like "Course not found" is a sentence to show.
+const CODE_LIKE = /^[a-z][a-z0-9_]*$/
+
 /** Builds an ApiError from a non-2xx response body, in any of FastAPI's three `detail` shapes. */
 export function errorFromResponse(status: number, body: unknown): ApiError {
   const detail = isRecord(body) ? body.detail : undefined
   if (typeof detail === 'string' && detail.trim() !== '') {
-    return new ApiError(status, detail.trim())
+    const text = detail.trim()
+    return CODE_LIKE.test(text) ? new ApiError(status, text) : new ApiError(status, statusCode(status), text)
   }
   if (Array.isArray(detail)) {
     return new ApiError(status, 'validation_error', undefined, fieldErrorsFrom422(detail))
@@ -50,7 +54,11 @@ export function errorFromResponse(status: number, body: unknown): ApiError {
   if (isRecord(detail) && typeof detail.code === 'string') {
     return new ApiError(status, detail.code, typeof detail.message === 'string' ? detail.message : undefined)
   }
-  return new ApiError(status, STATUS_CODES[status] ?? (status >= 500 ? 'server_error' : 'http_error'))
+  return new ApiError(status, statusCode(status))
+}
+
+function statusCode(status: number): string {
+  return STATUS_CODES[status] ?? (status >= 500 ? 'server_error' : 'http_error')
 }
 
 /**

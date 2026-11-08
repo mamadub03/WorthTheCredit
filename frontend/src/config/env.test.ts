@@ -15,7 +15,7 @@ describe('parseMockDomains', () => {
 
   it('takes a list and ignores unknown names', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    expect([...parseMockDomains('reviews, profile, nope')]).toEqual(['reviews', 'profile'])
+    expect([...parseMockDomains('reviews, recommendations, nope')]).toEqual(['reviews', 'recommendations'])
     expect(warn).toHaveBeenCalledOnce()
     warn.mockRestore()
   })

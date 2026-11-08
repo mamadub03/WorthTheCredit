@@ -1,39 +1,34 @@
 /**
- * POST /recommendations, per BE2's contract. Owner: FE2 (#31).
+ * POST /recommendations, per the contract on main
+ * (backend/app/schemas/recommendation.py, issue #10). The endpoint is planned
+ * (#16); until BE2 ships it, the mock API answers (issue #31). Owner: FE2.
  *
  * Items are checked one at a time, so one malformed item from the AI pipeline
- * is dropped (and counted) instead of failing the whole page (project.mdc:
- * "Do not trust AI-generated responses without validation").
+ * is dropped (and counted) instead of failing the page (project.mdc: "Do not
+ * trust AI-generated responses without validation").
  */
 import { z } from 'zod'
 import type { ApiClient } from './client.ts'
-import type { ProfileRequest } from './profile.ts'
+import { courseSummarySchema, type CourseSummary } from './courses.ts'
 import { toMatchLevel, type MatchLevel } from '../domain/reviewVocabulary.ts'
 
+/** RecommendationRequest. The API rejects other keys and needs at least one preference. */
 export interface RecommendationRequest {
-  /** Omit to use the student's saved profile (BE2 answers profile_required if there's none). */
-  profile?: ProfileRequest
-  /** Optional free-text request, up to 500 characters. */
-  query?: string
+  major: string | null
+  interests: string[]
+  skills: string[]
+  career_goals: string | null
+  academic_goals: string | null
 }
 
 export interface Recommendation {
-  courseCode: string
-  title: string
+  course: CourseSummary
   matchLevel: MatchLevel
-  /** How the course connects to the student's goals (AI-written). */
-  why: string
-  /** Skills the student could build (AI-written). */
-  skills: string[]
-  /** What past reviewers reported; empty when the course has no reviews. */
-  studentInsights: string[]
-  /** From the database, not the AI. Null when there are no reviews. */
+  /** Why it fits the student (written by Gemini). */
+  explanation: string
+  /** From the database, never from Gemini. Null while the course has no reviews. */
   worthScore: number | null
   reviewCount: number
-  difficultyAvg: number | null
-  workloadSummary: string | null
-  /** Caveats, always ending with the prerequisites-not-verified note. */
-  limitations: string[]
 }
 
 export interface RecommendationResult {
@@ -42,23 +37,12 @@ export interface RecommendationResult {
   droppedCount: number
 }
 
-const strings = z
-  .array(z.string())
-  .nullish()
-  .transform((list) => list ?? [])
-
 const itemSchema = z.object({
-  course_code: z.string().min(1),
-  title: z.string(),
+  course: courseSummarySchema,
   match_level: z.string(),
-  why: z.string(),
-  skills: strings,
-  student_insights: strings,
-  difficulty_avg: z.number().nullish(),
-  workload_summary: z.string().nullish(),
-  worth_score: z.number().nullish(),
+  explanation: z.string(),
+  community_worth_score: z.number().nullish(),
   review_count: z.number().int().nonnegative().nullish(),
-  limitations: strings,
 })
 
 export function parseRecommendation(value: unknown): Recommendation | null {
@@ -66,19 +50,14 @@ export function parseRecommendation(value: unknown): Recommendation | null {
   if (!parsed.success) return null
   const item = parsed.data
   const matchLevel = toMatchLevel(item.match_level)
-  if (!matchLevel || item.why.trim() === '') return null
+  const explanation = item.explanation.trim()
+  if (!matchLevel || explanation === '') return null
   return {
-    courseCode: item.course_code,
-    title: item.title,
+    course: item.course,
     matchLevel,
-    why: item.why.trim(),
-    skills: item.skills,
-    studentInsights: item.student_insights,
-    worthScore: item.worth_score ?? null,
+    explanation,
+    worthScore: item.community_worth_score ?? null,
     reviewCount: item.review_count ?? 0,
-    difficultyAvg: item.difficulty_avg ?? null,
-    workloadSummary: item.workload_summary ?? null,
-    limitations: item.limitations,
   }
 }
 
@@ -90,20 +69,20 @@ export const recommendationsSchema = z
     let droppedCount = 0
     for (const raw of recommendations) {
       const item = parseRecommendation(raw)
-      if (!item || seen.has(item.courseCode)) {
+      if (!item || seen.has(item.course.id)) {
         droppedCount += 1
         continue
       }
-      seen.add(item.courseCode)
+      seen.add(item.course.id)
       items.push(item)
     }
     return { items, droppedCount }
   })
 
-/** BE2 says typical latency is a few seconds; this allows a minute. */
+/** A Gemini call can take several seconds; this allows a minute. */
 export const RECOMMENDATION_TIMEOUT_MS = 60_000
 
-/** Fails with profile_required (400), rate_limited (429), recommendation_failed (502), or gemini_not_configured (503). */
+/** Needs a signed-in student. 422 means the request had no preference at all. */
 export function getRecommendations(
   client: ApiClient,
   request: RecommendationRequest,

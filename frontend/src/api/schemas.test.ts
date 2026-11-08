@@ -1,134 +1,140 @@
 import { describe, expect, it } from 'vitest'
-import { courseSchema } from './courses.ts'
-import { profileSchema } from './profile.ts'
+import { courseDetailSchema, courseSearchSchema, courseSummarySchema } from './courses.ts'
 import { recommendationsSchema } from './recommendations.ts'
-import { myReviewSchema, reviewSchema } from './reviews.ts'
+import { reviewSchema, worthScoreSchema } from './reviews.ts'
 
-// The review example from BE2's worththecredit-api/docs/api-contract.md.
-const be2Review = {
-  id: '2d64a531-fa81-4674-9c36-424f3adb8439',
-  course_code: 'SWEN-261',
+// Shapes from the contracts on main (issue #25 comment, backend/app/schemas/*.py).
+const course = {
+  id: 'c0a5e000-0000-4000-8000-000000000006',
+  code: 'ISTE-240',
+  title: 'Web and Mobile II',
+  description: 'Client-side web development.',
+  department: 'ISTE',
+  college: 'Golisano College of Computing and Information Sciences',
+  campus: 'Henrietta',
+  credits: 3,
+  prerequisites: null,
+}
+
+const review = {
+  id: '0e7d6a52-3c1b-4f8e-a9d2-6b4c1e8f7a35',
+  course_id: course.id,
   goals: ['career_preparation', 'skill_development'],
   worth_score: 4,
-  skills: ['Agile', 'Unit testing'],
-  difficulty: 3,
-  weekly_hours: '7-9',
-  feedback: 'Start the team project early.',
-  professor: 'Dr. Rivera',
+  concept_difficulty: 3,
+  weekly_hours_range: '6-10',
+  skills_gained: ['JavaScript', 'Accessibility'],
+  feedback: 'Start the projects early.',
+  instructor_name: 'Prof. Example',
   semester: 'Fall 2025',
-  created_at: '2026-11-08T00:37:32.987642Z',
+  created_at: '2026-11-07T23:10:00.123456-05:00',
 }
 
-const be2Recommendation = {
-  course_code: 'CSCI-420',
-  title: 'Principles of Data Mining',
-  match_level: 'Strong Match',
-  why: 'Hands-on ML on real data, which fits your goal of becoming an ML engineer.',
-  skills: ['Pandas', 'Clustering'],
-  student_insights: ['Reviewers found the real, messy data sets practical.'],
-  difficulty_avg: 3.5,
-  workload_summary: 'Most students report 10-12 hrs/week',
-  worth_score: 4.5,
-  review_count: 2,
-  limitations: ['Only 2 reviews so far', 'Prerequisites not verified'],
+const item = {
+  course,
+  match_level: 'strong_match',
+  explanation: 'Builds the front-end skills your career goal needs.',
+  community_worth_score: 4.25,
+  review_count: 4,
 }
 
-describe('reviewSchema', () => {
-  it("parses BE2's review into the app's shape", () => {
-    expect(reviewSchema.parse(be2Review)).toEqual({
-      id: be2Review.id,
-      courseCode: 'SWEN-261',
-      goals: ['career_preparation', 'skill_development'],
-      worthScore: 4,
-      skills: ['Agile', 'Unit testing'],
-      difficulty: 3,
-      weeklyHours: '7-9',
-      feedback: 'Start the team project early.',
-      professor: 'Dr. Rivera',
-      semester: 'Fall 2025',
-      createdAt: be2Review.created_at,
+describe('course schemas', () => {
+  it('parse a search page', () => {
+    const page = courseSearchSchema.parse({ results: [course], total: 50, limit: 20, offset: 0 })
+    expect(page.total).toBe(50)
+    expect(page.results[0]).toEqual({
+      id: course.id,
+      code: 'ISTE-240',
+      title: 'Web and Mobile II',
+      description: 'Client-side web development.',
+      department: 'ISTE',
+      college: course.college,
+      campus: 'Henrietta',
+      credits: 3,
+      prerequisites: null,
     })
   })
 
-  it('drops goal keys it does not know and fills missing optional fields with null', () => {
-    const { feedback: _f, professor: _p, semester: _s, ...required } = be2Review
-    const review = reviewSchema.parse({ ...required, goals: ['career_preparation', 'degree_requirements'] })
-    expect(review.goals).toEqual(['career_preparation'])
-    expect(review.feedback).toBeNull()
-    expect(review.professor).toBeNull()
-    expect(review.semester).toBeNull()
+  it('fill missing optional fields', () => {
+    const minimal = courseSummarySchema.parse({ id: course.id, code: 'ISTE-240', title: 'Web and Mobile II', prerequisites: '' })
+    expect(minimal).toMatchObject({ description: '', department: null, credits: null, prerequisites: null })
+  })
+
+  it('parse details with and without reviews', () => {
+    expect(
+      courseDetailSchema.parse({ ...course, community_worth_score: null, review_count: 0, average_concept_difficulty: null }),
+    ).toMatchObject({ worthScore: null, reviewCount: 0, averageDifficulty: null })
+    expect(
+      courseDetailSchema.parse({ ...course, community_worth_score: 4.333333, review_count: 3, average_concept_difficulty: 2.5 }),
+    ).toMatchObject({ worthScore: 4.333333, reviewCount: 3, averageDifficulty: 2.5 })
+  })
+})
+
+describe('reviewSchema', () => {
+  it('parses ReviewPublic into the app shape', () => {
+    expect(reviewSchema.parse(review)).toEqual({
+      id: review.id,
+      courseId: course.id,
+      goals: ['career_preparation', 'skill_development'],
+      worthScore: 4,
+      conceptDifficulty: 3,
+      weeklyHoursRange: '6-10',
+      skillsGained: ['JavaScript', 'Accessibility'],
+      feedback: 'Start the projects early.',
+      instructorName: 'Prof. Example',
+      semester: 'Fall 2025',
+      createdAt: review.created_at,
+    })
+  })
+
+  it('drops unknown goals and fills missing optional fields', () => {
+    const { feedback: _f, instructor_name: _i, semester: _s, skills_gained: _k, ...required } = review
+    const parsed = reviewSchema.parse({ ...required, goals: ['career_preparation', 'degree_requirement'] })
+    expect(parsed.goals).toEqual(['career_preparation'])
+    expect(parsed).toMatchObject({ skillsGained: [], feedback: null, instructorName: null, semester: null })
   })
 
   it('rejects scores outside 1 to 5', () => {
-    expect(reviewSchema.safeParse({ ...be2Review, worth_score: 6 }).success).toBe(false)
+    expect(reviewSchema.safeParse({ ...review, concept_difficulty: 6 }).success).toBe(false)
   })
 })
 
-describe('myReviewSchema', () => {
-  it('handles both answers', () => {
-    expect(myReviewSchema.parse({ course_code: 'SWEN-261', has_reviewed: false, review: null })).toEqual({
-      courseCode: 'SWEN-261',
-      hasReviewed: false,
-      review: null,
-    })
-    expect(myReviewSchema.parse({ course_code: 'SWEN-261', has_reviewed: true, review: be2Review }).review?.id).toBe(be2Review.id)
-  })
-})
-
-describe('courseSchema', () => {
-  it("accepts BE2's and BE1's field names", () => {
-    const be2 = courseSchema.parse({ course_code: 'GCIS-123', title: 'SD&PS I', department: 'GCIS', credit_hours: 4 })
-    const be1 = courseSchema.parse({ id: 'uuid', code: 'GCIS-123', title: 'SD&PS I', department: 'GCIS', credits: 4 })
-    expect(be2).toEqual(be1)
-    expect(be2.code).toBe('GCIS-123')
-    expect(be2.credits).toBe(4)
-  })
-
-  it('rejects a course with no code', () => {
-    expect(courseSchema.safeParse({ title: 'Nameless' }).success).toBe(false)
-  })
-})
-
-describe('profileSchema', () => {
-  it('fills missing lists and text', () => {
-    expect(profileSchema.parse({ major: 'Biology' })).toEqual({
-      major: 'Biology',
-      interests: [],
-      skills: [],
-      careerGoals: null,
-      personalInterests: [],
-      degreeRequirements: null,
-      updatedAt: null,
+describe('worthScoreSchema', () => {
+  it('fills every workload range', () => {
+    expect(
+      worthScoreSchema.parse({ course_id: course.id, community_worth_score: null, review_count: 0, average_concept_difficulty: null }),
+    ).toEqual({
+      courseId: course.id,
+      worthScore: null,
+      reviewCount: 0,
+      averageDifficulty: null,
+      workload: { '0-3': 0, '3-6': 0, '6-10': 0, '10+': 0 },
     })
   })
 })
 
 describe('recommendationsSchema', () => {
-  it("parses BE2's recommendation", () => {
-    const result = recommendationsSchema.parse({ recommendations: [be2Recommendation] })
+  it('parses a recommendation', () => {
+    const result = recommendationsSchema.parse({ recommendations: [item] })
     expect(result.droppedCount).toBe(0)
-    expect(result.items[0]).toMatchObject({
-      courseCode: 'CSCI-420',
-      matchLevel: 'strong',
-      worthScore: 4.5,
-      reviewCount: 2,
-      studentInsights: ['Reviewers found the real, messy data sets practical.'],
-    })
+    expect(result.items[0]).toMatchObject({ matchLevel: 'strong_match', worthScore: 4.25, reviewCount: 4 })
+    expect(result.items[0].course.code).toBe('ISTE-240')
   })
 
   it('drops malformed and repeated items instead of failing the page', () => {
+    const other = { ...course, id: 'c0a5e000-0000-4000-8000-000000000007', code: 'IGME-220' }
     const result = recommendationsSchema.parse({
       recommendations: [
-        be2Recommendation,
-        { ...be2Recommendation, course_code: 'CSCI-331', match_level: '87%' },
-        { ...be2Recommendation, course_code: 'CSCI-332', why: '  ' },
-        { ...be2Recommendation },
-        'nonsense',
-        { ...be2Recommendation, course_code: 'ISTE-340', match_level: 'moderate match', worth_score: null, student_insights: null },
+        item,
+        { ...item, course: other, match_level: '87%' },
+        { ...item, course: other, explanation: '  ' },
+        { ...item, course: { code: 'NO-ID' } },
+        item,
+        { ...item, course: other, match_level: 'Good match', community_worth_score: null, review_count: null },
       ],
     })
-    expect(result.items.map((item) => item.courseCode)).toEqual(['CSCI-420', 'ISTE-340'])
-    expect(result.items[1]).toMatchObject({ matchLevel: 'moderate', worthScore: null, studentInsights: [] })
+    expect(result.items.map((recommendation) => recommendation.course.code)).toEqual(['ISTE-240', 'IGME-220'])
+    expect(result.items[1]).toMatchObject({ matchLevel: 'good_match', worthScore: null, reviewCount: 0 })
     expect(result.droppedCount).toBe(4)
   })
 
