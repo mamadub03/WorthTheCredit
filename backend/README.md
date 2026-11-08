@@ -60,6 +60,18 @@ Backend validates RS256 access tokens via Auth0 JWKS. Protected dependencies:
 
 Course browse stays public. Backend 2 should `Depends(require_verified_email)` on review writes.
 
+## Tests (Issue #9)
+
+From `backend/` with the venv active:
+
+```bash
+pip install -r requirements.txt
+pytest -q
+```
+
+Always-on smoke tests cover `/health`, OpenAPI routes, auth 401s, and schema/constraint declarations.  
+Live Tiger Data / Auth0 cases **skip** until `DATABASE_URL` / Auth0 env vars are set for end-to-end demo wiring.
+
 ## Alembic
 
 From `backend/` with `DATABASE_URL` set:

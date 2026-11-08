@@ -119,3 +119,9 @@ Course/User/Review SQLAlchemy models and initial migration were generated with C
 - `backend/app/core/auth.py`, `backend/app/core/config.py`
 - `backend/app/api/deps.py`, `backend/app/api/routes/auth_routes.py`
 - `backend/app/api/router.py`, `backend/requirements.txt`, `backend/.env.example`, `backend/README.md`
+
+## 2026-11-07 — Backend integration testing (Issue #9)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), branch `mamadu-dev-issue9` → `backend`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** pytest smoke suite for health, course OpenAPI/schemas, auth 401s, ORM constraints; optional DB/Auth0 tests skip until env is wired.
