@@ -75,6 +75,30 @@ export function createReview(
   })
 }
 
+/** One page of a course's reviews (ReviewListResponse), newest first. */
+export const reviewPageSchema = z.object({
+  results: z.array(reviewSchema),
+  total: z.number().int().nonnegative(),
+  limit: z.number().int(),
+  offset: z.number().int(),
+})
+
+export type ReviewPage = z.output<typeof reviewPageSchema>
+
+/** Public. FE1's review list (#22) and FE2's recommendation cards (#30) both read it. */
+export function listReviews(
+  client: ApiClient,
+  courseId: string,
+  page: { limit?: number; offset?: number } = {},
+  signal?: AbortSignal,
+): Promise<ReviewPage> {
+  return client.request(`/courses/${encodeURIComponent(courseId)}/reviews`, {
+    query: { limit: page.limit, offset: page.offset },
+    schema: reviewPageSchema,
+    signal,
+  })
+}
+
 /** A course's review aggregates (WorthScoreSummary). Difficulty and workload never feed the Worth Score. */
 export const worthScoreSchema = z
   .object({
