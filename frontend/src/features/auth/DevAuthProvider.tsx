@@ -11,9 +11,10 @@ interface DevSession {
 
 /**
  * Fake sign-in for local work before the Auth0 tenant exists (VITE_DEV_AUTH=true
- * under `vite dev`; production builds can't turn it on). It sends BE2's dev
- * tokens, "dev:<name>" for a verified student and "dev-unverified" for an
- * unverified one, which BE2's API accepts when it runs with DEV_AUTH_BYPASS=true.
+ * under `vite dev`; production builds can't turn it on). It sends dev tokens,
+ * "dev:<name>" for a verified student and "dev-unverified" for an unverified
+ * one, which only the mock API understands: the real backend validates Auth0
+ * JWTs (#8) and has no dev bypass, so pair this with VITE_API_MOCKS.
  * Owner: FE2 (#26).
  */
 export default function DevAuthProvider({ children, startUnverified = false }: { children: ReactNode; startUnverified?: boolean }) {
@@ -87,7 +88,7 @@ export default function DevAuthProvider({ children, startUnverified = false }: {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-/** Mirrors who BE2's dev bypass says each token is. */
+/** Mirrors who the mock API says each dev token is. */
 function toUser(session: DevSession): AuthUser {
   return session.verified
     ? { sub: `dev|${session.name}`, email: `${session.name}@example.com`, emailVerified: true, name: session.name }
