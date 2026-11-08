@@ -79,9 +79,9 @@ describe('recommendations page', () => {
     expect(sent).toEqual([
       { major: 'Software Engineering', interests: ['machine learning'], skills: [], career_goals: 'ML engineer', academic_goals: null },
     ])
-    const first = screen.getAllByRole('link')[0]
-    expect(first.textContent).toMatch(/^CSCI-/)
-    expect(first.getAttribute('href')).toMatch(/^\/courses\/c0a5e000-/)
+    const first = screen.getAllByRole('article')[0]
+    expect(first.textContent).toMatch(/CSCI-/)
+    expect(screen.getAllByRole('link', { name: 'View course' })[0].getAttribute('href')).toMatch(/^\/courses\/c0a5e000-/)
   })
 
   it("remembers the student's answers in this browser", async () => {

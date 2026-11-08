@@ -125,3 +125,13 @@ The review submission flow was generated with Claude Code (Claude Opus 5.5) on 7
 ### Suggested citation
 
 The AI personalization form was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: Recommendation result cards (FE2, #30)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/30-recommendation-results`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** match cards in the team's chosen Example B design (match level, Worth Score or "No reviews yet", course code, Gemini's explanation, difficulty, typical weekly hours, review count, the skills reviewers reported, a prerequisites caveat, and a link to the course page), a `listReviews` call in the shared reviews module, the hook and pure summary behind the student insights, and tests.
+
+### Suggested citation
+
+The recommendation result cards were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.

@@ -1,0 +1,152 @@
+/* Example B (white + warm, Figtree). Variables fall back to B's values until the shared theme defines them. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 8px 12px;
+  border-radius: 20px;
+  background: var(--wtc-surface, #ffffff);
+  color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 16px;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.level {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.worth {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.noScore {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.code {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Match levels: tints from Example B */
+.strong_match {
+  background: #e6f2cf;
+  color: #3d5a00;
+}
+
+.good_match {
+  background: #fff0bf;
+  color: #6b5200;
+}
+
+.partial_match {
+  background: #ffe6d2;
+  color: #8a3700;
+}
+
+.exploratory {
+  background: #f3f4f5;
+  color: #4a4f54;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 6px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.why {
+  margin: 0;
+  color: #3a4044;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.facts,
+.note {
+  margin: 0;
+  color: #555b60;
+  font-size: 12px;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skills li {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--wtc-warm, #fff4eb);
+  color: #8a3700;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.view {
+  margin: auto 6px 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--wtc-ink, #1e2124);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.view:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.view:focus-visible {
+  outline: 2px solid var(--wtc-orange, #f76902);
+  outline-offset: 2px;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
