@@ -1,5 +1,9 @@
-# AI-GENERATED (Cursor Agent) — Issue #3: Configure Tiger Data PostgreSQL
+# AI-GENERATED (Cursor Agent) — Issues #3–#4: database package
 # Owned by Backend Developer 1 (mamadub03).
 # File-level AI attribution for this module (not per-symbol).
 
-"""Database package: engine, sessions, and declarative Base (models in Issue #4)."""
+"""Database package: engine, sessions, Base, and ORM models."""
+
+from app.db.models import Course, Review, User
+
+__all__ = ["Course", "Review", "User"]
