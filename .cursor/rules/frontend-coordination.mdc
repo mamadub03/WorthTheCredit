@@ -11,7 +11,8 @@ The full agreement is docs/frontend-coordination.md. Read it before changing rou
 Frontend Developer 2 owns these paths:
 - frontend/src/features/auth/, frontend/src/features/reviewForm/, frontend/src/features/recommendations/
 - frontend/src/components/form/
-- frontend/src/api/client.ts, frontend/src/api/recommendations.ts, frontend/src/api/profile.ts, frontend/src/api/mock/
+- frontend/src/api/client.ts, frontend/src/api/errors.ts, frontend/src/api/appClient.ts, frontend/src/api/account.ts, frontend/src/api/recommendations.ts, frontend/src/api/profile.ts, frontend/src/api/mock/
+- frontend/src/config/env.ts
 - frontend/src/domain/reviewVocabulary.ts, frontend/src/routes/paths.ts
 
 Frontend Developer 1 owns everything else in frontend/, including App.tsx, main.tsx, index.css, vite.config.ts, index.html, and src/pages/. frontend/src/api/reviews.ts is shared: FE1 writes the list and stats calls, FE2 writes the create and "already reviewed" calls.

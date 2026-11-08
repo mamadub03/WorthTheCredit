@@ -16,12 +16,13 @@ FE2 keeps all of its code in these paths, so it never lands in yours:
 | `src/features/reviewForm/` | Review form, its page, submission and duplicate handling | #27, #28 |
 | `src/features/recommendations/` | Personalization form, results, their page | #29, #30, #31 |
 | `src/components/form/` | Form controls (section 5) | #27 |
-| `src/api/client.ts`, `src/api/mock/` | Shared API client and mock mode (section 6) | #25 |
+| `src/api/client.ts`, `src/api/errors.ts`, `src/api/appClient.ts`, `src/api/mock/`, `src/config/env.ts` | Shared API client, error type, mock mode, and env settings (section 6) | #25 |
 | `src/api/recommendations.ts`, `src/api/profile.ts` | Recommendation and profile calls and schemas | #29, #31 |
+| `src/api/account.ts` | Resend-verification call | #26 |
 | `src/domain/reviewVocabulary.ts` | Goal, Worth Score, difficulty, weekly hours, and semester keys and labels (section 7) | #25 |
 | `src/routes/paths.ts` | URL helpers (section 2) | #25 |
 
-FE1 owns everything else in `frontend/`: build config, `index.html`, `main.tsx`, `App.tsx`, `index.css`, `src/pages/`, layout and display components, and the course API module. `src/api/reviews.ts` is shared: FE1 writes the list and stats calls (#21, #22, #23), FE2 writes the create and "already reviewed" calls (#28), and the review types in it follow BE2's contract (section 7).
+FE1 owns everything else in `frontend/`: build config, `index.html`, `main.tsx`, `App.tsx`, `index.css`, `src/pages/`, layout and display components, and the course API module (`src/api/courses.ts`, which FE2 started with the one detail call its review page needs). `src/api/reviews.ts` is shared: FE1 writes the list and stats calls (#21, #22, #23), FE2 writes the create and "already reviewed" calls (#28), and the review types in it follow BE2's contract (section 7).
 
 Editing the other person's paths needs their OK first (project.mdc: "Do not modify another developer's feature without approval"). The shared files are in section 3.
 

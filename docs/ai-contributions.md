@@ -45,3 +45,24 @@ Frontend initialization (Vite, React, TypeScript, and React Router) was generate
 ### Suggested citation
 
 The FE1 and FE2 frontend coordination proposal was drafted with Claude Code (Claude Opus 5.5) on 7 November 2026 from the team's product decisions, project rules, GitHub issues, and both backend branches, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: API client, contracts, and mock mode (FE2, #25)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/25-frontend-coordination`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **Inputs:** `docs/frontend-coordination.md` and BE2's `worththecredit-api/docs/api-contract.md` (branch `BackPart2`).
+- **What the AI wrote:** the shared API client with one error type, zod schemas and calls for courses (a starter for FE1), reviews, profile, recommendations, and account, an in-browser mock of BE2's API with clearly labeled sample data and a demo banner, typed env settings, the review vocabulary, URL helpers, a Vitest setup, and 52 tests.
+- **Dependencies it added:** `zod`; dev only: `vitest`, `@testing-library/react`, `@testing-library/dom`, `@testing-library/user-event`, `jsdom`.
+- **Not decided by the AI:** the API contract itself, which is BE2's.
+
+### Files the AI added or substantially edited
+
+- `frontend/src/api/` (`client.ts`, `errors.ts`, `appClient.ts`, `courses.ts`, `reviews.ts`, `profile.ts`, `recommendations.ts`, `account.ts`, `mock/`), with tests
+- `frontend/src/config/env.ts`, `frontend/src/domain/reviewVocabulary.ts`, `frontend/src/routes/paths.ts`, with tests
+- `frontend/src/test/setup.ts`, `frontend/vitest.config.ts`, `frontend/.env.example`
+- `frontend/package.json`, `frontend/package-lock.json` (dependencies and the `test` script)
+- `docs/frontend-coordination.md`, `.cursor/rules/frontend-coordination.mdc` (ownership list), and this entry
+
+### Suggested citation
+
+The frontend API client, schemas, and mock API were generated with Claude Code (Claude Opus 5.5) on 7 November 2026 against BE2's API contract, for review by the FE2 developer. See `docs/ai-contributions.md`.
