@@ -40,6 +40,37 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 - Docs: http://127.0.0.1:8000/docs
 - Course search: `GET /courses?q=web&department=ISTE&limit=20`
 - Course details: `GET /courses/{course_id}` (includes Worth Score aggregates when reviews exist)
+- Auth smoke tests (Bearer token from Frontend 2 Auth0 SPA):
+  - `GET /auth/me`
+  - `GET /auth/verified-check` (requires `email_verified` claim)
+
+## Auth0 (Issue #8)
+
+Set in `.env` (with Frontend 2):
+
+```bash
+AUTH0_DOMAIN=your-tenant.us.auth0.com
+AUTH0_API_AUDIENCE=https://worththecredit.api
+```
+
+Backend validates RS256 access tokens via Auth0 JWKS. Protected dependencies:
+
+- `get_current_user` — valid JWT; provisions `users` row by `auth0_sub`
+- `require_verified_email` — same + `email_verified` claim (use on review submit)
+
+Course browse stays public. Backend 2 should `Depends(require_verified_email)` on review writes.
+
+## Tests (Issue #9)
+
+From `backend/` with the venv active:
+
+```bash
+pip install -r requirements.txt
+pytest -q
+```
+
+Always-on smoke tests cover `/health`, OpenAPI routes, auth 401s, and schema/constraint declarations.  
+Live Tiger Data / Auth0 cases **skip** until `DATABASE_URL` / Auth0 env vars are set for end-to-end demo wiring.
 
 ## Alembic
 

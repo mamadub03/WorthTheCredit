@@ -1,4 +1,4 @@
-# AI-GENERATED (Cursor Agent) — Issues #2–#3: settings + DATABASE_URL
+# AI-GENERATED (Cursor Agent) — Issues #2–#3 / #8: settings
 # Owned by Backend Developer 1 (mamadub03).
 # File-level AI attribution for this module (not per-symbol).
 # Loads settings from environment / .env. Secrets must never be hardcoded here.
@@ -34,6 +34,13 @@ class Settings(BaseSettings):
     # for app boot so /health still works before credentials are configured.
     # Shared with Backend Developer 2 — same .env.example contract.
     database_url: str | None = Field(default=None, alias="DATABASE_URL")
+
+    # Auth0 (Issue #8). Coordinate domain + API audience with Frontend 2 (#26).
+    # No client secret on the API — we only validate JWTs via JWKS.
+    auth0_domain: str | None = Field(default=None, alias="AUTH0_DOMAIN")
+    auth0_api_audience: str | None = Field(default=None, alias="AUTH0_API_AUDIENCE")
+    # Optional override; defaults to https://{AUTH0_DOMAIN}/
+    auth0_issuer: str | None = Field(default=None, alias="AUTH0_ISSUER")
 
     @property
     def cors_origin_list(self) -> list[str]:
