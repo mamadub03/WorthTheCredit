@@ -77,3 +77,20 @@ The frontend API client, schemas, and mock API were generated with Claude Code (
 ### Suggested citation
 
 The FE2 API layer was realigned to the merged backend contracts with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: Auth0 sign-in, dev sign-in, and the route guard (FE2, #26)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/26-auth`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** one `useAuth()` interface backed by Auth0 (redirect login and signup, return to the starting page, refresh tokens, re-reading `email_verified` after verification) or by a dev sign-in for local work; `RequireAuth`, with a verified-email gate that doesn't sign students straight back in after logout; the `/callback` page; `useApiClient()`; logout cleanup of per-student browser data; FE2's route list; the four documented edits to `App.tsx`; the header sign-in menu, the verify-email screen, and FE2's `Button`; and tests.
+- **Dependency it added:** `@auth0/auth0-react` 2.30.
+- **Not finished until:** BE1's JWT validation (#8) and the team's Auth0 tenant exist, per the comments on #26.
+
+### Files the AI added or substantially edited
+
+- `frontend/src/features/auth/`, `frontend/src/components/form/Button.tsx`, `frontend/src/routes/fe2Routes.tsx`, `frontend/src/App.tsx`
+- `frontend/package.json`, `frontend/package-lock.json`, and this entry
+
+### Suggested citation
+
+The frontend sign-in layer (Auth0 and dev sign-in) was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.

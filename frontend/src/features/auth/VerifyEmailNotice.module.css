@@ -1,0 +1,10 @@
+.actions {
+  margin-top: 20px;
+}
+
+.status {
+  min-height: 1.5em;
+  margin-top: 12px;
+  color: var(--accent);
+  font-size: 0.95rem;
+}
