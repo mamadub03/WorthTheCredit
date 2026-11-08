@@ -1,14 +1,23 @@
 # WorthTheCredit backend
 
-FastAPI REST API for WorthTheCredit (Issue #2 scaffold).
+FastAPI REST API for WorthTheCredit.
 
-> **AI note:** This backend package was generated with **Cursor Agent** for
-> GitHub Issue #2. See [`docs/ai-contributions.md`](../docs/ai-contributions.md).
+> **AI note:** Backend files use a **file-level** `# AI-GENERATED (Cursor Agent)`
+> header (whole module), not per-function tags. See
+> [`docs/ai-contributions.md`](../docs/ai-contributions.md).
+
+## Git workflow (Backend Developer 1)
+
+- Long-lived integration branch: **`backend`** (not `main`).
+- One feature branch per issue (e.g. `mamadu-dev-issue3`) branched from `backend`.
+- Open PRs **into `backend`**. Merge `backend` → `main` only after backend work is tested.
+- Stop and coordinate when a change is a shared contract with Backend Developer 2
+  (models, review schema, Worth Score aggregates, API shapes).
 
 ## Requirements
 
-- Python 3.11+ (developed/tested against the local Python 3.x toolchain)
-- A virtual environment (recommended)
+- Python 3.11+
+- Tiger Data PostgreSQL URL in `.env` as `DATABASE_URL` (for DB/Alembic)
 
 ## Setup
 
@@ -18,33 +27,26 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
+# set DATABASE_URL=postgresql+psycopg://USER:PASSWORD@HOST:5432/DBNAME
 ```
 
-## Run locally
-
-From the `backend/` directory (so `app` imports resolve):
+## Run API
 
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-- Health: [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
-- Interactive docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- Health: http://127.0.0.1:8000/health
+- Docs: http://127.0.0.1:8000/docs
 
-## Scope of Issue #2
+## Alembic
 
-Included now:
+From `backend/` with `DATABASE_URL` set:
 
-- Python project layout under `backend/app`
-- Dependencies (`requirements.txt`)
-- Settings via `.env` / `.env.example`
-- CORS for the Vite frontend origins
-- `/health` endpoint
-- OpenAPI docs at `/docs`
+```bash
+alembic revision --autogenerate -m "message"   # after models exist (Issue #4)
+alembic upgrade head
+```
 
-Deferred to later issues:
-
-- Tiger Data / SQLAlchemy / Alembic (Issue #3–#4)
-- Mock data seeding (Issue #5)
-- Course APIs (Issues #6–#7)
-- Auth0 JWT validation (Issue #8)
+Issue #3 ships the engine/session + Alembic wiring only. **No Course/User/Review
+models yet** — that is Issue #4 and needs a Backend Dev 2 cross-check.

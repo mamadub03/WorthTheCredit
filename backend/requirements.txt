@@ -1,4 +1,4 @@
-# AI-GENERATED (Cursor Agent) — Issue #2: Initialize FastAPI backend
+# AI-GENERATED (Cursor Agent) — Issues #2–#3: FastAPI + Tiger Data wiring
 # Runtime dependencies for the WorthTheCredit FastAPI API.
 # Pin versions for reproducible local installs during the hackathon.
 
@@ -8,3 +8,6 @@ pydantic==2.12.3
 pydantic-settings==2.11.0
 python-dotenv==1.2.1
 httpx==0.28.1
+SQLAlchemy==2.0.44
+alembic==1.17.0
+psycopg[binary]==3.2.12

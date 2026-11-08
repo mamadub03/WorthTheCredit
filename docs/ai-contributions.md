@@ -27,8 +27,33 @@ WorthTheCredit allows AI assistance when it is cited. This file is the running l
 
 ### In-code delineation
 
-Python modules under `backend/app/` start with an `# AI-GENERATED (Cursor Agent) — Issue #2` header so reviewers can distinguish agent-authored scaffold from later human edits.
+**File-level only:** Python modules get a single top-of-file `# AI-GENERATED (Cursor Agent) — Issue #N` header for the whole module. Do **not** tag individual functions/components.
 
 ### Suggested citation
 
 FastAPI backend initialization (project layout, settings, CORS, and `/health`) was generated with Cursor Agent on 7 November 2026 for GitHub Issue #2. See `docs/ai-contributions.md`.
+
+## 2026-11-07 — Configure Tiger Data PostgreSQL (Issue #3)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue3` (bases on integration branch `backend`).
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** `DATABASE_URL` settings, SQLAlchemy engine/session, empty `Base`, Alembic init. **No ORM models** (deferred to Issue #4 for Backend Dev 2 cross-check).
+
+### Files the agent added or substantially edited
+
+- `backend/requirements.txt`
+- `backend/.env.example`
+- `backend/README.md`
+- `backend/app/core/config.py`
+- `backend/app/db/__init__.py`
+- `backend/app/db/base.py`
+- `backend/app/db/session.py`
+- `backend/alembic.ini`
+- `backend/alembic/env.py`
+- `backend/alembic/script.py.mako`
+- `backend/alembic/versions/.gitkeep`
+- `docs/ai-contributions.md` (this file)
+
+### Suggested citation
+
+Tiger Data / SQLAlchemy / Alembic wiring was generated with Cursor Agent on 7 November 2026 for GitHub Issue #3. See `docs/ai-contributions.md`.
