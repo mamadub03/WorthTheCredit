@@ -1,0 +1,170 @@
+/* Shared display pieces (FE1, #19). */
+
+/* Difficulty caps: gray caps underneath, orange caps clipped to the value on top. */
+.caps {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: var(--caps-w);
+  vertical-align: middle;
+}
+
+.capsRow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  width: var(--caps-w);
+}
+
+.capsFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.capsAnimate {
+  animation: capsFill 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+}
+
+@keyframes capsFill {
+  from {
+    width: 0;
+  }
+}
+
+/* Worth Score square. */
+.worthBadge {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--wtc-peach, #ffe6d2);
+  color: var(--wtc-ink, #1e2124);
+  font: 800 18px var(--wtc-display, Outfit, sans-serif);
+}
+
+.worthBadgeLarge {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  font-size: 21px;
+}
+
+.worthBadgeEmpty {
+  background: var(--wtc-gray, #f3f1ec);
+  color: #8a8f93;
+}
+
+/* Empty and error states. */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 36px 24px;
+  border-radius: 32px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.stateArt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 28px;
+  color: var(--wtc-ink, #1e2124);
+  animation: bob 3.2s ease-in-out infinite;
+}
+
+.stateTitle {
+  margin: 0;
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.stateText {
+  max-width: 420px;
+  color: var(--wtc-muted, #555b60);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.stateText p {
+  margin: 0;
+}
+
+.stateActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.tint_peach {
+  background: var(--wtc-peach, #ffe6d2);
+}
+
+.tint_teal {
+  background: var(--wtc-teal, #d3eff5);
+}
+
+.tint_lilac {
+  background: var(--wtc-lilac, #e9e1f8);
+}
+
+.tint_butter {
+  background: var(--wtc-butter, #fff0bf);
+}
+
+.tint_mint {
+  background: var(--wtc-mint, #e6f2cf);
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(6deg);
+  }
+}
+
+/* Loading placeholders. */
+.skeleton {
+  display: block;
+  flex: none;
+  background: linear-gradient(90deg, #f1ece4 0, #f9f6f1 40%, #f1ece4 80%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -400px 0;
+  }
+  to {
+    background-position: 400px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capsAnimate,
+  .stateArt,
+  .skeleton {
+    animation: none;
+  }
+
+  .capsFill {
+    transition: none;
+  }
+}
