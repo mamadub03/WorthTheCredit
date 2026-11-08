@@ -1,6 +1,7 @@
-# AI-GENERATED (Cursor Agent) — Issue #2: Initialize FastAPI backend
-# Owned by Backend Developer 1 (mamadub03). Loads settings from environment /
-# .env. Secrets must never be hardcoded here.
+# AI-GENERATED (Cursor Agent) — Issues #2–#3: settings + DATABASE_URL
+# Owned by Backend Developer 1 (mamadub03).
+# File-level AI attribution for this module (not per-symbol).
+# Loads settings from environment / .env. Secrets must never be hardcoded here.
 
 """Application settings loaded from environment variables."""
 
@@ -29,6 +30,10 @@ class Settings(BaseSettings):
         default="http://localhost:5173,http://127.0.0.1:5173",
         alias="CORS_ORIGINS",
     )
+    # Tiger Data PostgreSQL URL. Required for DB sessions / Alembic; optional
+    # for app boot so /health still works before credentials are configured.
+    # Shared with Backend Developer 2 — same .env.example contract.
+    database_url: str | None = Field(default=None, alias="DATABASE_URL")
 
     @property
     def cors_origin_list(self) -> list[str]:
