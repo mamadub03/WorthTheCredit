@@ -19,7 +19,7 @@ export const FOLLOW_UPS = ['Something lighter', 'More hands-on projects', 'Less 
 export type ExchangeState =
   | { status: 'loading' }
   | { status: 'done'; result: RecommendationResult }
-  | { status: 'failed'; message: string; code: string }
+  | { status: 'failed'; message: string; code: string; needsFreshToken?: boolean }
 
 export interface Exchange {
   id: string
@@ -54,9 +54,15 @@ export function requestFor(profile: ProfileFormValues, typed: string | null): Re
   return { ...base, academic_goals: [base.academic_goals, `Student's request: ${extra}`].filter(Boolean).join('\n') }
 }
 
+/** POST /recommendations only answers 403 when the student's email isn't verified. */
+export function isUnverifiedEmail(error: ApiError): boolean {
+  return error.status === 403 || ['forbidden', 'email_not_verified'].includes(error.code)
+}
+
 /** What the advisor says when a turn fails. */
 export function failureMessage(error: ApiError): string {
   if (error.status === 401 || error.code === 'not_authenticated') return 'Your sign-in expired. Sign in again to keep going.'
+  if (isUnverifiedEmail(error)) return 'Verify your email to get matches. Open the link we sent you, then try again.'
   if (error.status === 422) return 'Tell me a bit more first: your major, an interest, a skill, or a goal.'
   if (error.status === 429 || error.code === 'rate_limited') return "That's a lot of questions at once. Give me a minute and try again."
   if (error.code === 'timeout') return 'That took too long. Try again.'

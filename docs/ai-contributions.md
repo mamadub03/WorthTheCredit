@@ -148,6 +148,17 @@ The recommendation result cards were generated with Claude Code (Claude Opus 5.5
 
 The AI match page was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
 
+## 2026-11-08: Plain message for an unverified email in the AI match chat (FE2, #31)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/31-recommendations-403`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** a 403 case in the chat's `failureMessage()`, so an unverified student sees "Verify your email to get matches" instead of the API's developer sentence; a fresh token before "Try again" on that failure, because the API reads `email_verified` from the access token and Auth0 otherwise keeps serving the cached one; and tests.
+- **Left alone on purpose:** `RequireAuth` and the page's sign-in-only access, because whether recommendations need a verified email is still being settled with BE2 (comment on #31).
+
+### Suggested citation
+
+The unverified-email message in the AI match chat was generated with Claude Code (Claude Opus 5.5) on 8 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
 ## 2026-11-07: Example B styling and the sign-in page (FE2, #26, #27)
 
 - **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/example-b-styling`, after the team picked Example B from the design canvas.

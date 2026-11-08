@@ -8,8 +8,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ApiError, isApiError } from '../../api/errors.ts'
 import { getRecommendations, type RecommendationRequest } from '../../api/recommendations.ts'
 import { readStored, userKey, writeStored } from '../auth/appStorage.ts'
+import { useAuth } from '../auth/authContext.ts'
 import { useApiClient } from '../auth/useApiClient.ts'
-import { failureMessage, type Exchange } from './chatModel.ts'
+import { failureMessage, isUnverifiedEmail, type Exchange } from './chatModel.ts'
 
 export function chatKey(sub: string): string {
   return userKey(sub, 'advisor-chat')
@@ -35,6 +36,7 @@ export interface AdvisorChat {
 
 export function useAdvisorChat(sub: string | null): AdvisorChat {
   const client = useApiClient()
+  const { refreshUser } = useAuth()
   const [exchanges, setExchanges] = useState<Exchange[]>(() => savedChat(sub))
   const inFlight = useRef<AbortController | null>(null)
 
@@ -45,22 +47,29 @@ export function useAdvisorChat(sub: string | null): AdvisorChat {
   }, [sub, exchanges])
 
   const run = useCallback(
-    async (id: string, request: RecommendationRequest) => {
+    async (id: string, request: RecommendationRequest, freshToken = false) => {
       inFlight.current?.abort()
       const controller = new AbortController()
       inFlight.current = controller
       const settle = (state: Exchange['state']) =>
         setExchanges((current) => current.map((exchange) => (exchange.id === id ? { ...exchange, state } : exchange)))
       try {
+        if (freshToken) {
+          // The API reads email_verified from the access token and Auth0 keeps serving
+          // the cached one, so without this a student who just verified gets 403 again.
+          // If the refresh fails, the request below still reports what's wrong.
+          await refreshUser().catch(() => null)
+          if (controller.signal.aborted) return
+        }
         const result = await getRecommendations(client, request, controller.signal)
         if (!controller.signal.aborted) settle({ status: 'done', result })
       } catch (error) {
         if (controller.signal.aborted) return
         const problem = isApiError(error) ? error : new ApiError(0, 'server_error')
-        settle({ status: 'failed', message: failureMessage(problem), code: problem.code })
+        settle({ status: 'failed', message: failureMessage(problem), code: problem.code, needsFreshToken: isUnverifiedEmail(problem) })
       }
     },
-    [client],
+    [client, refreshUser],
   )
 
   const send = useCallback(
@@ -76,8 +85,9 @@ export function useAdvisorChat(sub: string | null): AdvisorChat {
     (id: string) => {
       const exchange = exchanges.find((item) => item.id === id)
       if (!exchange) return
+      const { state } = exchange
       setExchanges((current) => current.map((item) => (item.id === id ? { ...item, state: { status: 'loading' } } : item)))
-      void run(id, exchange.request)
+      void run(id, exchange.request, state.status === 'failed' && state.needsFreshToken)
     },
     [exchanges, run],
   )
