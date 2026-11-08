@@ -1,0 +1,224 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 50;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--wtc-ink, #1e2124);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.skip:focus {
+  top: 12px;
+  color: #ffffff;
+}
+
+.header {
+  width: 100%;
+  max-width: 1244px;
+  margin: 0 auto;
+  padding: 14px 32px;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+}
+
+.link {
+  position: relative;
+  padding: 12px;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--wtc-ink, #1e2124);
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 7px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--wtc-orange, #f76902);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.link:hover::after,
+.link:focus-visible::after,
+.link[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+.link[aria-current='page'] {
+  font-weight: 700;
+}
+
+.logo {
+  display: flex;
+  padding: 6px 4px;
+}
+
+.logo img {
+  display: block;
+  width: auto;
+  height: 36px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.logo:hover img {
+  transform: scale(1.04);
+}
+
+.account {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+/* FE2's AuthMenu floats right with its own top padding; inside this grid cell it just needs to sit flat. */
+.account > * {
+  float: none;
+  padding: 0;
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1244px;
+  margin: 0 auto;
+  padding: 8px 32px 64px;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 0 36px;
+  border-top: 1.5px solid var(--wtc-line-warm, #e8e2d8);
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+}
+
+.footerLogo {
+  display: block;
+  width: auto;
+  height: 26px;
+  margin-right: auto;
+}
+
+.footerBreak {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.credits {
+  flex-basis: 100%;
+  font-size: 12px;
+}
+
+/* The phone tab bar is hidden on wider screens. */
+.tabs {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 10px 12px;
+  }
+
+  .nav {
+    grid-template-columns: auto 1fr;
+  }
+
+  .links {
+    display: none;
+  }
+
+  .logo img {
+    height: 24px;
+  }
+
+  .main {
+    padding: 4px 12px 120px;
+  }
+
+  .footer {
+    margin: 0 12px;
+    width: auto;
+    padding-bottom: 120px;
+  }
+
+  .tabs {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 14px;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 6px;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(30, 33, 36, 0.14);
+  }
+
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 0;
+    border-radius: 16px;
+    color: var(--wtc-ink, #1e2124);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .tab:hover {
+    color: var(--wtc-ink, #1e2124);
+  }
+
+  .tab[aria-current='page'] {
+    background: var(--wtc-peach, #ffe6d2);
+    font-weight: 700;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link::after,
+  .logo img {
+    transition: none;
+  }
+}
