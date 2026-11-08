@@ -231,7 +231,7 @@ Main has one backend now (#43). Course search and details are live. The review a
 
 ## 10. Git workflow between us
 
-- #33 is merged into `frontend_v1`, our integration branch (the backend used `backend` the same way). FE2 opens one PR per issue, stacked so each diff shows only that issue: #25 targets `frontend_v1`, #26 builds on #25, #27 and #28 build on #26, and #29 to #31 build on #26 separately, so a blocked review-submission PR can't hold up recommendations.
+- #33 is merged into `frontend_v1`, our integration branch (the backend used `backend` the same way). FE2 opens one PR per issue, stacked so each diff shows only that issue: #25 targets `frontend_v1`, #26 builds on #25, and #27 on #26. #28 (review submission, blocked on the backend) branches off #27 on its own, and #29 to #31 continue from #27, so the blocked PR can't hold up recommendations.
 - Shared-file edits: tell the other person first, keep them minimal, merge them early.
 - We review each other's frontend PRs; project.mdc requires human approval before a merge.
 
