@@ -1,7 +1,7 @@
 /**
  * In-browser stand-in for the API, shaped like the contracts on main: BE1's
- * live course routes (backend/app/api/routes/courses.py) and BE2's planned
- * review and recommendation endpoints (backend/app/schemas/review.py and
+ * course routes (backend/app/api/routes/courses.py) and BE2's review and
+ * recommendation endpoints (backend/app/schemas/review.py and
  * recommendation.py, issue #10). Owner: FE2 (#25).
  *
  * VITE_API_MOCKS picks which areas it answers; everything else goes to the

@@ -1,6 +1,6 @@
 # Frontend coordination: FE1 and FE2
 
-Status: proposal from FE2 (Rameen) to FE1 (Grace), part of #25. It becomes the agreement when FE1 approves the PR that adds it. Where it disagrees with `.cursor/rules/project.mdc`, project.mdc wins.
+Status: in use since #45 merged (FE2 Rameen, FE1 Grace). Where it disagrees with `.cursor/rules/project.mdc`, project.mdc wins.
 
 Drafted with Claude Code (Claude Opus 5.5) at Rameen's request; see `docs/ai-contributions.md`.
 
@@ -108,6 +108,7 @@ If #19 moves to a layout route with `<Outlet />`, put `{fe2Routes()}` inside it 
 - `@auth0/auth0-react` 2.30, the agreed auth provider. Its peer range covers React 19.3.
 - `zod` 4. One schema per payload gives the TypeScript type and a runtime check on API and Gemini responses (project.mdc: "Do not trust AI-generated responses without validation").
 - Dev only: `vitest` 5, `@testing-library/react`, `@testing-library/dom`, `@testing-library/user-event`, `jsdom`, and a `"test": "vitest run"` script. The scaffold has no test runner yet, so it's there for you too. Its config is a separate `vitest.config.ts`, so `vite.config.ts` stays yours.
+- Dev only, for #32: `@playwright/test` 1.64 with `"e2e"` and `"e2e:typecheck"` scripts, and Playwright's output folders in `.gitignore` (section 12).
 
 `package-lock.json`: never hand-merge it. On a conflict, take the base branch's copy and run `npm install`.
 
@@ -149,15 +150,15 @@ FE2 built these as part of #25, because the Auth0 token has to pass through the 
 - `src/api/client.ts` exposes `createApiClient`; pages get one from `useApiClient()`. It prefixes the base URL, sends and parses JSON, applies a timeout (15 s by default, 60 s for recommendations), attaches the access token only when a call asks for it, and turns every failure into one `ApiError`. Public GETs (search, details, review lists) send no token.
 - `ApiError` carries `status` (0 for network errors and timeouts), `code`, `message` (safe to show), and `fieldErrors` (from FastAPI 422 responses). When the API's `detail` is a code (`already_reviewed`), that's the `code`; when it's a sentence ("Course not found"), the code comes from the status (`not_found`) and the sentence becomes the `message`. The client adds `network_error`, `timeout`, and `invalid_response`.
 - Each API function checks its response against a zod schema. A response that doesn't match becomes `invalid_response` instead of a crash deep inside a component.
-- Mock mode swaps the client's `fetch` for an in-memory one that follows the contracts on main: BE1's live course routes, and BE2's planned review and recommendation endpoints. The client code and error handling are identical either way. `VITE_API_MOCKS` takes `all`, `none`, or a list of `courses`, `reviews`, `recommendations`, so each area moves to the real backend as it ships.
+- Mock mode swaps the client's `fetch` for an in-memory one that follows the contracts on main: BE1's course routes and BE2's review and recommendation endpoints. The client code and error handling are identical either way. `VITE_API_MOCKS` takes `all`, `none`, or a list of `courses`, `reviews`, `recommendations`. Use `none` with the backend running and `all` for a fully offline demo.
 - Demo labeling (project.mdc: "Keep generated demo data clearly distinguishable from real student reviews"): in mock mode a banner reads "Demo mode: sample data, not real student reviews." BE1's seed is courses only, each description already says "DEMO DATA", and every real review will come through FE2's form.
 
 Env vars, in `frontend/.env.example` (FE2 adds it; real values go in `frontend/.env.local`, which the existing `*.local` rule already ignores):
 
 ```bash
 VITE_API_BASE_URL=http://localhost:8000   # the FastAPI server; its CORS list already allows localhost:5173
-VITE_API_MOCKS=all                        # all, none, or a list such as reviews,recommendations
-VITE_DEV_AUTH=true                        # npm run dev only: a fake signed-in student until Auth0 is set up; ignored by production builds
+VITE_API_MOCKS=none                       # all, none, or a list such as reviews,recommendations
+VITE_DEV_AUTH=true                        # npm run dev only: a fake signed-in student for offline work; ignored by production builds and once Auth0 is set
 VITE_AUTH0_DOMAIN=
 VITE_AUTH0_CLIENT_ID=
 VITE_AUTH0_AUDIENCE=
@@ -219,22 +220,23 @@ Aggregates for your course page (#21): `GET /courses/{id}` already returns `comm
   // user is { sub, email, emailVerified, name } or null
   ```
 
-- Dev sign-in: until the team's Auth0 tenant exists, `npm run dev` with `VITE_DEV_AUTH=true` gives you a fake signed-in student. It works with the mock API; the real backend will accept only Auth0 tokens once BE1 finishes #8.
+- Real sign-in: the team's Auth0 tenant is set up. Its public values are on #26 and go in `frontend/.env.local`, never in the repo; `docs/local-integration.md` has the rest.
+- Dev sign-in: with no Auth0 values, `npm run dev` with `VITE_DEV_AUTH=true` gives you a fake signed-in student. It only works with the mock API, because the real backend accepts only Auth0 tokens.
 - Sign-in entry points: the header's "Sign in" opens `/signin`, which returns to `?next=` afterwards. A link of your own (say "Sign in to write a review") can use `paths.signIn(currentPath)`. Protected pages still go straight to Auth0 and back.
 - Auth0 returns to `/callback`, so your home page never sees `?code=...&state=...` in its URL.
 - Logging out returns to `/`.
 
 ## 9. Backend status (what both of us depend on)
 
-Main has one backend now (#43). Course search and details are live. The review and recommendation endpoints exist as contracts (#10) until BE2 builds them (#12 to #16), and JWT validation is #8. Until then the mock answers for those areas. Still open:
+Everything is on `main`: course search and details, JWT validation (#8), review submission and lists (#12, #14), Worth Scores (#13), and Gemini recommendations (#15, #16). `docs/local-integration.md` covers running it. Still open:
 
-- The review and recommendation endpoints themselves, and the error `detail` style they use (a code string such as `already_reviewed`, or a sentence; the client handles both).
-- The Auth0 tenant, the SPA client, and the API identifier (BE1, #8). Mamadu asked that the domain and audience be agreed before either side hardcodes them.
-- For #30: `RecommendationItem` has `explanation` but no list of skills, so the "relevant skills" in #30 come from the explanation text unless BE2 adds a field. Workload comes from `GET /courses/{id}/worth-score`.
+- `email_verified` in the access token. Posting a review and asking for AI matches both require it, and Auth0 leaves it out unless a post-login Action adds it. Until then both return 403, except on a local backend with `AUTH_SKIP_EMAIL_VERIFICATION=true`.
+- For #31: `RecommendationRequest` has no free-text field, so typed requests travel inside `academic_goals` with a "Student's request:" label. A `query: str | None` field would replace that with no UI change.
+- For #30: `RecommendationItem` has `explanation` but no list of skills, so the skills on match cards come from what reviewers reported. Workload comes from `GET /courses/{id}/worth-score`.
 
 ## 10. Git workflow between us
 
-- #33 is merged into `frontend_v1`, our integration branch (the backend used `backend` the same way). FE2 opens one PR per issue, stacked so each diff shows only that issue: #25 targets `frontend_v1`, #26 builds on #25, and #27 on #26. #28 (review submission, blocked on the backend) branches off #27 on its own, and #29 to #31 continue from #27, so the blocked PR can't hold up recommendations. The Example B restyle of FE2's screens builds on #30, beside #31, so it doesn't wait on #31's backend blockers either.
+- #66 brought FE1's pages, FE2's stack (#45 to #56), and the backend together on `main`, and `frontend_v1` is retired. Frontend PRs now go to `test/full-product`, which started from the same commit as `main`, one per issue.
 - Shared-file edits: tell the other person first, keep them minimal, merge them early.
 - We review each other's frontend PRs; project.mdc requires human approval before a merge.
 
@@ -242,9 +244,19 @@ The event ends Sunday 4:30 PM per its MLH page; the submission deadline is proba
 
 ## 11. What I need from you
 
-- [ ] Styling: CSS Modules on your tokens (my vote), Tailwind v4, or something else
-- [ ] Header: I add `<AuthMenu />` and a Recommendations link, or you place them in #19
-- [ ] The route table in section 2, including `/review` and `/callback`
-- [ ] The `strictPort` line in `vite.config.ts`
-- [ ] You use `src/api/client.ts`, `useApiClient()`, and mock mode for #23
-- [ ] The Worth Score display rules
+- [x] Styling: CSS Modules on your tokens (my vote), Tailwind v4, or something else
+- [x] Header: I add `<AuthMenu />` and a Recommendations link, or you place them in #19
+- [x] The route table in section 2, including `/review` and `/callback`
+- [x] The `strictPort` line in `vite.config.ts`
+- [x] You use `src/api/client.ts`, `useApiClient()`, and mock mode for #23
+- [x] The Worth Score display rules
+
+## 12. End-to-end tests (#32)
+
+`npm run e2e` runs the Playwright suite in `frontend/e2e/`. It covers FE2's flows from the issue: signup and sign-in (including `?next=` and the verify-email step), review submission (the exact `ReviewCreate` JSON, the backend's 409, 401, and 422 answers, and drafts surviving a reload), recommendation requests (About you, follow-ups, typed questions, a Gemini failure and retry), and a recommendation card to the course page and Back without a second Gemini call.
+
+How it runs: Playwright starts `vite dev` on port 5174 with dev sign-in and the in-app mock off, and answers the app's API calls at the network boundary from `e2e/fakeBackend.ts`, which serves FE2's mock API (the contracts on main). The app makes real HTTP calls through the shared client, so a test can read request bodies and inject an error with `backend.respondOnce(...)`. Every test also gets Google Fonts answered locally and fails if the app logs an error to the console. Tests tagged `@phone` run again at a Pixel 7 size.
+
+`e2e/` and `playwright.config.ts` are shared. To add specs for your pages, use `import { test, expect } from './fixtures.ts'` in the same folder.
+
+Not covered: a real Auth0 sign-in, the real backend (it rejects dev tokens), and Gemini itself. #66 ran those by hand.

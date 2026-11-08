@@ -158,6 +158,16 @@ The AI match page was generated with Claude Code (Claude Opus 5.5) on 7 November
 
 FE2's Example B styling and the sign-in page were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
 
+## 2026-11-07: End-to-end UI tests (FE2, #32)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/32-e2e-tests`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the Playwright setup (`playwright.config.ts`, desktop and phone projects on the installed Chrome), a fake backend that answers the app's real HTTP calls from FE2's mock API so tests can read request bodies and inject errors, fixtures that fail any test with a console error, end-to-end specs for signup and sign-in, review submission, recommendation requests, and recommendation-to-course navigation, and the README, coordination doc, and Cursor rule notes. On 8 November it moved the suite onto `main`, added FE1's course page to the navigation checks, and brought the frontend docs, `.env.example`, and code comments in line with what is now on `main`.
+
+### Suggested citation
+
+The end-to-end UI tests were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
 ## 2026-11-08: Carousel design, home, search, course page and layout (FE1, #19 to #24)
 
 - **Requested by:** Grace Pimentel (Frontend Developer 1), on branch `fe1/carousel-pages`, after designing the "College carousel" look on the team's design canvas with the same tool.
