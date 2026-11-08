@@ -14,7 +14,7 @@ Frontend Developer 2 owns these paths:
 - frontend/src/api/client.ts, frontend/src/api/errors.ts, frontend/src/api/appClient.ts, frontend/src/api/recommendations.ts, frontend/src/api/mock/
 - frontend/src/config/env.ts, frontend/src/domain/reviewVocabulary.ts, frontend/src/routes/paths.ts, frontend/src/routes/fe2Routes.tsx
 
-Frontend Developer 1 owns everything else in frontend/, including App.tsx, main.tsx, index.css, vite.config.ts, index.html, src/pages/, and src/api/courses.ts. frontend/src/api/reviews.ts is shared: FE1 writes the review list call, FE2 writes the create and worth-score calls. frontend/src/styles/exampleB.css is shared: it holds the Example B design tokens; either developer can add tokens. frontend/e2e/ and frontend/playwright.config.ts are shared: the Playwright suite (#32); either developer adds specs for their pages using e2e/fixtures.ts.
+Frontend Developer 1 owns everything else in frontend/, including App.tsx, main.tsx, index.css, vite.config.ts, index.html, src/pages/, and src/api/courses.ts. frontend/src/api/reviews.ts is shared: FE1 writes the review list call, FE2 writes the create and worth-score calls. frontend/src/styles/exampleB.css is shared: it holds the Example B design tokens; either developer can add tokens.
 
 When working in frontend/:
 - Do not edit the other developer's paths without that developer's approval.
@@ -22,7 +22,7 @@ When working in frontend/:
 - Never hand-merge package-lock.json. Take the base branch's copy and run npm install.
 - Build URLs with the helpers in src/routes/paths.ts, not string literals. Course URLs use the course's UUID.
 - Take review goal, Worth Score, difficulty, weekly hours, semester, and match-level keys and labels from src/domain/reviewVocabulary.ts.
+- frontend/e2e/ and frontend/playwright.config.ts are shared: either developer adds specs for their pages using e2e/fixtures.ts. Before a frontend PR, run npm test and npm run e2e in frontend/. End-to-end tests answer API calls from e2e/fakeBackend.ts; use backend.respondOnce() for error cases rather than a real server.
 - Read auth state through useAuth() from src/features/auth, and get API clients from useApiClient().
 - Show "No reviews yet" when community_worth_score is null, never 0.
-- Before a frontend PR, run npm test and npm run e2e in frontend/. End-to-end tests answer API calls from e2e/fakeBackend.ts; use backend.respondOnce() for error cases rather than a real server.
 - The team's design is Example B (white + warm, Figtree). Style new UI with the --wtc-* variables from src/styles/exampleB.css, each with a fallback, e.g. var(--wtc-ink, #1e2124). Orange fills take ink text, not white; orange text uses --wtc-link.

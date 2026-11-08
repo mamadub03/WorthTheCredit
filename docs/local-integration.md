@@ -56,14 +56,22 @@ the origin the backend's CORS list allows.
 | AI matches | Needs Auth0 and Gemini | Also needs `GEMINI_API_KEY` in `backend/.env`. |
 
 Don't mix the real course API with mocked reviews
-(`VITE_API_MOCKS=reviews,recommendations`, still the default in
-`frontend/.env.example`). The mock only knows its own course ids, so it answers
+(`VITE_API_MOCKS=reviews,recommendations`). The mock only knows its own course ids, so it answers
 "Course not found" for real ones and the course page's review list shows an
 error. The backend now serves reviews, so use `none` against the backend, or
 `all` for a fully offline demo. Mocking only `recommendations` is fine.
 
 The seed has no reviews, so every course starts with "No reviews yet" until
 students post some.
+
+## Real sign-in
+
+The Auth0 tenant is set up, and its public values are on issue #26:
+
+- `frontend/.env.local`: `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`. Dev sign-in turns off once these are set.
+- `backend/.env`: `AUTH0_DOMAIN` and `AUTH0_API_AUDIENCE`, the same domain and audience.
+
+Access tokens don't carry `email_verified` yet, because that needs an Auth0 post-login Action. Until it exists, posting a review or asking for AI matches returns 403. For local work, set `AUTH_SKIP_EMAIL_VERIFICATION=true` with `APP_ENV=development` in `backend/.env`. A valid Auth0 token is still required, and the switch is ignored in any other environment.
 
 ## "Sign-in expired" on every request (macOS)
 

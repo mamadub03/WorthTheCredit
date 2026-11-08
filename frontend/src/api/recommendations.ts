@@ -1,7 +1,7 @@
 /**
  * POST /recommendations, per the contract on main
- * (backend/app/schemas/recommendation.py, issue #10). The endpoint is planned
- * (#16); until BE2 ships it, the mock API answers (issue #31). Owner: FE2.
+ * (backend/app/schemas/recommendation.py, issue #10). VITE_API_MOCKS can send
+ * it to the mock API instead, for offline work (issue #31). Owner: FE2.
  *
  * Items are checked one at a time, so one malformed item from the AI pipeline
  * is dropped (and counted) instead of failing the page (project.mdc: "Do not

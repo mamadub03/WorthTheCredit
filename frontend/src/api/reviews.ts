@@ -1,7 +1,7 @@
 /**
  * Review calls and schemas, per the contracts on main
- * (backend/app/schemas/review.py, issue #10). The review endpoints themselves
- * are planned (#12 to #14); until BE2 ships them, the mock API answers.
+ * (backend/app/schemas/review.py, issue #10). VITE_API_MOCKS can send them to
+ * the mock API instead, for offline work.
  *
  * Shared module: FE2 wrote create and worth-score (#28, #30); FE1 adds the
  * review list here (#22, #23), reusing `reviewSchema`.
