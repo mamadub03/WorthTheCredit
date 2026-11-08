@@ -1,0 +1,229 @@
+/* Courses, from the Carousel-Courses board. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-top: 16px;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(34px, 4.6vw, 52px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.searchRow {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.chipsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  margin: 0 -32px;
+  padding: 4px 32px 10px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.chip,
+.goal {
+  border: 1.5px solid #ffffff;
+  background: #ffffff;
+  color: var(--wtc-ink, #1e2124);
+  font: 600 14px var(--wtc-font, Inter, sans-serif);
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+}
+
+.chip:hover,
+.goal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 33, 36, 0.1);
+}
+
+.chip {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 16px 5px 5px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.chipMark {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.goals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.goal {
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 12px;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resultsHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.resultsText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resultsTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sort select {
+  height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--wtc-ink, #1e2124);
+  font: 600 14px var(--wtc-font, Inter, sans-serif);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+}
+
+.moreButton {
+  align-self: center;
+  min-height: 50px;
+  margin-top: 8px;
+  padding: 0 28px;
+  font-size: 15px;
+}
+
+.popular {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.popularChip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--wtc-line-warm, #e8e2d8);
+  border-radius: 999px;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.popularChip:hover {
+  border-color: var(--wtc-ink, #1e2124);
+  color: var(--wtc-ink, #1e2124);
+}
+
+@media (max-width: 640px) {
+  .page {
+    gap: 16px;
+    padding-top: 4px;
+  }
+
+  .chips {
+    margin: 0 -12px;
+    padding: 4px 12px 10px;
+  }
+
+  .goals {
+    flex-wrap: nowrap;
+    margin: 0 -12px;
+    padding: 0 12px;
+    overflow-x: auto;
+  }
+
+  .goal {
+    flex: none;
+  }
+
+  .resultsTitle {
+    font-size: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .goal {
+    transition: none;
+  }
+}

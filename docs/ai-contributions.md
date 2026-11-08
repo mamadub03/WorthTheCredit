@@ -158,6 +158,148 @@ The AI match page was generated with Claude Code (Claude Opus 5.5) on 7 November
 
 FE2's Example B styling and the sign-in page were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
 
+## 2026-11-08: Carousel design, home, search, course page and layout (FE1, #19 to #24)
+
+- **Requested by:** Grace Pimentel (Frontend Developer 1), on branch `fe1/carousel-pages`, after designing the "College carousel" look on the team's design canvas with the same tool.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the app layout (nav with the logo, footer, phone tab bar, skip link, scroll-to-top), the shared design tokens moved to the carousel look in `src/styles/exampleB.css`, global button and animation styles in `index.css`, display components (Worth Score badge, graduation-cap difficulty meter, flipping seal coin, course card, search bar, empty, error and loading states), the home page with the 3D college carousel, the `/courses` search page with a college filter, the course page (scores, difficulty, weekly time, why students took it, skills, the review list, catalog facts, more from the department), the 404 page, data hooks, course insight helpers, and tests.
+- **Assets:** the team logo pack, eleven original college marks (not RIT's official logos), and eleven Unsplash photos, credited in the footer.
+- **Not touched:** FE2's paths (auth, review form, recommendations, form components, API client, vocabulary, `paths.ts`). They pick up the new look through the shared tokens only.
+- **Follow-up the same day:** at Grace's request the AI rebuilt the home, courses and course pages to match her design boards closely (the design's course card with its "Top reason" panel, the two-line hero, the Department filter, goal chips and sort on `/courses`, the course advisor preview, and the design's score and review cards), loading each card's numbers from `/worth-score` and its reviews.
+
+### Suggested citation
+
+FE1's pages and layout were generated with Claude Code (Claude Opus 5.5) on 8 November 2026 from Grace Pimentel's College carousel design, for review by the FE1 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07 — Initialize FastAPI backend (Issue #2)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue2`.
+- **Stack specified by the project rules:** Python, FastAPI, Pydantic.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** Issue #2 only — project layout, dependencies, env-based settings, CORS, `/health`, and OpenAPI docs. No database, Auth0, or Gemini wiring yet.
+
+### Files the agent added or substantially edited
+
+- `backend/requirements.txt`
+- `backend/.env.example`
+- `backend/README.md`
+- `backend/app/__init__.py`
+- `backend/app/main.py`
+- `backend/app/core/__init__.py`
+- `backend/app/core/config.py`
+- `backend/app/api/__init__.py`
+- `backend/app/api/router.py`
+- `backend/app/api/routes/__init__.py`
+- `backend/app/api/routes/health.py`
+- `README.md`
+- `docs/ai-contributions.md` (this file)
+
+### In-code delineation
+
+**File-level only:** Python modules get a single top-of-file `# AI-GENERATED (Cursor Agent) — Issue #N` header for the whole module. Do **not** tag individual functions/components.
+
+### Suggested citation
+
+FastAPI backend initialization (project layout, settings, CORS, and `/health`) was generated with Cursor Agent on 7 November 2026 for GitHub Issue #2. See `docs/ai-contributions.md`.
+
+## 2026-11-07 — Configure Tiger Data PostgreSQL (Issue #3)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue3` (bases on integration branch `backend`).
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** `DATABASE_URL` settings, SQLAlchemy engine/session, empty `Base`, Alembic init. **No ORM models** (deferred to Issue #4 for Backend Dev 2 cross-check).
+
+### Files the agent added or substantially edited
+
+- `backend/requirements.txt`
+- `backend/.env.example`
+- `backend/README.md`
+- `backend/app/core/config.py`
+- `backend/app/db/__init__.py`
+- `backend/app/db/base.py`
+- `backend/app/db/session.py`
+- `backend/alembic.ini`
+- `backend/alembic/env.py`
+- `backend/alembic/script.py.mako`
+- `backend/alembic/versions/.gitkeep`
+- `docs/ai-contributions.md` (this file)
+
+### Suggested citation
+
+Tiger Data / SQLAlchemy / Alembic wiring was generated with Cursor Agent on 7 November 2026 for GitHub Issue #3. See `docs/ai-contributions.md`.
+
+## 2026-11-07 — Implement database models (Issue #4)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue4` (bases on `backend`).
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** Course, User, Review ORM models + initial Alembic migration from `docs/DATABASE_SCHEMA.md`.
+
+### Files the agent added or substantially edited
+
+- `backend/app/db/models.py`
+- `backend/app/db/__init__.py`
+- `backend/app/db/base.py`
+- `backend/alembic/env.py`
+- `backend/alembic/versions/d6f2fb02932e_create_courses_users_reviews.py`
+- `docs/ai-contributions.md` (this file)
+
+### Suggested citation
+
+Course/User/Review SQLAlchemy models and initial migration were generated with Cursor Agent on 7 November 2026 for GitHub Issue #4 from `docs/DATABASE_SCHEMA.md`.
+
+## 2026-11-07 — Generate and seed mock RIT data (Issue #5)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue5`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** Idempotent **courses-only** seed across RIT colleges for search/Gemini. No seeded users/reviews (reviews come from the later review-form / Worth Score flow).
+
+## 2026-11-07 — Course search API (Issue #6)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), branch `mamadu-dev-issue6` → `backend`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** `GET /courses` with `q` / `code` / `department` filters + `CourseSummary` JSON contract for frontends.
+
+### Files
+- `backend/app/schemas/course.py`
+- `backend/app/api/routes/courses.py`
+- `backend/app/api/router.py`
+- `backend/README.md`
+- `docs/ai-contributions.md`
+
+## 2026-11-07 — Course details API (Issue #7)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), branch `mamadu-dev-issue7` → `backend`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** `GET /courses/{course_id}` with course metadata + Community Worth Score / review_count / avg difficulty (null/0 when unreviewed).
+
+### Files
+- `backend/app/schemas/course.py`
+- `backend/app/api/routes/courses.py`
+- `backend/app/schemas/__init__.py`
+- `backend/README.md`
+- `docs/ai-contributions.md`
+
+## 2026-11-07: Logo and brand assets (no issue yet)
+
+- **Requested by:** Frontend Developer 2 (`RameenSyed`), on branch `fe2/brand-logo`.
+- **Tool:** Claude Code (Claude Opus 5.5).
+- **Scope:** the logo only. Concept exploration, the W-of-two-checks mark, the "worth the cRedIT" wordmark (Fraunces Bold, SIL Open Font License, converted to outlines), app icons, favicon set, seal, link-preview image, and the script that generates them. It builds on the team's earlier logo directions, which introduced the cRedIT pun. Nothing is wired into the frontend; `frontend/index.html`, `frontend/public/` and the header stay with FE1.
+
+### Files the agent added or substantially edited
+
+- `docs/brand/README.md`
+- `docs/brand/svg/` (16 SVG files)
+- `docs/brand/png/` (11 PNG files and `favicon.ico`)
+- `docs/brand/source/wtc_type.py`, `wtc_logo.py`, `build.py`, `render_pngs.py`
+- `docs/ai-contributions.md` (this entry)
+
+### In-code delineation
+
+Python files under `docs/brand/source/` start with an `# AI-GENERATED (Claude Code, Claude Opus 5.5)` header. Every SVG and PNG in `docs/brand/` is generated by those scripts.
+
+### Suggested citation
+
+The WorthTheCredit logo and brand assets were designed and generated with Claude Code (Claude Opus 5.5) on 7 November 2026, building on the team's earlier "cRedIT" wordmark ideas. See `docs/ai-contributions.md`.
+
 ## 2026-11-07: End-to-end UI tests (FE2, #32)
 
 - **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/32-e2e-tests`.
