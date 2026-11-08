@@ -95,3 +95,16 @@ Course/User/Review SQLAlchemy models and initial migration were generated with C
 - `backend/app/api/router.py`
 - `backend/README.md`
 - `docs/ai-contributions.md`
+
+## 2026-11-07 — Course details API (Issue #7)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), branch `mamadu-dev-issue7` → `backend`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** `GET /courses/{course_id}` with course metadata + Community Worth Score / review_count / avg difficulty (null/0 when unreviewed).
+
+### Files
+- `backend/app/schemas/course.py`
+- `backend/app/api/routes/courses.py`
+- `backend/app/schemas/__init__.py`
+- `backend/README.md`
+- `docs/ai-contributions.md`
