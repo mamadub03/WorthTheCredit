@@ -82,3 +82,16 @@ Course/User/Review SQLAlchemy models and initial migration were generated with C
 - **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue5`.
 - **Tool:** Cursor Agent (Composer).
 - **Scope:** Idempotent **courses-only** seed across RIT colleges for search/Gemini. No seeded users/reviews (reviews come from the later review-form / Worth Score flow).
+
+## 2026-11-07 — Course search API (Issue #6)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), branch `mamadu-dev-issue6` → `backend`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** `GET /courses` with `q` / `code` / `department` filters + `CourseSummary` JSON contract for frontends.
+
+### Files
+- `backend/app/schemas/course.py`
+- `backend/app/api/routes/courses.py`
+- `backend/app/api/router.py`
+- `backend/README.md`
+- `docs/ai-contributions.md`
