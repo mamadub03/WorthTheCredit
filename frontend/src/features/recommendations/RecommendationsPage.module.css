@@ -1,36 +1,24 @@
+/*
+ * The AI match page on the College carousel boards. AppLayout's main column
+ * already gives the boards' 1180 px content width. The aside grows 1 and the
+ * chat 999, so About you sits at about 280 px and the chat takes the rest;
+ * below 900 px the chat wraps under it with no media query.
+ */
 .page {
-  display: grid;
-  gap: 20px;
-  color: var(--wtc-ink, #1e2124);
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
-}
-
-.header {
-  display: grid;
-  justify-items: start;
-  gap: 10px;
-}
-
-.tag {
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--wtc-warm, #fff4eb);
-  color: #8a3700;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.title {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.columns {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 20px;
+  color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+@media (max-width: 640px) {
+  .page {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
+    padding-top: 8px;
+  }
 }

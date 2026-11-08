@@ -13,31 +13,35 @@ interface AboutYouCardProps {
 }
 
 /**
- * "About you": the student's major, interests, skills, and goals (#29), in the
- * Example B AI match layout. Opens in edit mode until there's something to show.
- * Owner: FE2 (#31).
+ * "About you": the student's major, interests, skills, and goals (#29), as the
+ * peach panel on the College carousel AI board. It opens on the form until
+ * there's something to show, then shows the board's summary with Edit. On a
+ * phone the summary becomes the board's scrolling chip row. Owner: FE2 (#31).
  */
 export default function AboutYouCard({ form, busy, onMatch }: AboutYouCardProps) {
   const { values, errors } = form
   const filled = hasPreference(values)
   const [editing, setEditing] = useState(!filled)
 
-  const rows: { label: string; value: string }[] = [
-    { label: 'Major', value: values.major.trim() },
-    { label: 'Interests', value: values.interests.join(', ') },
-    { label: 'Skills', value: values.skills.join(', ') },
-    { label: 'Career goal', value: values.careerGoals.trim() },
-    { label: 'Academic goals', value: values.academicGoals.trim() },
+  const rows: { label: string; value: string; always: boolean }[] = [
+    { label: 'Major', value: values.major.trim(), always: true },
+    { label: 'Interests', value: values.interests.join(', '), always: true },
+    { label: 'Skills', value: values.skills.join(', '), always: true },
+    { label: 'Career goal', value: values.careerGoals.trim(), always: true },
+    { label: 'Academic goals', value: values.academicGoals.trim(), always: false },
   ]
 
   return (
-    <section className={styles.card} aria-labelledby="about-you-title">
+    <section
+      className={`${styles.card} ${editing ? '' : styles.summary} wtc-rise`}
+      aria-labelledby="about-you-title"
+    >
       <div className={styles.head}>
         <h2 id="about-you-title" className={styles.title}>
           About you
         </h2>
         {!editing ? (
-          <Button variant="secondary" size="small" onClick={() => setEditing(true)}>
+          <Button variant="secondary" size="small" className={styles.edit} onClick={() => setEditing(true)}>
             Edit
           </Button>
         ) : null}
@@ -94,18 +98,20 @@ export default function AboutYouCard({ form, busy, onMatch }: AboutYouCardProps)
             maxLength={PROFILE_LIMITS.goalsLength}
             error={errors.academicGoals}
           />
-          <Button variant="secondary" onClick={() => setEditing(false)} disabled={!filled}>
+          <Button variant="secondary" className={styles.done} onClick={() => setEditing(false)} disabled={!filled}>
             Done
           </Button>
         </div>
       ) : (
         <dl className={styles.rows}>
-          {rows.map((row) => (
-            <div key={row.label}>
-              <dt>{row.label}</dt>
-              <dd>{row.value || <span className={styles.unset}>Not set</span>}</dd>
-            </div>
-          ))}
+          {rows
+            .filter((row) => row.always || row.value)
+            .map((row) => (
+              <div key={row.label} className={row.value ? styles.row : `${styles.row} ${styles.rowUnset}`}>
+                <dt>{row.label}</dt>
+                <dd>{row.value || <span className={styles.unset}>Not set</span>}</dd>
+              </div>
+            ))}
         </dl>
       )}
 
@@ -115,6 +121,8 @@ export default function AboutYouCard({ form, busy, onMatch }: AboutYouCardProps)
         </p>
       ) : null}
       <Button
+        variant="dark"
+        className={styles.match}
         onClick={() => {
           setEditing(false)
           onMatch()
@@ -124,7 +132,7 @@ export default function AboutYouCard({ form, busy, onMatch }: AboutYouCardProps)
         Match me with courses
       </Button>
       <p className={styles.note}>
-        Saved in this browser so you don't have to repeat it. Your answers go to Google Gemini to find matches.
+        The advisor remembers this in this browser, so you don’t have to repeat it. Your answers go to Google Gemini to find matches.
       </p>
     </section>
   )

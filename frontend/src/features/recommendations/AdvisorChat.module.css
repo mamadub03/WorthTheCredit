@@ -1,86 +1,100 @@
+/*
+ * The chat card on the College carousel AI boards: white card, advisor
+ * header, bubbles, typing dots, follow-up chips and the composer. Desktop
+ * first; the phone composition (no card, pinned chips and composer) is at the
+ * bottom. The deep brown (#5a2800) under the results has no token; it's the
+ * board's darker peach ink.
+ */
 .panel {
   display: flex;
-  flex: 999 1 560px;
+  flex: 999 1 600px;
   flex-direction: column;
   gap: 16px;
   min-width: 0;
-  padding: 24px;
-  border: 1.5px solid var(--wtc-line-warm, #f0e4da);
+  padding: 26px;
   border-radius: 32px;
   background: var(--wtc-surface, #ffffff);
   color: var(--wtc-ink, #1e2124);
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
+/* Desktop and phone copy variants: only one is ever rendered visible. */
+.narrow {
+  display: none;
+}
+
+/* Advisor header */
 .head {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--wtc-gray, #f3f1ec);
 }
 
 .avatar {
-  display: grid;
+  display: block;
   flex: none;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: var(--wtc-orange, #f76902);
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  padding: 6px;
+  border-radius: 14px;
+  background: var(--wtc-cream, #fbf7f1);
 }
 
 .who {
-  display: grid;
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-width: 0;
 }
 
-.who strong {
-  font-size: 17px;
+.name {
+  margin: 0;
+  font: 700 18px/1.25 var(--wtc-display, Outfit, Inter, sans-serif);
 }
 
-.who span {
-  color: #555b60;
+.sub {
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
   font-size: 12px;
+  line-height: 1.45;
 }
 
+:global(.wtc-btn).newChat {
+  flex: none;
+  width: 44px;
+  min-height: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 14px;
+}
+
+/* The conversation */
 .log {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .advisor,
+.student,
 .bubble {
-  align-self: flex-start;
-  padding: 14px 18px;
-  border-radius: 22px 22px 22px 6px;
-  background: var(--wtc-warm, #fff4eb);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .advisor {
+  align-self: flex-start;
   max-width: 560px;
-}
-
-.answer {
-  display: flex;
-}
-
-.bubble {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  background: var(--wtc-warm-strong, #ffe6d2);
-}
-
-.bubble p {
-  margin: 0;
-  color: var(--wtc-ink, #1e2124);
+  padding: 14px 18px;
+  border-radius: 22px 22px 22px 6px;
+  background: var(--wtc-gray, #f3f1ec);
 }
 
 .student {
@@ -90,14 +104,56 @@
   border-radius: 22px 22px 6px 22px;
   background: var(--wtc-ink, #1e2124);
   color: #ffffff;
-  font-size: 15px;
-  line-height: 1.5;
+}
+
+.answer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.bubble {
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px 22px 22px 6px;
+}
+
+.bubble p {
+  margin: 0;
+}
+
+/* A failed turn or an empty answer: the advisor's gray bubble. */
+.problem,
+.plain {
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 560px;
+  padding: 14px 18px;
+  background: var(--wtc-gray, #f3f1ec);
+}
+
+:global(.wtc-btn).retry {
+  box-shadow: none;
+}
+
+/* Results: the peach bubble that holds the match cards. */
+.results {
+  box-sizing: border-box;
+  gap: 12px;
+  width: 100%;
+  max-width: 820px;
+  padding: 16px;
+  background: var(--wtc-peach, #ffe6d2);
+}
+
+.lead {
+  padding: 0 4px;
 }
 
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -105,126 +161,364 @@
 
 .cards > li {
   display: flex;
+  min-width: 0;
 }
 
 .cards > li > article {
   flex: 1;
 }
 
-.fine {
+.bubble .fine {
+  padding: 0 4px;
   color: #5a2800;
   font-size: 12px;
+  line-height: 1.45;
 }
 
-.bubble .fine {
-  color: #5a2800;
+/* Typing dots while the advisor works on a reply. The text beside them is the live status. */
+.typingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 4px;
 }
 
-.typing {
-  display: inline-flex;
+.dots {
+  display: flex;
   gap: 4px;
-  margin-right: 6px;
-}
-
-.typing span {
-  width: 6px;
-  height: 6px;
+  padding: 9px 12px;
   border-radius: 99px;
-  background: #8a3700;
-  animation: blink 1.2s infinite ease-in-out;
+  background: var(--wtc-peach, #ffe6d2);
 }
 
-.typing span:nth-child(2) {
-  animation-delay: 0.2s;
+.dots span {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--wtc-peach-ink, #8a3700);
+  animation: dots 1.2s ease-in-out infinite;
 }
 
-.typing span:nth-child(3) {
-  animation-delay: 0.4s;
+.dots span:nth-child(2) {
+  animation-delay: 0.15s;
 }
 
-@keyframes blink {
+.dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes dots {
   0%,
   80%,
   100% {
     opacity: 0.25;
+    translate: 0 0;
   }
 
   40% {
     opacity: 1;
+    translate: 0 -3px;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .typing span {
-    animation: none;
-  }
+.prompt {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Follow-ups and the composer */
+.dock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .followUps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
 .chip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 44px;
   padding: 8px 14px;
-  border: 1.5px solid #ecedee;
+  border: 1.5px solid var(--wtc-line-warm, #e8e2d8);
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--wtc-surface, #ffffff);
   color: var(--wtc-ink, #1e2124);
-  font: 600 14px var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font: 600 14px var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
   cursor: pointer;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease;
 }
 
-.chip:hover:not(:disabled) {
-  border-color: var(--wtc-orange, #f76902);
+.chip:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 33, 36, 0.1);
 }
 
-.chip:focus-visible {
-  outline: 2px solid var(--wtc-orange, #f76902);
-  outline-offset: 2px;
+.chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .composer {
   display: flex;
   align-items: flex-end;
-  gap: 10px;
-  padding: 10px 10px 10px 16px;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 8px 8px 8px 18px;
   border-radius: 22px;
-  background: #f3f4f5;
+  background: var(--wtc-gray, #f3f1ec);
+  transition: box-shadow 0.3s ease;
+}
+
+/* The textarea drops its own outline, so this ring is the composer's focus indicator. */
+.composer:focus-within {
+  box-shadow:
+    0 0 0 2px var(--wtc-orange, #f76902),
+    0 0 0 6px rgba(247, 105, 2, 0.28);
 }
 
 .composer textarea {
   flex: 1;
   min-width: 0;
+  padding: 10px 0;
   border: 0;
+  outline: none;
   background: transparent;
   color: var(--wtc-ink, #1e2124);
-  font: 500 15px var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font: 500 15px/1.45 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
   resize: none;
 }
 
-.composer textarea:focus {
-  outline: none;
+.composer textarea::placeholder {
+  color: var(--wtc-muted, #555b60);
+  opacity: 1;
 }
 
-.composer:focus-within {
-  outline: 2px solid var(--wtc-orange, #f76902);
-  outline-offset: 1px;
+:global(.wtc-btn).send {
+  flex: none;
+  width: 48px;
+  min-height: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 16px;
 }
 
-.sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
+/*
+ * Phone: the white card drops away and the conversation flows on the cream
+ * page. The header becomes a white bar, the advisor bubble turns white, and
+ * the chips and composer stay pinned above FE1's tab bar (92 px, as on the board).
+ */
 @media (max-width: 640px) {
   .panel {
-    padding: 16px;
+    flex: none;
+    gap: 12px;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .wide {
+    display: none;
+  }
+
+  .narrow {
+    display: inline;
+  }
+
+  .head {
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 0;
     border-radius: 24px;
+    background: var(--wtc-surface, #ffffff);
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 12px;
+  }
+
+  .name {
+    font-size: 17px;
+  }
+
+  .log {
+    gap: 12px;
+  }
+
+  .advisor,
+  .student,
+  .bubble {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .advisor,
+  .problem,
+  .plain {
+    max-width: 300px;
+    padding: 12px 14px;
+    border-radius: 20px 20px 20px 6px;
+    background: var(--wtc-surface, #ffffff);
+  }
+
+  .student {
+    max-width: 290px;
+    padding: 12px 14px;
+    border-radius: 20px 20px 6px 20px;
+  }
+
+  .results {
+    gap: 10px;
+    padding: 12px;
+    border-radius: 20px 20px 20px 6px;
+  }
+
+  .lead,
+  .bubble .fine {
+    padding: 0 2px;
+  }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .typingRow {
+    gap: 8px;
+    padding: 0 4px;
+  }
+
+  .dots {
+    padding: 8px 10px;
+  }
+
+  .dots span {
+    width: 6px;
+    height: 6px;
+  }
+
+  .dock {
+    position: sticky;
+    bottom: 92px;
+    z-index: 15;
+    gap: 8px;
+    margin: 0 -12px;
+    padding: 12px 12px 0;
+    background: linear-gradient(to bottom, rgba(251, 247, 241, 0), var(--wtc-cream, #fbf7f1) 12px);
+  }
+
+  .followUps {
+    gap: 6px;
+  }
+
+  .chips {
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin: 0 -12px;
+    padding: 0 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  /* On a phone the chips take the orange fill sweep instead of the lift. */
+  .chip {
+    flex: none;
+    padding: 8px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: color 0.35s ease;
+  }
+
+  .chip::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: 50%;
+    width: 240%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--wtc-orange, #f76902);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+  }
+
+  .chip:not(:disabled):hover,
+  .chip:not(:disabled):focus-visible,
+  .chip:not(:disabled):active {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .chip:not(:disabled):hover::before,
+  .chip:not(:disabled):focus-visible::before,
+  .chip:not(:disabled):active::before {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .composer {
+    align-items: center;
+    gap: 6px;
+    margin-top: 0;
+    padding: 5px 5px 5px 16px;
+    border-radius: 20px;
+    background: var(--wtc-surface, #ffffff);
+    box-shadow: 0 6px 18px rgba(30, 33, 36, 0.08);
+  }
+
+  .composer:focus-within {
+    box-shadow:
+      0 0 0 2px var(--wtc-orange, #f76902),
+      0 0 0 6px rgba(247, 105, 2, 0.28),
+      0 6px 18px rgba(30, 33, 36, 0.08);
+  }
+
+  .composer textarea {
+    min-height: 46px;
+    padding: 12px 0;
+  }
+
+  :global(.wtc-btn).send {
+    width: 46px;
+    min-height: 46px;
+    height: 46px;
+    border-radius: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots span {
+    animation: none;
+    opacity: 0.6;
+  }
+
+  .chip,
+  .chip::before,
+  .composer {
+    transition: none;
+  }
+
+  .chip:not(:disabled):hover {
+    transform: none;
   }
 }

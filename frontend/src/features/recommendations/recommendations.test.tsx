@@ -14,13 +14,18 @@ import { profileKey } from './useProfileForm.ts'
 
 const BASE = 'http://localhost:8000'
 
-function renderPage({ failFirst = false } = {}) {
+function renderPage({ failFirst = false, hang = false } = {}) {
   const mock = createMockApi({ baseUrl: BASE, latencyMs: 0, recommendationLatencyMs: 0, storage: null })
   const sent: Record<string, unknown>[] = []
   let failed = false
   const fetch: FetchLike = async (input, init) => {
     if (init.method === 'POST') {
       sent.push(JSON.parse(String(init.body)))
+      if (hang) {
+        return new Promise<Response>((_, reject) => {
+          init.signal?.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')))
+        })
+      }
       if (failFirst && !failed) {
         failed = true
         return new Response(JSON.stringify({ detail: 'recommendation_failed' }), { status: 502 })
@@ -146,5 +151,32 @@ describe('AI match page', () => {
     renderPage()
     await user.type(await screen.findByRole('textbox', { name: 'Major' }), 'Biology')
     expect(JSON.parse(localStorage.getItem(profileKey('dev|student')) ?? '{}')).toMatchObject({ major: 'Biology' })
+  })
+
+  it('sends with the icon button, and stop turns a waiting reply into Try again', async () => {
+    const user = userEvent.setup()
+    renderPage({ hang: true })
+    const send = await screen.findByRole('button', { name: 'Send' })
+    expect((send as HTMLButtonElement).disabled).toBe(true)
+    await user.type(screen.getByRole('textbox', { name: 'Message the course advisor' }), 'machine learning')
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+    expect(await screen.findByText('Finding courses…')).toBeTruthy()
+    await user.click(screen.getByRole('button', { name: 'Stop' }))
+    const alert = await screen.findByRole('alert')
+    expect(alert.textContent).toMatch(/Stopped/)
+    expect(within(alert).getByRole('button', { name: 'Try again' })).toBeTruthy()
+  })
+
+  it('offers the follow-ups as a group and starts over with New chat', async () => {
+    const user = userEvent.setup()
+    renderPage()
+    expect(screen.queryByRole('button', { name: 'New chat' })).toBeNull()
+    await user.type(await screen.findByRole('textbox', { name: 'Message the course advisor' }), 'machine learning{Enter}')
+    await screen.findAllByRole('article')
+    const group = screen.getByRole('group', { name: /Want me to adjust\?/ })
+    expect(within(group).getByRole('button', { name: 'Something lighter' })).toBeTruthy()
+    await user.click(screen.getByRole('button', { name: 'New chat' }))
+    expect(screen.queryAllByRole('article')).toHaveLength(0)
+    expect(screen.queryByRole('group', { name: /Want me to adjust\?/ })).toBeNull()
   })
 })

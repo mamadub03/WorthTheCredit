@@ -1,41 +1,52 @@
-import { Link } from 'react-router'
 import type { Recommendation } from '../../api/recommendations.ts'
-import { formatAverage, matchLevelLabel } from '../../domain/reviewVocabulary.ts'
+import ButtonLink from '../../components/form/ButtonLink.tsx'
+import CapsMeter from '../../components/ui/CapsMeter.tsx'
+import { reviewCountLabel } from '../../components/ui/format.ts'
+import { ClockIcon } from '../../components/ui/icons.tsx'
+import { formatAverage, matchLevelLabel, weeklyHoursLabel } from '../../domain/reviewVocabulary.ts'
 import { paths } from '../../routes/paths.ts'
 import styles from './RecommendationCard.module.css'
 import { useCourseInsights } from './useCourseInsights.ts'
 
+/** "6-10" to "6–10", the en-dash the boards use for a range. */
+function hoursRange(key: string): string {
+  return key.replace('-', '–')
+}
+
 /**
- * One recommended course, as a match card in the Example B design (#30).
- * Gemini wrote the explanation; every number and skill on the card comes from
- * student reviews in the database. Owner: FE2.
+ * One recommended course as the College carousel AI board's match card (#30):
+ * a tinted top with the match level, the Worth number and the course code,
+ * then the title, Gemini's explanation, concept difficulty as caps and the
+ * most common weekly hours, and "View course". Gemini wrote the explanation;
+ * every number and skill on the card comes from student reviews in the
+ * database. On a phone the tint carries "CODE · Title" and the number moves
+ * to its right, as the phone board draws it. Owner: FE2.
  */
 export default function RecommendationCard({ item }: { item: Recommendation }) {
   const { course } = item
   const { insights, loading, failed } = useCourseInsights(course.id, item.reviewCount)
   const titleId = `rec-${course.id}`
-  const reviews = `${item.reviewCount} ${item.reviewCount === 1 ? 'review' : 'reviews'}`
-
-  const facts: string[] = []
-  if (insights?.averageDifficulty != null) facts.push(`Difficulty ${formatAverage(insights.averageDifficulty)}`)
-  if (insights?.mostCommonHours) facts.push(`${insights.mostCommonHours} h/wk`)
-  if (item.reviewCount > 0) facts.push(reviews)
+  const difficulty = insights?.averageDifficulty ?? null
+  const hours = insights?.mostCommonHours ?? null
 
   return (
     <article className={styles.card} aria-labelledby={titleId}>
-      <div className={`${styles.top} ${styles[item.matchLevel]}`}>
-        <div className={styles.score}>
-          <span className={styles.level}>{matchLevelLabel(item.matchLevel)}</span>
-          {item.worthScore === null ? (
-            <span className={styles.noScore}>No reviews yet</span>
-          ) : (
-            <span className={styles.worth}>
-              {formatAverage(item.worthScore)}
-              <span className={styles.sr}> out of 5 Worth Score, from {reviews}</span>
-            </span>
-          )}
-        </div>
+      <div className={`${styles.tint} ${styles[item.matchLevel]}`}>
+        <span className={styles.level}>{matchLevelLabel(item.matchLevel)}</span>
+        {item.worthScore === null ? (
+          <span className={styles.noScore}>No reviews yet</span>
+        ) : (
+          <span className={styles.worth}>
+            <span className="wtc-sr">Worth Score </span>
+            {formatAverage(item.worthScore)}
+            <span className="wtc-sr"> out of 5, from {reviewCountLabel(item.reviewCount)}</span>
+          </span>
+        )}
         <span className={styles.code}>{course.code}</span>
+        <span className={styles.phoneTitle}>
+          <span>{course.code}</span>
+          <span aria-hidden="true"> · {course.title}</span>
+        </span>
       </div>
 
       <div className={styles.body}>
@@ -43,7 +54,29 @@ export default function RecommendationCard({ item }: { item: Recommendation }) {
           {course.title}
         </h3>
         <p className={styles.why}>{item.explanation}</p>
-        {facts.length > 0 ? <p className={styles.facts}>{facts.join(' · ')}</p> : null}
+        {difficulty !== null || hours ? (
+          <div className={styles.stats}>
+            {difficulty !== null ? (
+              <span className={styles.meter}>
+                <CapsMeter value={difficulty} size={16} animate />
+                <span className={styles.meterValue} aria-hidden="true">
+                  {formatAverage(difficulty)}
+                </span>
+              </span>
+            ) : (
+              <span />
+            )}
+            {hours ? (
+              <span className={styles.hours} title="Hours per week students reported">
+                <ClockIcon size={15} />
+                <span aria-hidden="true">
+                  {hoursRange(hours)}h<span className={styles.unit}>/wk</span>
+                </span>
+                <span className="wtc-sr">Most students reported {weeklyHoursLabel(hours)} a week</span>
+              </span>
+            ) : null}
+          </div>
+        ) : null}
         {insights && insights.topSkills.length > 0 ? (
           <ul className={styles.skills} aria-label="Skills students gained">
             {insights.topSkills.map((skill) => (
@@ -57,9 +90,11 @@ export default function RecommendationCard({ item }: { item: Recommendation }) {
         {course.prerequisites ? <p className={styles.note}>Prerequisites: {course.prerequisites}. Not checked against your record.</p> : null}
       </div>
 
-      <Link className={styles.view} to={paths.course(course.id)}>
-        View course
-      </Link>
+      <div className={styles.actions}>
+        <ButtonLink variant="dark" className={styles.view} to={paths.course(course.id)}>
+          View course
+        </ButtonLink>
+      </div>
     </article>
   )
 }
