@@ -13,7 +13,7 @@
 """Ask Gemini to rank courses FastAPI already retrieved.
 
 The API key is ``GEMINI_API_KEY``. ``GEMINI_MODEL`` overrides the model
-name and defaults to ``gemini-2.5-flash``. Neither value is hardcoded.
+name and defaults to ``gemini-flash-latest``. Neither value is hardcoded.
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ from app.schemas.recommendation import (
     unexpected_course_ids,
 )
 
-_DEFAULT_MODEL = "gemini-2.5-flash"
+_DEFAULT_MODEL = "gemini-flash-latest"
 _TIMEOUT_SECONDS = 30.0
 
 Complete = Callable[[str, dict], httpx.Response]
