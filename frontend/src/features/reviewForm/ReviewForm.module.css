@@ -228,6 +228,154 @@
   gap: 14px;
 }
 
+/* Live preview: the peach side card above the rules (desktop only) */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 30px;
+  background: var(--wtc-peach, #ffe6d2);
+}
+
+.previewHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 4px 6px 0;
+}
+
+.previewTitle {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 18px/1.25 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.previewNote {
+  margin: 0;
+  color: var(--wtc-peach-ink, #8a3700);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.previewCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 18px;
+  border-radius: 22px;
+  background: var(--wtc-surface, #ffffff);
+  color: var(--wtc-ink, #1e2124);
+}
+
+.previewTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.previewWorth {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--wtc-peach, #ffe6d2);
+  font: 800 18px/1 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.previewWho {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.previewWho p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.previewTerm {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.previewProfessor {
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+}
+
+.previewGoals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.previewGoals li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.previewTips {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* The board draws the empty text in #8a8f93 (3.3:1 on white); muted keeps it at text contrast. */
+.previewEmpty {
+  color: var(--wtc-muted, #555b60);
+  font-style: italic;
+}
+
+.previewStats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding-top: 10px;
+  border-top: 1.5px solid var(--wtc-gray, #f3f1ec);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.previewHours {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.previewUnit,
+.previewUnset {
+  color: var(--wtc-muted, #555b60);
+  font-weight: 500;
+}
+
+.previewGained {
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.previewGained strong {
+  color: var(--wtc-ink, #1e2124);
+}
+
 /* Rules: the side card on desktop, one line on a phone */
 
 .rules {
@@ -374,6 +522,12 @@
   text-decoration: underline;
 }
 
+/* The global orange ring is 2.8:1 on the cream page; ink reads at 15:1. */
+.cancel:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
+}
+
 .status {
   color: var(--wtc-muted, #555b60);
   font-size: 14px;
@@ -391,7 +545,7 @@
 
 .barCount {
   margin: 0;
-  color: #ffffff;
+  color: var(--wtc-surface, #ffffff);
   font-size: 13px;
   font-weight: 700;
 }
@@ -481,18 +635,32 @@
     grid-template-columns: 1fr;
   }
 
-  /* The dark sticky bar, kept above Grace's phone tab bar (fixed, about 80 px tall with its gap). */
+  /*
+   * The dark sticky bar, kept above Grace's phone tab bar (fixed at bottom
+   * 14px, about 80 px tall with its gap, no safe-area term). The AI page's dock
+   * uses the same 92px.
+   */
   .submitRow {
     position: sticky;
     z-index: 5;
-    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    bottom: 92px;
     flex-wrap: nowrap;
     gap: 12px;
     padding: 10px 10px 10px 18px;
     border-radius: 26px;
     background: var(--wtc-ink, #1e2124);
     box-shadow: 0 12px 30px rgba(30, 33, 36, 0.28);
-    color: #ffffff;
+    color: var(--wtc-surface, #ffffff);
+  }
+
+  /*
+   * The sticky bar and the tab bar cover about 160 px at the bottom, so a
+   * field focused by keyboard stops above them (WCAG 2.4.11).
+   */
+  .question,
+  .card,
+  .form :is(input, textarea, select) {
+    scroll-margin-bottom: 180px;
   }
 
   :global(.wtc-btn).submit {

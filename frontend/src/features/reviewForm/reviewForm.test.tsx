@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
@@ -11,6 +11,9 @@ import { ApiClientOverride } from '../auth/useApiClient.ts'
 import WriteReviewPage from './WriteReviewPage.tsx'
 
 const BASE = 'http://localhost:8000'
+
+/** Questions whose visible title differs add it to the group's name (WCAG 2.5.3), so match the start. */
+const startsWith = (text: string) => (name: string) => name.startsWith(text)
 const swen = MOCK_COURSES.find((course) => course.code === 'SWEN-261')!
 
 function renderPage(path = '/review') {
@@ -60,8 +63,8 @@ describe('review form', () => {
     expect(screen.getByText('Introduction to Software Engineering')).toBeTruthy()
 
     await user.click(screen.getByRole('checkbox', { name: 'Career preparation' }))
-    await user.click(within(screen.getByRole('group', { name: WORTH_SCORE_QUESTION })).getByRole('radio', { name: /4\s*Mostly/ }))
-    await user.type(screen.getByRole('textbox', { name: 'Skills or knowledge you gained' }), 'Agile{Enter}code  review{Enter}')
+    await user.click(within(screen.getByRole('group', { name: startsWith(WORTH_SCORE_QUESTION) })).getByRole('radio', { name: /4\s*Mostly/ }))
+    await user.type(screen.getByRole('textbox', { name: /^Skills or knowledge you gained/ }), 'Agile{Enter}code  review{Enter}')
     await user.click(within(screen.getByRole('group', { name: DIFFICULTY_QUESTION })).getByRole('radio', { name: /3\s*Moderate/ }))
     await user.click(within(screen.getByRole('group', { name: WEEKLY_HOURS_QUESTION })).getByRole('radio', { name: /6-10/ }))
     await user.type(screen.getByRole('textbox', { name: /What should future students know/ }), 'Start the project early.')
@@ -74,7 +77,7 @@ describe('review form', () => {
     expect(screen.getByText(/^Posted anonymously to SWEN-261\./)).toBeTruthy()
     expect(screen.getByText('Worth 4 / 5')).toBeTruthy()
     expect(screen.getByText('Difficulty 3 / 5')).toBeTruthy()
-    expect(screen.getByText('6-10 h/wk')).toBeTruthy()
+    expect(screen.getByText('6–10 h/wk')).toBeTruthy()
     expect(sent).toEqual([
       {
         url: `${BASE}/courses/${swen.id}/reviews`,
@@ -114,13 +117,13 @@ describe('review form', () => {
     expect(screen.getByText('Still need your goals, a Worth Score, a difficulty, weekly hours, one skill.')).toBeTruthy()
 
     await user.click(screen.getByRole('checkbox', { name: 'Career preparation' }))
-    await user.click(within(screen.getByRole('group', { name: WORTH_SCORE_QUESTION })).getByRole('radio', { name: /^5/ }))
+    await user.click(within(screen.getByRole('group', { name: startsWith(WORTH_SCORE_QUESTION) })).getByRole('radio', { name: /^5/ }))
     await user.click(within(screen.getByRole('group', { name: DIFFICULTY_QUESTION })).getByRole('radio', { name: /^2/ }))
     expect(progress.getAttribute('aria-valuenow')).toBe('3')
     expect(screen.getByText('Still need weekly hours, one skill.')).toBeTruthy()
 
     await user.click(within(screen.getByRole('group', { name: WEEKLY_HOURS_QUESTION })).getByRole('radio', { name: /^3-6/ }))
-    await user.type(screen.getByRole('textbox', { name: 'Skills or knowledge you gained' }), 'Git{Enter}')
+    await user.type(screen.getByRole('textbox', { name: /^Skills or knowledge you gained/ }), 'Git{Enter}')
     expect(progress.getAttribute('aria-valuenow')).toBe('5')
     expect(screen.getByText("Ready to post. You can't edit it afterward.")).toBeTruthy()
   })
@@ -128,11 +131,57 @@ describe('review form', () => {
   it('removes a skill with its button', async () => {
     const user = userEvent.setup()
     renderPage()
-    const skills = await screen.findByRole('textbox', { name: 'Skills or knowledge you gained' })
+    const skills = await screen.findByRole('textbox', { name: /^Skills or knowledge you gained/ })
     await user.type(skills, 'Agile{Enter}Git{Enter}')
     await user.click(screen.getByRole('button', { name: 'Remove Agile' }))
     expect(screen.queryByRole('button', { name: 'Remove Agile' })).toBeNull()
     expect(screen.getByRole('button', { name: 'Remove Git' })).toBeTruthy()
     vi.restoreAllMocks()
+  })
+
+  it('previews a hovered or focused cap, then shows the picked value again', async () => {
+    const user = userEvent.setup()
+    renderPage(`/review?course=${swen.id}`)
+    await screen.findByText('Introduction to Software Engineering')
+    const difficulty = screen.getByRole('group', { name: DIFFICULTY_QUESTION })
+    expect(screen.getByText('0 / 5')).toBeTruthy()
+    expect(screen.getByText('Pick 1 to 5 caps')).toBeTruthy()
+
+    await user.click(within(difficulty).getByRole('radio', { name: /^2/ }))
+    expect(screen.getByText('2 / 5')).toBeTruthy()
+    // The live preview's meter follows the preview too.
+    act(() => within(difficulty).getByRole('radio', { name: /^4/ }).focus())
+    expect(screen.getByText('4 / 5')).toBeTruthy()
+    expect(screen.getByText('Concept difficulty 4.0 of 5')).toBeTruthy()
+    act(() => (document.activeElement as HTMLElement).blur())
+    expect(screen.getByText('2 / 5')).toBeTruthy()
+    expect(screen.getByText('Concept difficulty 2.0 of 5')).toBeTruthy()
+  })
+
+  it('without a course, cancels to the courses list and asks for the course first', async () => {
+    renderPage()
+    expect(await screen.findByRole('link', { name: 'Cancel' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Cancel' }).getAttribute('href')).toBe('/courses')
+    expect(screen.getByText(/^Still need the course, your goals/)).toBeTruthy()
+  })
+
+  it('builds the live preview from the answers so far', async () => {
+    const user = userEvent.setup()
+    renderPage(`/review?course=${swen.id}`)
+    await screen.findByText('Introduction to Software Engineering')
+    const preview = screen.getByRole('region', { name: 'Live preview' })
+    expect(within(preview).getByText('Your tips for future students will show here.')).toBeTruthy()
+    expect(within(preview).getByText('None yet')).toBeTruthy()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Career preparation' }))
+    await user.click(within(screen.getByRole('group', { name: WEEKLY_HOURS_QUESTION })).getByRole('radio', { name: /^6-10/ }))
+    await user.type(screen.getByRole('textbox', { name: /^Skills or knowledge you gained/ }), 'Agile{Enter}Git{Enter}')
+    await user.type(screen.getByRole('textbox', { name: /^What should future students know\?/ }), 'Start early.')
+    expect(within(preview).getByText('Took it for career prep')).toBeTruthy()
+    expect(within(preview).getByText('Agile, Git')).toBeTruthy()
+    expect(within(preview).getByText('Start early.')).toBeTruthy()
+    expect(within(preview).getByText('6–10h')).toBeTruthy()
+    // No professor typed, so no professor line.
+    expect(within(preview).getByText('Anonymous')).toBeTruthy()
   })
 })

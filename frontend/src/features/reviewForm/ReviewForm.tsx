@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { CourseSummary } from '../../api/courses.ts'
 import Button from '../../components/form/Button.tsx'
@@ -6,6 +6,9 @@ import ChoiceGroup from '../../components/form/ChoiceGroup.tsx'
 import { SelectField, TextAreaField, TextField } from '../../components/form/Field.tsx'
 import RatingScale from '../../components/form/RatingScale.tsx'
 import TagInput from '../../components/form/TagInput.tsx'
+import CapsMeter from '../../components/ui/CapsMeter.tsx'
+import { ClockIcon } from '../../components/ui/icons.tsx'
+import { GOAL_STYLE, hoursShort, tintColors } from '../../domain/goalStyles.ts'
 import {
   DIFFICULTY_LABELS,
   DIFFICULTY_QUESTION,
@@ -17,31 +20,53 @@ import {
   WEEKLY_HOURS_QUESTION,
   WORTH_SCORE_LABELS,
   WORTH_SCORE_QUESTION,
+  type GoalKey,
+  type Score,
   type Term,
 } from '../../domain/reviewVocabulary.ts'
 import { COURSES_PATH } from '../../routes/discoveryPaths.ts'
 import { paths } from '../../routes/paths.ts'
 import CoursePicker from './CoursePicker.tsx'
 import styles from './ReviewForm.module.css'
-import { REVIEW_LIMITS, reviewFieldId, semesterYears, type ReviewFormValues } from './reviewFormModel.ts'
+import {
+  REVIEW_LIMITS,
+  reviewFieldId,
+  semesterYears,
+  validateReview,
+  type ReviewField,
+  type ReviewFormValues,
+} from './reviewFormModel.ts'
 import type { LoadStatus } from './useCourses.ts'
 import type { ReviewFormState } from './useReviewForm.ts'
 
 const worthOptions = SCORES.map((score) => ({ value: score, label: String(score), caption: WORTH_SCORE_LABELS[score] }))
 const difficultyOptions = SCORES.map((score) => ({ value: score, label: String(score), caption: DIFFICULTY_LABELS[score] }))
-const hoursOptions = WEEKLY_HOURS.map((hours) => ({ value: hours.key, label: hours.key, caption: 'hours' }))
+const hoursOptions = WEEKLY_HOURS.map((hours) => ({ value: hours.key, label: hours.key, caption: 'hours', unit: 'h' }))
 const termOptions = TERMS.map((term) => ({ value: term, label: term }))
 
 const REQUIRED_COUNT = 5
 
-/** The five required answers the progress bar counts, in question order, with how "Still need" names each. */
-const REQUIRED: readonly { done: (values: ReviewFormValues) => boolean; missing: string }[] = [
-  { done: (values) => values.goals.length > 0, missing: 'your goals' },
-  { done: (values) => values.worthScore !== null, missing: 'a Worth Score' },
-  { done: (values) => values.conceptDifficulty !== null, missing: 'a difficulty' },
-  { done: (values) => values.weeklyHoursRange !== null, missing: 'weekly hours' },
-  { done: (values) => values.skillsGained.length > 0, missing: 'one skill' },
+/**
+ * The five required answers the progress bar counts, in question order, with
+ * how "Still need" names each. An answer counts once validateReview has no
+ * message for its field, so the bar follows the real rules.
+ */
+const REQUIRED: readonly { field: ReviewField; missing: string }[] = [
+  { field: 'goals', missing: 'your goals' },
+  { field: 'worthScore', missing: 'a Worth Score' },
+  { field: 'conceptDifficulty', missing: 'a difficulty' },
+  { field: 'weeklyHoursRange', missing: 'weekly hours' },
+  { field: 'skillsGained', missing: 'one skill' },
 ]
+
+/** The live preview's "Took it for ..." words, from the board. */
+const PREVIEW_GOALS: Record<GoalKey, string> = {
+  career_preparation: 'career prep',
+  skill_development: 'skill building',
+  academic_development: 'intellectual growth',
+  degree_requirements: 'a requirement',
+  personal_exploration: 'just curious',
+}
 
 interface ReviewFormProps {
   form: ReviewFormState
@@ -76,10 +101,13 @@ export default function ReviewForm({
 }: ReviewFormProps) {
   const { values, errors } = form
   const yearOptions = semesterYears().map((year) => ({ value: year, label: year }))
-  const done = REQUIRED.map((question) => question.done(values))
+  // The caps' hover or focus preview, so the live preview's meter follows it.
+  const [difficultyPreview, setDifficultyPreview] = useState<Score | null>(null)
+  const unmet = validateReview(values)
+  const done = REQUIRED.map((question) => !unmet[question.field])
   const answered = done.filter(Boolean).length
   const missing = [
-    ...(values.courseId ? [] : ['the course']),
+    ...(unmet.courseId ? ['the course'] : []),
     ...REQUIRED.filter((_, index) => !done[index]).map((question) => question.missing),
   ]
   const status = missing.length === 0 ? "Ready to post. You can't edit it afterward." : `Still need ${missing.join(', ')}.`
@@ -140,7 +168,12 @@ export default function ReviewForm({
               id={reviewFieldId('goals')}
               legend={GOALS_QUESTION}
               legendHidden
-              hint="Pick all that apply. We use this to match you with students who had the same goals."
+              hint={
+                <PhoneText
+                  wide="Pick all that apply. We use this to match you with students who had the same goals."
+                  narrow="Pick all that apply."
+                />
+              }
               options={GOALS}
               selected={values.goals}
               onToggle={form.toggleGoal}
@@ -154,12 +187,14 @@ export default function ReviewForm({
             invalid={Boolean(errors.worthScore)}
             title="How well did it help you reach those goals?"
             phoneTitle="Did it help you reach those goals?"
+            titleId="review-worth-title"
             delay="wtc-d2"
           >
             <RatingScale
               id={reviewFieldId('worthScore')}
               legend={WORTH_SCORE_QUESTION}
               legendHidden
+              labelledBy="review-worth-title"
               hint="This becomes your Worth Score."
               options={worthOptions}
               value={values.worthScore}
@@ -179,12 +214,18 @@ export default function ReviewForm({
               id={reviewFieldId('conceptDifficulty')}
               legend={DIFFICULTY_QUESTION}
               legendHidden
-              hint="How hard the ideas are to understand. Not the professor, grading or workload."
+              hint={
+                <PhoneText
+                  wide="How hard the ideas are to understand. Not the professor, grading or workload."
+                  narrow="The ideas themselves. Not the professor, grading or workload."
+                />
+              }
               options={difficultyOptions}
               value={values.conceptDifficulty}
               onChange={(score) => form.setField('conceptDifficulty', score)}
               error={errors.conceptDifficulty}
               icon="caps"
+              onPreview={setDifficultyPreview}
             />
           </Question>
 
@@ -199,7 +240,7 @@ export default function ReviewForm({
               id={reviewFieldId('weeklyHoursRange')}
               legend={WEEKLY_HOURS_QUESTION}
               legendHidden
-              hint="Homework, projects and studying, on a typical week."
+              hint={<PhoneText wide="Homework, projects and studying, on a typical week." narrow="On a typical week." />}
               options={hoursOptions}
               value={values.weeklyHoursRange}
               onChange={(hours) => form.setField('weeklyHoursRange', hours)}
@@ -214,13 +255,15 @@ export default function ReviewForm({
             invalid={Boolean(errors.skillsGained)}
             title="What skills did you actually walk away with?"
             phoneTitle="Skills you walked away with"
+            titleId="review-skills-title"
             delay={styles.d4}
           >
             <TagInput
               id={reviewFieldId('skillsGained')}
               label="Skills or knowledge you gained"
               labelHidden
-              hint="Add at least one. Type your own and press Enter."
+              labelledBy="review-skills-title"
+              hint={<PhoneText wide="Add at least one. Type your own and press Enter." narrow="Add at least one." />}
               placeholder="Type a skill…"
               tags={values.skillsGained}
               onAdd={form.addSkill}
@@ -278,8 +321,7 @@ export default function ReviewForm({
           </section>
 
           <p className={`${styles.rulesLine} ${styles.narrow}`}>
-            Anonymous to other students · One review per course · Can't be edited after posting · Verified RIT email
-            required
+            Anonymous to other students · One review per course · Can't be edited after posting · Verified email required
           </p>
 
           {submitError ? (
@@ -295,7 +337,7 @@ export default function ReviewForm({
 
           <div className={styles.submitRow}>
             <div className={`${styles.barProgress} ${styles.narrow}`}>
-              <p className={styles.barCount} aria-live="polite">
+              <p className={styles.barCount}>
                 {answered} of {REQUIRED_COUNT} required
               </p>
               <Progress answered={answered} className={styles.barTrack} />
@@ -306,13 +348,12 @@ export default function ReviewForm({
             <Link className={`${styles.cancel} ${styles.wide}`} to={values.courseId ? paths.course(values.courseId) : COURSES_PATH}>
               Cancel
             </Link>
-            <span className={`${styles.status} ${styles.wide}`} aria-live="polite">
-              {status}
-            </span>
+            <span className={`${styles.status} ${styles.wide}`}>{status}</span>
           </div>
         </form>
 
         <aside className={styles.aside}>
+          <LivePreview values={values} difficulty={difficultyPreview ?? values.conceptDifficulty} />
           <section className={`${styles.rules} wtc-rise wtc-d3`} aria-labelledby="review-rules-title">
             <h2 id="review-rules-title" className={styles.rulesTitle}>
               Before you post
@@ -326,7 +367,7 @@ export default function ReviewForm({
             <Rule tint="butter" icon="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z" title="Final once posted">
               Double-check before posting.
             </Rule>
-            <Rule tint="mint" icon="M5 12.5l4.5 4.5L19 7.5" title="Verified RIT email">
+            <Rule tint="mint" icon="M5 12.5l4.5 4.5L19 7.5" title="Verified email">
               Only verified students can post.
             </Rule>
           </section>
@@ -341,7 +382,9 @@ export default function ReviewForm({
  * answered) beside the board's title, then the control with its hint. The
  * control's own legend stays the group's accessible name (the e2e names) and
  * is visually hidden; the visible title is the board's wording, hidden from
- * screen readers so it isn't read twice.
+ * screen readers so it isn't read twice. Where the two wordings differ, the
+ * control also names itself by titleId, so its name holds the words a voice
+ * control user sees (WCAG 2.5.3).
  */
 function Question({
   step,
@@ -349,6 +392,7 @@ function Question({
   invalid,
   title,
   phoneTitle,
+  titleId,
   delay,
   children,
 }: {
@@ -357,6 +401,7 @@ function Question({
   invalid: boolean
   title: string
   phoneTitle?: string
+  titleId?: string
   delay: string
   children: ReactNode
 }) {
@@ -369,18 +414,94 @@ function Question({
       <span className={`${styles.step} ${done ? styles.stepDone : ''}`} aria-hidden="true">
         {done ? '✓' : step}
       </span>
-      <p className={styles.questionTitle} aria-hidden="true">
-        {phoneTitle ? (
-          <>
-            <span className={styles.wide}>{title}</span>
-            <span className={styles.narrow}>{phoneTitle}</span>
-          </>
-        ) : (
-          title
-        )}
+      <p id={titleId} className={styles.questionTitle} aria-hidden="true">
+        {phoneTitle ? <PhoneText wide={title} narrow={phoneTitle} /> : title}
       </p>
       <div className={styles.questionBody}>{children}</div>
     </div>
+  )
+}
+
+/** The desktop wording, or the phone board's shorter one below 641 px. */
+function PhoneText({ wide, narrow }: { wide: string; narrow: string }) {
+  return (
+    <>
+      <span className={styles.wide}>{wide}</span>
+      <span className={styles.narrow}>{narrow}</span>
+    </>
+  )
+}
+
+/**
+ * Desktop only: the review as other students will see it, built from the
+ * answers so far. The cap meter follows the difficulty caps' hover preview.
+ * The professor line shows only when one was typed.
+ */
+function LivePreview({ values, difficulty }: { values: ReviewFormValues; difficulty: number | null }) {
+  const term = [values.semesterTerm, values.semesterYear].filter(Boolean).join(' ')
+  const professor = values.instructorName.trim()
+  const tips = values.feedback.trim()
+  const hours = values.weeklyHoursRange
+  return (
+    <section className={`${styles.preview} wtc-rise wtc-d2`} aria-labelledby="review-preview-title">
+      <div className={styles.previewHead}>
+        <h2 id="review-preview-title" className={styles.previewTitle}>
+          Live preview
+        </h2>
+        <p className={styles.previewNote}>How others will see it</p>
+      </div>
+      <article className={styles.previewCard}>
+        <div className={styles.previewTop}>
+          <span className={styles.previewWorth}>
+            {values.worthScore === null ? (
+              <span className="wtc-sr">No Worth Score yet</span>
+            ) : (
+              <>
+                <span className="wtc-sr">Worth Score </span>
+                {values.worthScore}
+                <span className="wtc-sr"> of 5</span>
+              </>
+            )}
+          </span>
+          <div className={styles.previewWho}>
+            <p className={styles.previewTerm}>{term ? `${term} · Anonymous` : 'Anonymous'}</p>
+            {professor ? <p className={styles.previewProfessor}>{professor}</p> : null}
+          </div>
+        </div>
+        {values.goals.length > 0 ? (
+          <ul className={styles.previewGoals}>
+            {values.goals.map((goal) => (
+              <li key={goal} style={{ background: tintColors(GOAL_STYLE[goal].tint).bg }}>
+                Took it for {PREVIEW_GOALS[goal]}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        <p className={tips ? styles.previewTips : `${styles.previewTips} ${styles.previewEmpty}`}>
+          {tips || 'Your tips for future students will show here.'}
+        </p>
+        <div className={styles.previewStats}>
+          {difficulty === null ? (
+            <span className={styles.previewUnset}>No difficulty yet</span>
+          ) : (
+            <CapsMeter value={difficulty} size={17} />
+          )}
+          <span className={styles.previewHours}>
+            <ClockIcon size={16} />
+            {hours ? (
+              <span>
+                {hoursShort(hours)}h<span className={styles.previewUnit}>/wk</span>
+              </span>
+            ) : (
+              <span className={styles.previewUnset}>No hours yet</span>
+            )}
+          </span>
+        </div>
+        <p className={styles.previewGained}>
+          Gained <strong>{values.skillsGained.length > 0 ? values.skillsGained.join(', ') : 'None yet'}</strong>
+        </p>
+      </article>
+    </section>
   )
 }
 

@@ -41,6 +41,13 @@
   text-decoration: underline;
 }
 
+/* The global orange ring is 2.8:1 on the cream page; ink reads at 15:1. */
+.breadcrumb a:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .current {
   color: var(--wtc-ink, #1e2124);
   font-weight: 600;

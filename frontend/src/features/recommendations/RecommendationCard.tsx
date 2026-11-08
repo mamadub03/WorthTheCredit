@@ -3,15 +3,11 @@ import ButtonLink from '../../components/form/ButtonLink.tsx'
 import CapsMeter from '../../components/ui/CapsMeter.tsx'
 import { reviewCountLabel } from '../../components/ui/format.ts'
 import { ClockIcon } from '../../components/ui/icons.tsx'
+import { hoursShort } from '../../domain/goalStyles.ts'
 import { formatAverage, matchLevelLabel, weeklyHoursLabel } from '../../domain/reviewVocabulary.ts'
 import { paths } from '../../routes/paths.ts'
 import styles from './RecommendationCard.module.css'
 import { useCourseInsights } from './useCourseInsights.ts'
-
-/** "6-10" to "6–10", the en-dash the boards use for a range. */
-function hoursRange(key: string): string {
-  return key.replace('-', '–')
-}
 
 /**
  * One recommended course as the College carousel AI board's match card (#30):
@@ -70,7 +66,7 @@ export default function RecommendationCard({ item }: { item: Recommendation }) {
               <span className={styles.hours} title="Hours per week students reported">
                 <ClockIcon size={15} />
                 <span aria-hidden="true">
-                  {hoursRange(hours)}h<span className={styles.unit}>/wk</span>
+                  {hoursShort(hours)}h<span className={styles.unit}>/wk</span>
                 </span>
                 <span className="wtc-sr">Most students reported {weeklyHoursLabel(hours)} a week</span>
               </span>

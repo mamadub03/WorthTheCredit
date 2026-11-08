@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
 import { ClockIcon } from '../ui/icons.tsx'
 import { CAP_PATHS } from '../ui/format.ts'
 import { FieldError } from './Field.tsx'
@@ -8,6 +8,8 @@ export interface ScaleOption<T extends string | number> {
   value: T
   label: string
   caption?: string
+  /** A short visible unit after the label ('clock' only), such as "h"; the caption stays in the accessible name. */
+  unit?: string
 }
 
 /**
@@ -22,7 +24,7 @@ export type RatingScaleIcon = 'caps' | 'clock'
 interface RatingScaleProps<T extends string | number> {
   id: string
   legend: string
-  hint?: string
+  hint?: ReactNode
   options: readonly ScaleOption<T>[]
   value: T | null
   onChange: (value: T) => void
@@ -30,6 +32,10 @@ interface RatingScaleProps<T extends string | number> {
   icon?: RatingScaleIcon
   /** Keep the legend as the group's accessible name but hide it, when the screen draws its own visible title. */
   legendHidden?: boolean
+  /** Another element's id whose text joins the legend in the group's name, so a visible title is part of it. */
+  labelledBy?: string
+  /** 'caps' only: the value a hovered or focused cap previews, or null when the preview ends. */
+  onPreview?: (value: T | null) => void
 }
 
 /**
@@ -48,18 +54,27 @@ export default function RatingScale<T extends string | number>({
   error,
   icon,
   legendHidden = false,
+  labelledBy,
+  onPreview,
 }: RatingScaleProps<T>) {
   const describedBy = [hint ? `${id}-hint` : '', error ? `${id}-error` : ''].filter(Boolean).join(' ') || undefined
   return (
-    <fieldset id={id} className={styles.fieldset} aria-describedby={describedBy}>
-      <legend className={legendHidden ? 'wtc-sr' : styles.legend}>{legend}</legend>
+    <fieldset
+      id={id}
+      className={styles.fieldset}
+      aria-labelledby={labelledBy ? `${id}-legend ${labelledBy}` : undefined}
+      aria-describedby={describedBy}
+    >
+      <legend id={`${id}-legend`} className={legendHidden ? 'wtc-sr' : styles.legend}>
+        {legend}
+      </legend>
       {hint ? (
         <p id={`${id}-hint`} className={styles.hint}>
           {hint}
         </p>
       ) : null}
       {icon === 'caps' ? (
-        <CapScale id={id} options={options} value={value} onChange={onChange} />
+        <CapScale id={id} options={options} value={value} onChange={onChange} onPreview={onPreview} />
       ) : icon === 'clock' ? (
         <ClockScale id={id} options={options} value={value} onChange={onChange} />
       ) : (
@@ -135,8 +150,18 @@ function TileScale<T extends string | number>({ id, options, value, onChange }: 
  * previews its value (caps and readout); leaving the row or blurring brings
  * back the picked value.
  */
-function CapScale<T extends string | number>({ id, options, value, onChange }: ScaleBodyProps<T>) {
-  const [preview, setPreview] = useState<number | null>(null)
+function CapScale<T extends string | number>({
+  id,
+  options,
+  value,
+  onChange,
+  onPreview,
+}: ScaleBodyProps<T> & { onPreview?: (value: T | null) => void }) {
+  const [preview, setPreviewIndex] = useState<number | null>(null)
+  function setPreview(index: number | null) {
+    setPreviewIndex(index)
+    onPreview?.(index === null ? null : options[index].value)
+  }
   const pickedIndex = options.findIndex((option) => option.value === value)
   const shownIndex = preview ?? pickedIndex
   const shown = shownIndex >= 0 ? options[shownIndex] : undefined
@@ -182,7 +207,7 @@ function CapScale<T extends string | number>({ id, options, value, onChange }: S
       </div>
       <p className={styles.capReadout} aria-hidden="true">
         <span className={styles.capReadoutValue}>
-          {shown ? shown.label : '–'} / {options.length}
+          {shown ? shown.label : '0'} / {options.length}
         </span>
         <span className={styles.capReadoutWord}>{shown?.caption ?? `Pick 1 to ${options.length} caps`}</span>
       </p>
@@ -190,19 +215,24 @@ function CapScale<T extends string | number>({ id, options, value, onChange }: S
   )
 }
 
-/** Chips led by a clock; form.module.css fills its face butter, white once picked. */
+/** Chips led by a clock, the range then its unit; form.module.css fills the face butter, white once picked. */
 function ClockScale<T extends string | number>({ id, options, value, onChange }: ScaleBodyProps<T>) {
   return (
-    // Phone grid: two across for up to four buckets, three across for more.
+    // Phone grid: two across for up to four buckets (the board's three across leaves one alone), three for more.
     <div className={styles.clocks} style={{ '--cols': options.length <= 4 ? 2 : 3 } as CSSProperties}>
       {options.map((option) => (
         <div key={String(option.value)} className={styles.clockOption}>
           <Radio id={id} option={option} value={value} onChange={onChange} />
           <label htmlFor={`${id}-${option.value}`} className={styles.clock}>
             <ClockIcon className={styles.clockIcon} size={20} />
-            <span>
+            {/* Seen: "6–10h". Heard: "6-10 hours", so the name still starts with the key. */}
+            <span aria-hidden="true">
+              {option.label.replace('-', '–')}
+              {option.unit ? <span className={styles.clockCaption}>{option.unit}</span> : null}
+            </span>
+            <span className="wtc-sr">
               {option.label}
-              {option.caption ? <span className={styles.clockCaption}>{option.caption}</span> : null}
+              {option.caption ? ` ${option.caption}` : ''}
             </span>
           </label>
         </div>

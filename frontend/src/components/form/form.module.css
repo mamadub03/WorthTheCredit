@@ -123,7 +123,8 @@
 .textarea:hover:not(:disabled),
 .select:hover:not(:disabled),
 .tagBox:hover {
-  border-color: var(--wtc-cap-empty, #c8ccce);
+  /* The board's cool gray hover border; exampleB.css has no token for it. */
+  border-color: #c8ccce;
 }
 
 .input:focus-visible,
@@ -137,7 +138,7 @@
 .textarea:disabled,
 .select:disabled {
   background: var(--wtc-gray, #f3f1ec);
-  color: var(--wtc-disabled-ink, #8a8f93);
+  color: #8a8f93; /* the board's disabled ink; no token */
   cursor: not-allowed;
 }
 
@@ -151,13 +152,6 @@
   margin: 0;
   color: var(--wtc-muted, #555b60);
   font-size: 12px;
-}
-
-/* Side-by-side selects (term and year): one row on desktop, stacked on a phone. */
-.row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
 }
 
 /* Goal chips: a label around a transparent native checkbox */
@@ -400,7 +394,11 @@
 
 .capIcon {
   fill: none;
-  stroke: var(--wtc-cap-empty, #c8ccce);
+  /*
+   * Unlit caps are the radios' only visible shape, so they need 3:1 (WCAG
+   * 1.4.11). The board's #c8ccce is 1.6:1 on white; this gray is 3.9:1. No token.
+   */
+  stroke: #7d8287;
 }
 
 .capIcon path {
@@ -621,7 +619,7 @@
 }
 
 .tagInput:disabled {
-  color: var(--wtc-disabled-ink, #8a8f93);
+  color: #8a8f93; /* the board's disabled ink; no token */
   cursor: not-allowed;
 }
 
@@ -788,8 +786,11 @@
     height: 18px;
   }
 
+  /* The phone board runs the range and its unit together: "6–10h". */
   .clockCaption {
-    margin-left: 1px;
+    margin-left: 0;
+    color: inherit;
+    font: inherit;
   }
 
   .tagBox {

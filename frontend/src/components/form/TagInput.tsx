@@ -1,11 +1,11 @@
-import { useState, type KeyboardEvent } from 'react'
+import { useState, type KeyboardEvent, type ReactNode } from 'react'
 import { FieldError } from './Field.tsx'
 import styles from './form.module.css'
 
 interface TagInputProps {
   id: string
   label: string
-  hint?: string
+  hint?: ReactNode
   tags: readonly string[]
   /** Returns true when the text was accepted (or was empty), so the box clears. */
   onAdd: (text: string) => boolean
@@ -16,6 +16,8 @@ interface TagInputProps {
   placeholder?: string
   /** Keep the label as the box's accessible name but hide it, when the screen draws its own visible title. */
   labelHidden?: boolean
+  /** Another element's id whose text joins the label in the box's name, so a visible title is part of it. */
+  labelledBy?: string
 }
 
 /**
@@ -25,7 +27,7 @@ interface TagInputProps {
  * (five tints by position) that pops in, with a round remove button whose hit
  * area reaches 44 px. Owner: FE2 (#27).
  */
-export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, error, optional, placeholder, labelHidden = false }: TagInputProps) {
+export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, error, optional, placeholder, labelHidden = false, labelledBy }: TagInputProps) {
   const [draft, setDraft] = useState('')
   const describedBy = [hint ? `${id}-hint` : '', error ? `${id}-error` : '', `${id}-count`].filter(Boolean).join(' ')
 
@@ -44,7 +46,7 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
 
   return (
     <div className={styles.field}>
-      <label className={labelHidden ? 'wtc-sr' : styles.label} htmlFor={id}>
+      <label id={`${id}-label`} className={labelHidden ? 'wtc-sr' : styles.label} htmlFor={id}>
         {label}
         {optional ? <span className={styles.optional}>optional</span> : null}
       </label>
@@ -80,6 +82,7 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
           value={draft}
           placeholder={tags.length === 0 ? placeholder : undefined}
           aria-invalid={error ? true : undefined}
+          aria-labelledby={labelledBy ? `${id}-label ${labelledBy}` : undefined}
           aria-describedby={describedBy}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={onKeyDown}

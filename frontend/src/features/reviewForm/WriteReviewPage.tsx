@@ -6,6 +6,7 @@ import sealUrl from '../../assets/brand/seal.svg'
 import Button from '../../components/form/Button.tsx'
 import ButtonLink from '../../components/form/ButtonLink.tsx'
 import Coin from '../../components/ui/Coin.tsx'
+import { hoursShort } from '../../domain/goalStyles.ts'
 import { COURSES_PATH } from '../../routes/discoveryPaths.ts'
 import { paths } from '../../routes/paths.ts'
 import { useAuth } from '../auth/authContext.ts'
@@ -44,6 +45,14 @@ function WriteReview() {
     urlCourseId,
     finished: outcome.status === 'posted',
   })
+
+  // Once the form resolves, bring the page back to the top so the card shows under the site header.
+  const resolved = outcome.status === 'posted' || outcome.status === 'already_reviewed'
+  useEffect(() => {
+    if (!resolved) return
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    document.scrollingElement?.scrollTo?.({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
+  }, [resolved])
 
   // Show field messages from a rejected submission (422, or a course that disappeared).
   useEffect(() => {
@@ -193,7 +202,7 @@ function PostedCard({ review, course }: { review: Review; course: CourseSummary 
         <p className={styles.pills}>
           <span className={styles.pillWorth}>Worth {review.worthScore} / 5</span>
           <span className={styles.pillDifficulty}>Difficulty {review.conceptDifficulty} / 5</span>
-          <span className={styles.pillHours}>{review.weeklyHoursRange} h/wk</span>
+          <span className={styles.pillHours}>{hoursShort(review.weeklyHoursRange)} h/wk</span>
         </p>
       }
       actions={

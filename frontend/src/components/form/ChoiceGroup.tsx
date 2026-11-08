@@ -1,10 +1,11 @@
+import type { ReactNode } from 'react'
 import { FieldError } from './Field.tsx'
 import styles from './form.module.css'
 
 interface ChoiceGroupProps<T extends string> {
   id: string
   legend: string
-  hint?: string
+  hint?: ReactNode
   options: readonly { key: T; label: string }[]
   selected: readonly T[]
   onToggle: (key: T) => void
