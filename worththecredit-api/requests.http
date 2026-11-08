@@ -1,0 +1,128 @@
+### WorthTheCredit API — manual requests
+# Use with VS Code "REST Client" extension or JetBrains HTTP Client: click "Send Request".
+# Local dev: set DEV_AUTH_BYPASS=true in .env, then any token below works:
+#   "dev"            → verified user "dev|local-user"
+#   "dev:alice"      → verified user "dev|alice" (pick any name for a second user)
+#   "dev-unverified" → unverified user (POST /reviews → 403)
+# With real Auth0: paste a real access token into @token (see README-BE2 §11).
+
+@base = http://localhost:8000
+@token = dev
+@adminKey = local-admin-key
+
+### Health
+GET {{base}}/health
+
+### Course search (BE1 stub) — public
+GET {{base}}/courses?q=swen
+
+### Course detail with stats (BE1 stub) — public
+GET {{base}}/courses/SWEN-261
+
+### Worth Score + stats — public
+GET {{base}}/courses/SWEN-261/stats
+
+### Public reviews, newest first (optional ?professor=&limit=&offset=) — public
+GET {{base}}/courses/SWEN-261/reviews?limit=5&offset=0
+
+### Filter reviews by professor — public
+GET {{base}}/courses/SWEN-261/reviews?professor=dr.%20rivera
+
+### Create a review → 201 (run twice → 409 already_reviewed)
+POST {{base}}/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "course_code": "CSCI-420",
+  "goals": ["career_preparation", "skill_development"],
+  "worth_score": 5,
+  "skills": ["Pandas", "Clustering"],
+  "difficulty": 4,
+  "weekly_hours": "10-12",
+  "feedback": "Real messy data; start homework early.",
+  "professor": "Dr. Patel",
+  "semester": "Fall 2025"
+}
+
+### Validation error → 422
+POST {{base}}/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "course_code": "CSCI-420", "goals": [], "worth_score": 9, "skills": [], "difficulty": 0, "weekly_hours": "lots" }
+
+### Unknown course → 404 course_not_found
+POST {{base}}/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "course_code": "FAKE-999", "goals": ["career_preparation"], "worth_score": 3, "skills": ["x"], "difficulty": 3, "weekly_hours": "0-3" }
+
+### Unverified email → 403 email_not_verified
+POST {{base}}/reviews
+Authorization: Bearer dev-unverified
+Content-Type: application/json
+
+{ "course_code": "PSYC-101", "goals": ["personal_exploration"], "worth_score": 4, "skills": ["Empathy"], "difficulty": 2, "weekly_hours": "4-6" }
+
+### Missing token → 401 not_authenticated
+POST {{base}}/reviews
+Content-Type: application/json
+
+{}
+
+### Have I reviewed this course?
+GET {{base}}/reviews/me?course_code=CSCI-420
+Authorization: Bearer {{token}}
+
+### Report a review (paste an id from the public list) → 201; again → 409 already_reported
+# Reasons: spam | fake | inappropriate | off_topic | other
+POST {{base}}/reviews/REPLACE-WITH-REVIEW-ID/report
+Authorization: Bearer dev:reporter
+Content-Type: application/json
+
+{ "reason": "spam", "note": "Looks like an ad" }
+
+### Admin: hide a review (excluded from lists and stats)
+POST {{base}}/admin/reviews/REPLACE-WITH-REVIEW-ID/hide
+X-Admin-Api-Key: {{adminKey}}
+
+### Admin: unhide
+POST {{base}}/admin/reviews/REPLACE-WITH-REVIEW-ID/unhide
+X-Admin-Api-Key: {{adminKey}}
+
+### Profile: get (404 profile_not_found at first)
+GET {{base}}/profile
+Authorization: Bearer {{token}}
+
+### Profile: save
+PUT {{base}}/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "major": "Software Engineering",
+  "interests": ["machine learning", "data"],
+  "skills": ["Python"],
+  "career_goals": "ML engineer in healthcare",
+  "personal_interests": ["public speaking"],
+  "degree_requirements": "One CS advanced elective"
+}
+
+### Recommendations with an explicit profile + request
+POST {{base}}/recommendations
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "profile": { "major": "Software Engineering", "interests": ["machine learning", "data"], "career_goals": "ML engineer" },
+  "query": "I want something hands-on with ML that isn't too heavy a workload."
+}
+
+### Recommendations using the SAVED profile (omit "profile")
+POST {{base}}/recommendations
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "query": "hands-on data projects" }
