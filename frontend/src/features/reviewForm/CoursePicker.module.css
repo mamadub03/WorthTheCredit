@@ -1,0 +1,67 @@
+/* The course combobox in the Example B style (src/styles/exampleB.css). */
+
+.combo {
+  position: relative;
+}
+
+.options {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  max-height: 320px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  border: 1.5px solid var(--wtc-line, #ecedee);
+  border-radius: 18px;
+  background: var(--wtc-surface, #ffffff);
+  box-shadow: 0 8px 24px rgba(184, 74, 0, 0.1);
+  list-style: none;
+}
+
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--wtc-ink, #1e2124);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.option strong {
+  flex: none;
+  color: var(--wtc-link, #b84a00);
+  font-weight: 800;
+}
+
+.active {
+  background: var(--wtc-warm, #fff4eb);
+}
+
+.selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--wtc-orange, #f76902);
+  border-radius: 14px;
+  background: var(--wtc-warm, #fff4eb);
+}
+
+.selectedText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  color: var(--wtc-ink, #1e2124);
+  font-weight: 600;
+}
+
+.selectedText strong {
+  color: var(--wtc-link, #b84a00);
+  font-weight: 800;
+}

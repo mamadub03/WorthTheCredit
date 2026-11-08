@@ -1,0 +1,67 @@
+/* Example B message panel: warm outline, large radius, Figtree (src/styles/exampleB.css). */
+
+.panel {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  padding: 36px 32px;
+  border: 1.5px solid var(--wtc-line-warm, #f0e4da);
+  border-radius: 32px;
+  background: var(--wtc-surface, #ffffff);
+  color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.tag {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--wtc-warm, #fff4eb);
+  color: var(--wtc-link-hover, #8a3700);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.title {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.body {
+  display: grid;
+  gap: 10px;
+  max-width: 560px;
+}
+
+.body p {
+  margin: 0;
+  color: var(--wtc-body, #4a4f54);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.body strong {
+  color: var(--wtc-ink, #1e2124);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    padding: 28px 20px;
+    border-radius: 24px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+}

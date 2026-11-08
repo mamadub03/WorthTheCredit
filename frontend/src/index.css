@@ -1,0 +1,200 @@
+/*
+ * Global styles: page base, the shared button look and the small animations.
+ * Colors and fonts come from the --wtc-* tokens in src/styles/exampleB.css.
+ * Component styles live next to each component as CSS Modules. Owner: FE1 (#19).
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--wtc-cream, #fbf7f1);
+  color: var(--wtc-ink, #1e2124);
+  font: 16px/1.5 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--wtc-display, Outfit, Inter, sans-serif);
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--wtc-link, #b84a00);
+}
+
+a:hover {
+  color: var(--wtc-link-hover, #8a3700);
+}
+
+:focus-visible {
+  outline: 2px solid var(--wtc-orange, #f76902);
+  outline-offset: 2px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.wtc-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/*
+ * Buttons and button-like links. On hover a circle grows from the middle and
+ * fills the button with the next color: orange fills turn white, dark and
+ * white fills turn orange.
+ */
+.wtc-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 16px;
+  font: 700 16px var(--wtc-display, Outfit, Inter, sans-serif);
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.35s ease, transform 0.2s ease;
+}
+
+.wtc-btn::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: 240%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+.wtc-btn:not(:disabled):hover::before,
+.wtc-btn:not(:disabled):focus-visible::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.wtc-btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.wtc-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.wtc-btn-orange {
+  background: var(--wtc-orange, #f76902);
+  color: var(--wtc-ink, #1e2124);
+}
+
+.wtc-btn-orange::before {
+  background: #ffffff;
+}
+
+.wtc-btn-orange:not(:disabled):hover,
+.wtc-btn-orange:not(:disabled):focus-visible {
+  color: var(--wtc-ink, #1e2124);
+  outline: 2px solid var(--wtc-orange, #f76902);
+  outline-offset: -2px;
+}
+
+.wtc-btn-dark {
+  background: var(--wtc-ink, #1e2124);
+  color: #ffffff;
+}
+
+.wtc-btn-dark::before {
+  background: var(--wtc-orange, #f76902);
+}
+
+.wtc-btn-dark:not(:disabled):hover,
+.wtc-btn-dark:not(:disabled):focus-visible {
+  color: var(--wtc-ink, #1e2124);
+}
+
+.wtc-btn-white {
+  background: #ffffff;
+  color: var(--wtc-ink, #1e2124);
+  box-shadow: 0 2px 10px rgba(30, 33, 36, 0.06);
+}
+
+.wtc-btn-white::before {
+  background: var(--wtc-orange, #f76902);
+}
+
+.wtc-btn-white:hover,
+.wtc-btn-white:focus-visible {
+  color: var(--wtc-ink, #1e2124);
+}
+
+.wtc-btn-small {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* Page sections slide up as they appear. */
+@keyframes wtc-rise {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.wtc-rise {
+  animation: wtc-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.wtc-d1 {
+  animation-delay: 0.08s;
+}
+
+.wtc-d2 {
+  animation-delay: 0.16s;
+}
+
+.wtc-d3 {
+  animation-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wtc-rise {
+    animation: none;
+  }
+
+  .wtc-btn,
+  .wtc-btn::before {
+    transition: none;
+  }
+}

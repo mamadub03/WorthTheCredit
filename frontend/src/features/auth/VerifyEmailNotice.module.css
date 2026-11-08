@@ -1,0 +1,11 @@
+/*
+ * Sits beside the button in StatusPanel's action row, and wraps under it when
+ * long. Never display: none, or screen readers can miss the first message.
+ */
+.status {
+  flex: 1 1 220px;
+  margin: 0;
+  color: var(--wtc-link-hover, #8a3700);
+  font-size: 15px;
+  font-weight: 600;
+}

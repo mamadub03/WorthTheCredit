@@ -1,0 +1,10 @@
+/* Example B's warm band, so demo mode is obvious on every page without shouting. */
+.banner {
+  margin: 0;
+  padding: 9px 24px;
+  border-bottom: 1.5px solid var(--wtc-line-warm, #f0e4da);
+  background: var(--wtc-warm, #fff4eb);
+  color: var(--wtc-link-hover, #8a3700);
+  font: 600 14px/1.4 var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  text-align: center;
+}

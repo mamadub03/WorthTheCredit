@@ -41,6 +41,17 @@ class Settings(BaseSettings):
     auth0_api_audience: str | None = Field(default=None, alias="AUTH0_API_AUDIENCE")
     # Optional override; defaults to https://{AUTH0_DOMAIN}/
     auth0_issuer: str | None = Field(default=None, alias="AUTH0_ISSUER")
+    # LOCAL TESTING ONLY (integration branch): accept signed-in students whose
+    # access token has no email_verified claim yet. Still needs a valid Auth0
+    # token. Honored only when APP_ENV=development; off by default.
+    auth_skip_email_verification: bool = Field(
+        default=False, alias="AUTH_SKIP_EMAIL_VERIFICATION"
+    )
+
+    @property
+    def skip_email_verification(self) -> bool:
+        """True only for local development with the testing switch on."""
+        return self.auth_skip_email_verification and self.app_env == "development"
 
     @property
     def cors_origin_list(self) -> list[str]:
