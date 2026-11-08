@@ -1,0 +1,214 @@
+This MDC file was provided by ChatGPT which we used for our product scoping process. Chat link could be found here: https://chatgpt.com/share/6aefbcff-0a0c-83e9-b848-469416a82617
+---
+description: Shared project rules for all WorthTheCredit developers
+alwaysApply: true
+---
+
+# WorthTheCredit — Project Rules
+
+## 1. Product Overview
+
+WorthTheCredit is an RIT-focused, crowdsourced elective
+discovery and AI-powered recommendation platform.
+
+Our goal is to help students identify electives relevant
+to their academic, career, skill-development, and
+personal-development goals.
+
+The product focuses on the value of the COURSE itself,
+not the professor teaching it.
+
+## 2. Locked MVP Features
+
+- Student registration, login, and email verification.
+- Search and browse mock RIT courses.
+- View course descriptions, prerequisites, and credits.
+- View Community Worth Scores and student experiences.
+- Submit one review per student per course.
+- Calculate Worth Scores from student reviews.
+- Receive personalized Gemini course recommendations.
+- View recommendations with explanations and course links.
+
+### Worth Score
+
+Each reviewer rates how effectively a course helped
+them accomplish their academic, career, skills,
+or personal-development goals.
+
+- Scores range from 1 to 5.
+- Community Worth Score is the average student score.
+- Concept difficulty is independent of Worth Score.
+- Never calculate Worth Score from difficulty, workload,
+  professor ratings, or course grades.
+- Unreviewed courses have no Worth Score.
+
+### Reviews
+
+Reviews collect:
+- Student's intended goals.
+- Worth Score (1–5).
+- Skills or knowledge gained.
+- Concept difficulty (1–5).
+- Weekly time commitment.
+- Optional written feedback.
+- Optional instructor and semester context.
+
+Review rules:
+- One review per student per course.
+- No review editing in the MVP.
+- Reviews are anonymous to other students.
+- Backend enforces review limits and validation.
+
+### AI Recommendations
+
+- Students provide major, interests, skills, and goals.
+- FastAPI retrieves relevant database courses.
+- Gemini ranks and explains those courses.
+- Gemini may only recommend existing database courses.
+- Recommendations consider Worth Scores, review context,
+  course information, and student objectives.
+- Do not fabricate course details, reviews, or outcomes.
+- Use descriptive match levels rather than
+  unsupported numerical match percentages.
+
+## 3. Technology Stack
+
+Backend:
+- Python
+- FastAPI
+- SQLAlchemy
+- Pydantic
+
+Frontend:
+- React
+- Vite
+- TypeScript
+- Team-approved CSS/component libraries
+
+Database:
+- Tiger Data PostgreSQL
+
+Authentication:
+- Auth0 with email verification
+
+AI:
+- Google Gemini API
+
+Infrastructure:
+- Local development first
+- Vultr deployment after local MVP completion
+
+## 4. Architecture Rules
+
+- Use one FastAPI REST API consumed by React.
+- Exchange JSON using agreed request/response schemas.
+- Follow the project's API contracts.
+- PostgreSQL is the source of truth for courses and reviews.
+- FastAPI owns business logic and Worth Score calculation.
+- Gemini only receives course candidates retrieved by FastAPI.
+- Never expose database credentials or Gemini API keys
+  to the frontend.
+- Keep generated demo data clearly distinguishable
+  from real student reviews.
+
+## Shared Technical Documentation
+
+- Database schema: docs/DATABASE_SCHEMA.md
+- All developers must follow the agreed database schema.
+- Backend 1 owns SQLAlchemy models and Alembic migrations.
+- Backend 2 coordinates any review schema changes with Backend 1.
+- Do not independently change shared database models.
+- API request/response structures must be agreed upon before integration.
+
+## 5. Developer Ownership
+
+Backend Developer 1:
+- FastAPI setup and infrastructure.
+- Tiger Data configuration.
+- Database models and migrations.
+- Mock course data generation.
+- Course search and detail endpoints.
+- Auth0 backend integration.
+
+Backend Developer 2:
+- Review submission and retrieval.
+- Review validation and duplicate prevention.
+- Community Worth Score calculations.
+- Course candidate retrieval.
+- Gemini recommendation integration.
+
+Frontend Developer 1:
+- React/Vite project initialization.
+- Shared UI layout and navigation.
+- Homepage and course discovery.
+- Course details and insights.
+- Student review displays.
+
+Frontend Developer 2:
+- Auth0 frontend integration.
+- Structured review submission form.
+- AI personalization interface.
+- Recommendation results interface.
+
+Shared files and interfaces require coordination.
+
+## 6. GitHub Workflow
+
+- Work from an assigned GitHub issue.
+- Create one feature branch per issue.
+- Never develop directly on main.
+- Keep changes scoped to the assigned task.
+- Do not modify another developer's feature without approval.
+- Open a pull request for completed work.
+- Run relevant tests before requesting review.
+- Require human approval before merging.
+- Sync with main regularly.
+- Do not change agreed API contracts without communicating
+  with dependent developers.
+
+## 7. Cursor Agent Instructions
+
+Before implementing a task:
+1. Read the relevant GitHub issue.
+2. Identify affected files and dependencies.
+3. Review existing code and API contracts.
+4. Explain the proposed implementation briefly.
+
+During implementation:
+1. Focus only on the assigned feature.
+2. Prefer simple, maintainable solutions.
+3. Reuse existing utilities and components.
+4. Avoid unnecessary dependencies or abstractions.
+5. Add tests for important business logic.
+6. Never overwrite unrelated work.
+
+After implementation:
+1. Run relevant tests and checks.
+2. Summarize modified files.
+3. Report completed acceptance criteria.
+4. Report unresolved issues or blockers.
+5. Do not commit, merge, or deploy without approval.
+
+## 8. Security Rules
+
+- Never commit API keys, passwords, or .env files.
+- Use environment variables for secrets.
+- Validate Auth0 access tokens on protected endpoints.
+- Enforce review ownership using authenticated user IDs.
+- Never expose reviewer identities in public API responses.
+- Validate all user-submitted inputs.
+- Do not trust AI-generated responses without validation.
+
+## 9. Definition of Done
+
+A feature is complete only when:
+- Its GitHub issue acceptance criteria are satisfied.
+- Relevant tests or checks pass.
+- The code has been reviewed and merged.
+- Dependent functionality has been verified.
+- No critical integration bugs remain.
+
+GitHub Issues and the project tracker are the
+authoritative sources for task ownership and progress.
+
+Do not expand the locked MVP without team approval.
