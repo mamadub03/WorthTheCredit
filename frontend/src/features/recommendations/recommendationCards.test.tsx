@@ -60,7 +60,7 @@ describe('recommendation cards', () => {
       </Routes>,
     )
     await user.type(await screen.findByRole('textbox', { name: 'Interests' }), 'machine learning{Enter}')
-    await user.click(screen.getByRole('button', { name: 'Get recommendations' }))
+    await user.click(screen.getByRole('button', { name: 'Match me with courses' }))
 
     const cards = await screen.findAllByRole('article')
     const card = cards.find((article) => article.textContent?.includes('CSCI-331'))!
