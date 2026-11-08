@@ -9,13 +9,18 @@
 # - backend/app/reviews/policy.py prepare_review (Issue #11)
 # - backend/app/api/deps.py require_verified_email (Backend Developer 1, not edited)
 # - backend/app/db/models.py Review (read and inserted; file not edited)
+# GET /courses/{course_id}/worth-score was added for Issue #13.
+# Its query lives in backend/app/reviews/scoring.py.
 
-"""Authenticated review submission.
+"""Authenticated review submission and public Worth Score reads.
 
 ``POST /courses/{course_id}/reviews`` stores one review for the verified
 student. ``user_id`` is ``users.id`` from the Auth0 token. The response
 is ``ReviewPublic`` and does not include the reviewer. There is no
 update or delete route in the MVP.
+
+``GET /courses/{course_id}/worth-score`` is public. It returns the
+Issue #13 aggregate and does not list reviewers.
 """
 
 from __future__ import annotations
@@ -27,10 +32,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.deps import AuthenticatedUser, require_verified_email
-from app.db.models import Review
+from app.db.models import Course, Review
 from app.db.session import get_db
 from app.reviews.policy import ReviewPolicyError, prepare_review
-from app.schemas.review import ReviewCreate, ReviewPublic
+from app.reviews.scoring import worth_score_summary
+from app.schemas.review import ReviewCreate, ReviewPublic, WorthScoreSummary
 
 router = APIRouter(prefix="/courses", tags=["reviews"])
 
@@ -90,3 +96,18 @@ def submit_review(
         ) from None
     db.refresh(row)
     return row
+
+
+@router.get("/{course_id}/worth-score", response_model=WorthScoreSummary)
+def get_worth_score(
+    course_id: uuid.UUID,
+    db: Session = Depends(get_db),
+) -> WorthScoreSummary:
+    """Return Worth Score, difficulty, and workload counts for one course."""
+
+    if db.get(Course, course_id) is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found",
+        )
+    return worth_score_summary(db, course_id)
