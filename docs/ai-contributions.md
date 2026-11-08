@@ -105,6 +105,17 @@ The frontend sign-in layer (Auth0 and dev sign-in) was generated with Claude Cod
 
 The review form and course picker were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
 
+## 2026-11-07: Review submission and feedback (FE2, #28)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/28-review-submission`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the submission hook that maps every response of BE2's planned `POST /courses/{id}/reviews` to a screen or message (posted, already reviewed, signed out, unverified, missing course, field-level 422s, network failures), the "posted" and "already reviewed" screens, a sessionStorage draft that survives an Auth0 redirect, and tests.
+- **Not finished until:** BE2's review endpoint (#12) and BE1's JWT validation (#8) exist, per the comments on #28. Until then the mock answers.
+
+### Suggested citation
+
+The review submission flow was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
 ## 2026-11-07: AI personalization form (FE2, #29)
 
 - **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/29-personalization-form`.
