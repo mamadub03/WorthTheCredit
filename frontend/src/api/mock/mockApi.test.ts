@@ -118,7 +118,14 @@ describe('courses and stats', () => {
     const unreviewed = MOCK_COURSES.find((course) => !MOCK_REVIEWS.some((item) => item.course_code === course.course_code))
     expect(unreviewed).toBeDefined()
     const empty = await (await mock.fetch(`${BASE}/courses/${unreviewed!.course_code}/stats`, {})).json()
-    expect(empty).toMatchObject({ review_count: 0, worth_score: null, difficulty_avg: null, low_data: true, workload_summary: 'No workload reports yet' })
+    expect(empty).toMatchObject({
+      review_count: 0,
+      worth_score: null,
+      difficulty_avg: null,
+      workload_most_common: null,
+      workload_summary: null,
+      low_data: true,
+    })
 
     const stats = await (await mock.fetch(`${BASE}/courses/SWEN-261/stats`, {})).json()
     const total = Object.values(stats.workload_distribution as Record<string, number>).reduce((sum, value) => sum + value, 0)

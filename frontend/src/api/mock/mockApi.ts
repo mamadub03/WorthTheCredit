@@ -21,9 +21,10 @@ interface ProfileFields {
   major: string
   interests: string[]
   skills: string[]
-  career_goals: string | null
+  /** Like the real API, omitted text comes back as "" rather than null. */
+  career_goals: string
   personal_interests: string[]
-  degree_requirements: string | null
+  degree_requirements: string
 }
 
 interface ProfileRecord extends ProfileFields {
@@ -151,7 +152,8 @@ export function createMockApi(options: MockApiOptions): MockApi {
     for (const hours of HOURS) {
       if (distribution[hours] > 0 && (mostCommon === null || distribution[hours] > distribution[mostCommon])) mostCommon = hours
     }
-    let summary = 'No workload reports yet'
+    // Like the real API: no summary (null) until someone reports their hours.
+    let summary: string | null = null
     if (mostCommon) {
       const picked = distribution[mostCommon]
       summary =
@@ -407,11 +409,11 @@ export function createMockApi(options: MockApiOptions): MockApi {
           .flatMap((review) => (review.feedback ? [review.feedback] : []))
           .slice(0, 2),
         difficulty_avg: stats.difficulty_avg,
-        workload_summary: stats.workload_summary,
+        workload_summary: stats.workload_summary ?? 'No workload reports yet',
         worth_score: stats.worth_score,
         review_count: count,
         limitations: [
-          ...(count === 0 ? ['No reviews yet'] : count < 3 ? [`Only ${count} review${count === 1 ? '' : 's'} so far`] : []),
+          ...(count === 0 ? ['No student reviews yet'] : count < 3 ? [`Only ${count} review${count === 1 ? '' : 's'} so far`] : []),
           PREREQUISITES_NOTE,
         ],
       }
@@ -515,9 +517,9 @@ function readProfile(data: Record<string, unknown>, loc: string[], issues: Issue
     major,
     interests,
     skills,
-    career_goals: careerGoals,
+    career_goals: careerGoals ?? '',
     personal_interests: personalInterests,
-    degree_requirements: degreeRequirements,
+    degree_requirements: degreeRequirements ?? '',
   }
 }
 

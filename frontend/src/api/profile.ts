@@ -26,9 +26,10 @@ export const profileSchema = z
     major: profile.major,
     interests: profile.interests,
     skills: profile.skills,
-    careerGoals: profile.career_goals ?? null,
+    // BE2 returns "" for omitted text; the app treats empty and missing alike.
+    careerGoals: profile.career_goals || null,
     personalInterests: profile.personal_interests,
-    degreeRequirements: profile.degree_requirements ?? null,
+    degreeRequirements: profile.degree_requirements || null,
     updatedAt: profile.updated_at ?? null,
   }))
 
