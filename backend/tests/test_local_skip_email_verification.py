@@ -25,6 +25,8 @@ def _settings(**values: str) -> Settings:
 
 
 def test_unverified_is_rejected_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    # app.main loads backend/.env into the environment, which may turn the switch on locally.
+    monkeypatch.delenv("AUTH_SKIP_EMAIL_VERIFICATION", raising=False)
     monkeypatch.setattr(deps, "get_settings", lambda: _settings(APP_ENV="development"))
     with pytest.raises(HTTPException) as exc:
         require_verified_email(_unverified())
