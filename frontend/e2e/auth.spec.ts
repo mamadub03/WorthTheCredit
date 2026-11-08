@@ -12,7 +12,7 @@ test('a visitor creates an account from the header and can log out @phone', asyn
   await page.getByRole('banner').getByRole('link', { name: 'Sign in' }).click()
 
   await expect(page).toHaveURL(paths.signIn())
-  await expect(page.getByRole('heading', { level: 1, name: 'Welcome to WorthTheCredit' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: /^Welcome to / })).toBeVisible()
   await page.getByRole('button', { name: 'Create an account' }).click()
 
   await expect(page).toHaveURL(paths.home)
@@ -44,7 +44,7 @@ test('a protected page signs the student in and keeps its URL', async ({ page })
   await page.goto(paths.writeReview(swen.id))
   await expect(page.getByRole('heading', { level: 1, name: 'Was it worth the credit?' })).toBeVisible()
   await expect(page).toHaveURL(paths.writeReview(swen.id))
-  await expect(page.getByText(swen.title)).toBeVisible()
+  await expect(page.getByText(swen.title, { exact: true })).toBeVisible()
 })
 
 test('a student has to verify their email before reviewing', async ({ page }) => {

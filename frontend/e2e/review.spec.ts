@@ -42,7 +42,7 @@ test("posts a review as BE2's ReviewCreate JSON @phone", async ({ page, backend 
   await signIn(page, paths.writeReview())
   await page.getByRole('combobox', { name: 'Course' }).fill('swen')
   await page.getByRole('option', { name: /SWEN-261/ }).click()
-  await expect(page.getByText(swen.title)).toBeVisible()
+  await expect(page.getByText(swen.title, { exact: true })).toBeVisible()
 
   await answerRequired(page)
   await page.getByRole('textbox', { name: /^What should future students know\?/ }).fill('Start the team project early.')
@@ -70,7 +70,17 @@ test("posts a review as BE2's ReviewCreate JSON @phone", async ({ page, backend 
 
 test('a course link opens the form with that course picked', async ({ page }) => {
   await signIn(page, paths.writeReview(swen.id))
-  await expect(page.getByText(swen.title)).toBeVisible()
+  await expect(page.getByText(swen.title, { exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Change' })).toBeVisible()
+})
+
+test('the course page opens the form with that course picked', async ({ page }) => {
+  await signIn(page, paths.course(swen.id))
+  await expect(page.getByRole('heading', { level: 1, name: swen.title })).toBeVisible()
+  await page.getByRole('link', { name: 'Write a review' }).first().click()
+
+  await expect(page).toHaveURL(paths.writeReview(swen.id))
+  await expect(page.getByText(swen.title, { exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Change' })).toBeVisible()
 })
 
@@ -119,7 +129,7 @@ test('unfinished answers survive a reload', async ({ page }) => {
   await answerRequired(page)
   await page.reload()
 
-  await expect(page.getByText(swen.title)).toBeVisible()
+  await expect(page.getByText(swen.title, { exact: true })).toBeVisible()
   await expect(worthScore(page, 4)).toBeChecked()
   await expect(page.getByRole('button', { name: 'Remove Python' })).toBeVisible()
 })

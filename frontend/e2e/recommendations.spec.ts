@@ -91,8 +91,8 @@ test('a match opens its course page, and Back shows the same answers without ask
   expect(title).not.toBe('')
 
   await first.getByRole('link', { name: 'View course' }).click()
-  // FE1's course page (#21) isn't on frontend_v1 yet, so this URL shows Not found until it lands.
   await expect(page).toHaveURL(href)
+  await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible()
 
   await page.goBack()
   await expect(page).toHaveURL(paths.recommendations)
