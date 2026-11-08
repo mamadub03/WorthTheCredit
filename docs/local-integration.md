@@ -64,3 +64,16 @@ error. The backend now serves reviews, so use `none` against the backend, or
 
 The seed has no reviews, so every course starts with "No reviews yet" until
 students post some.
+
+## "Sign-in expired" on every request (macOS)
+
+If AI match or posting a review always says your sign-in expired, check the
+backend for `CERTIFICATE_VERIFY_FAILED`. Python from python.org on macOS ships
+without trusted certificates, so the backend can't fetch Auth0's signing keys
+and treats every token as invalid. Either run
+`/Applications/Python 3.12/Install Certificates.command`, or start the backend
+with the certifi bundle:
+
+```bash
+SSL_CERT_FILE="$(.venv/bin/python -m certifi)" .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
