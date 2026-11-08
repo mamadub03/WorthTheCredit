@@ -115,3 +115,13 @@ The review form and course picker were generated with Claude Code (Claude Opus 5
 ### Suggested citation
 
 The review submission flow was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: AI personalization form (FE2, #29)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/29-personalization-form`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the `/recommendations` page and its form (major, interests, existing skills, career goals, academic goals), the form model with the exact `RecommendationRequest` JSON and the API's at-least-one-preference rule, per-student answers remembered in this browser, a request hook that cancels stale requests, a simple results list (full cards come in #30), and tests.
+
+### Suggested citation
+
+The AI personalization form was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
