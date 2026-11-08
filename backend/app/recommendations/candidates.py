@@ -56,6 +56,7 @@ def keywords_for_request(request: RecommendationRequest) -> list[str]:
         skills=request.skills,
         career_goals=request.career_goals,
         academic_goals=request.academic_goals,
+        resume_text=request.resume_text,
     )
 
 

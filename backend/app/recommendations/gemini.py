@@ -139,7 +139,10 @@ def _prompt(
         "strong_match, good_match, partial_match, or exploratory. "
         "Use only course_id values from candidates. Do not invent courses, "
         "reviews, skills, or a Worth Score. Do not use a numeric match "
-        "percentage. Do not claim prerequisites are satisfied.\n"
+        "percentage. Do not claim prerequisites are satisfied. "
+        "If student.resume_text is present, use it as additional context for "
+        "ranking and explanations only; do not invent employers, jobs, or "
+        "skills that are not supported by the resume or profile fields.\n"
         + json.dumps(material)
     )
 
