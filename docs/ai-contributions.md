@@ -157,3 +157,13 @@ The AI match page was generated with Claude Code (Claude Opus 5.5) on 7 November
 ### Suggested citation
 
 FE2's Example B styling and the sign-in page were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-08: Review posted and already-reviewed screens in Example B (FE2, #28)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/28-review-outcome-screens`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI changed:** moved #28's "Review posted" and "You've already reviewed this course" screens from FE1's global `.panel` and `.eyebrow` classes to FE2's `StatusPanel`, turned their links into `ButtonLink`s beside the existing "Review a different course" button, and added test checks for the link targets and the live regions. The wording, link targets, and behavior are unchanged.
+
+### Suggested citation
+
+The review confirmation screens were moved to FE2's Example B `StatusPanel` with Claude Code (Claude Opus 5.5) on 8 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.

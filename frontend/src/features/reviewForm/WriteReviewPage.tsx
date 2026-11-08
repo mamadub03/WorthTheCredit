@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
-import { Link, useLocation, useSearchParams } from 'react-router'
+import { useLocation, useSearchParams } from 'react-router'
 import Button from '../../components/form/Button.tsx'
+import ButtonLink from '../../components/form/ButtonLink.tsx'
+import StatusPanel from '../../components/form/StatusPanel.tsx'
 import { paths } from '../../routes/paths.ts'
 import { useAuth } from '../auth/authContext.ts'
 import RequireAuth from '../auth/RequireAuth.tsx'
@@ -56,38 +58,47 @@ function WriteReview() {
 
   if (outcome.status === 'posted') {
     return (
-      <section className="panel" aria-live="polite">
-        <p className="eyebrow">Thank you</p>
-        <h1>Review posted</h1>
+      <StatusPanel
+        tag="Thank you"
+        title="Review posted"
+        live
+        actions={
+          <>
+            <ButtonLink to={paths.course(outcome.review.courseId)}>See the course</ButtonLink>
+            <ButtonLink to={paths.recommendations} variant="secondary">
+              Find your next course
+            </ButtonLink>
+          </>
+        }
+      >
         <p>It now counts toward the course's Worth Score and helps the next student decide.</p>
-        <p>
-          <Link to={paths.course(outcome.review.courseId)}>See the course</Link>
-          {' · '}
-          <Link to={paths.recommendations}>Find your next course</Link>
-        </p>
-      </section>
+      </StatusPanel>
     )
   }
 
   if (outcome.status === 'already_reviewed') {
     return (
-      <section className="panel" aria-live="polite">
-        <p className="eyebrow">One review per course</p>
-        <h1>You've already reviewed this course</h1>
+      <StatusPanel
+        tag="One review per course"
+        title="You've already reviewed this course"
+        live
+        actions={
+          <>
+            <ButtonLink to={paths.course(outcome.courseId)}>See the course</ButtonLink>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                form.setField('courseId', null)
+                reset()
+              }}
+            >
+              Review a different course
+            </Button>
+          </>
+        }
+      >
         <p>Each student gets one review per course, and reviews can't be edited after posting.</p>
-        <p>
-          <Link to={paths.course(outcome.courseId)}>See the course</Link>
-        </p>
-        <Button
-          variant="secondary"
-          onClick={() => {
-            form.setField('courseId', null)
-            reset()
-          }}
-        >
-          Review a different course
-        </Button>
-      </section>
+      </StatusPanel>
     )
   }
 

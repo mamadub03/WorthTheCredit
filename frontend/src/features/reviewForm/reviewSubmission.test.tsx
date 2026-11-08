@@ -50,7 +50,9 @@ describe('review submission', () => {
     setup()
     await answerAndPost(user)
     expect(await screen.findByRole('heading', { name: 'Review posted' })).toBeTruthy()
+    expect(screen.getByRole('region', { name: 'Review posted' }).getAttribute('aria-live')).toBe('polite')
     expect(screen.getByRole('link', { name: 'See the course' }).getAttribute('href')).toBe(`/courses/${course.id}`)
+    expect(screen.getByRole('link', { name: 'Find your next course' }).getAttribute('href')).toBe('/recommendations')
     expect(sessionStorage.getItem(draftKey('dev|student'))).toBeNull()
   })
 
@@ -70,6 +72,8 @@ describe('review submission', () => {
     })
     await answerAndPost(user)
     expect(await screen.findByRole('heading', { name: "You've already reviewed this course" })).toBeTruthy()
+    expect(screen.getByRole('region', { name: "You've already reviewed this course" }).getAttribute('aria-live')).toBe('polite')
+    expect(screen.getByRole('link', { name: 'See the course' }).getAttribute('href')).toBe(`/courses/${course.id}`)
 
     await user.click(screen.getByRole('button', { name: 'Review a different course' }))
     expect(await screen.findByRole('combobox', { name: 'Course' })).toBeTruthy()
