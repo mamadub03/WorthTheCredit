@@ -1,87 +1,98 @@
+import { useId } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router'
 import Button from '../../components/form/Button.tsx'
-import StatusPanel from '../../components/form/StatusPanel.tsx'
-import { paths, signInReturnPath } from '../../routes/paths.ts'
+import Coin from '../../components/ui/Coin.tsx'
+import { PencilIcon, SearchIcon, SparkIcon } from '../../components/ui/icons.tsx'
+import { COURSES_PATH } from '../../routes/discoveryPaths.ts'
+import { signInReturnPath } from '../../routes/paths.ts'
+import AuthStatusPanel from './AuthStatusPanel.tsx'
 import { useAuth } from './authContext.ts'
 import styles from './SignInPage.module.css'
 
-/** Icon paths from the Example B boards (24px grid, stroked). */
-const ICONS = {
-  check: 'M5 12.5l4.5 4.5L19 7',
-  mail: 'M3 7l9 6 9-6M6 5h12a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3z',
-  sparkle: 'M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z',
-  pencil: 'M4 20h4L19 9l-4-4L4 16zM13 7l4 4',
-  bookmark: 'M6 4h12v17l-6-4-6 4z',
-}
-
-/** What an account adds. Only features the app has: there is no shortlist yet. */
+/**
+ * What an account adds, from the College carousel sign-in board. The board's
+ * first perk, "Save a shortlist", is left out: the app has no shortlist.
+ */
 const PERKS = [
-  { title: 'Get AI matches', text: 'Courses picked for your major, skills, and career goals.', icon: ICONS.sparkle, tint: styles.tintBlue },
-  { title: 'Review your classes', text: 'One review per course, posted anonymously.', icon: ICONS.pencil, tint: styles.tintGreen },
-  { title: 'Keep your answers', text: 'What you tell the AI advisor is saved in this browser for next time.', icon: ICONS.bookmark, tint: styles.tintWarm },
+  { title: 'Get AI matches', text: 'Courses picked for your major, skills and career goals.', Icon: SparkIcon, tint: styles.tintTeal },
+  { title: 'Review your classes', text: 'One review per course, posted anonymously.', Icon: PencilIcon, tint: styles.tintMint },
+  { title: 'Browsing stays free', text: 'Search courses and read reviews without signing in.', Icon: SearchIcon, tint: styles.tintLilac },
 ]
+const PERK_DELAYS = ['wtc-d1', 'wtc-d2', 'wtc-d3']
 
 /**
- * /signin, the sign-in page from the Example B design. "Continue with email"
- * and "Create an account" open Auth0 (or dev sign-in), then return to
- * ?next=. Signed-in visitors go straight there. Owner: FE2.
+ * /signin, the College carousel sign-in board: a welcome card with the tossing
+ * coin beside what an account adds (below it on phones). "Continue with email"
+ * and "Create an account" open Auth0 (or dev sign-in), then return to ?next=
+ * when it stays on this site. Signed-in visitors go straight there. Owner: FE2.
  */
 export default function SignInPage() {
   const auth = useAuth()
   const [params] = useSearchParams()
   const returnTo = signInReturnPath(params.get('next'))
+  const id = useId()
+  const titleId = `${id}-title`
+  const perksId = `${id}-perks`
 
   if (auth.mode === 'unconfigured') {
-    return <StatusPanel title="Sign-in isn't set up yet">{auth.error ? <p>{auth.error.message}</p> : null}</StatusPanel>
+    return <AuthStatusPanel title="Sign-in isn't set up yet">{auth.error ? <p>{auth.error.message}</p> : null}</AuthStatusPanel>
   }
-  if (auth.isLoading) return <StatusPanel title="Checking your sign-in" live />
+  if (auth.isLoading) return <AuthStatusPanel title="Checking your sign-in" live />
   if (auth.isAuthenticated) return <Navigate to={returnTo} replace />
 
   return (
     <div className={styles.page}>
-      <section className={styles.card} aria-labelledby="sign-in-title">
-        <span className={styles.mark}>
-          <Icon path={ICONS.check} size={28} strokeWidth={2.6} />
+      <section className={`${styles.card} wtc-rise`} aria-labelledby={titleId}>
+        {/* Two sizes of Grace's coin, one per width; both are decorative. */}
+        <span className={styles.coinWide}>
+          <Coin size={132} />
         </span>
-        <h1 id="sign-in-title" className={styles.title}>
-          Welcome to WorthTheCredit
+        <span className={styles.coinPhone}>
+          <Coin size={110} />
+        </span>
+        <h1 id={titleId} className={styles.title}>
+          {/* The wordmark's orange letters, read out as one phrase. */}
+          <span aria-hidden="true">
+            Welcome to worth the c<span className={styles.accent}>R</span>ed<span className={styles.accent}>IT</span>
+          </span>
+          <span className="wtc-sr">Welcome to worth the cRedIT</span>
         </h1>
-        <p className={styles.lead}>Sign in to get AI course matches and review classes you've taken.</p>
+        <p className={styles.lead}>Sign in to get AI matches and review the classes you’ve taken.</p>
         {auth.error ? (
           <p className={styles.error} role="alert">
             Sign-in didn't finish: {auth.error.message}
           </p>
         ) : null}
-        <Button className={styles.cta} onClick={() => void auth.login({ returnTo })}>
-          <Icon path={ICONS.mail} size={20} strokeWidth={2.2} />
+        <Button size="large" className={`${styles.cta} ${styles.primary}`} onClick={() => void auth.login({ returnTo })}>
+          <MailIcon />
           Continue with email
         </Button>
-        <Button variant="secondary" className={styles.cta} onClick={() => void auth.signup({ returnTo })}>
+        <Button variant="dark" size="large" className={`${styles.cta} ${styles.dark}`} onClick={() => void auth.signup({ returnTo })}>
           Create an account
         </Button>
         <p className={styles.note}>
           {auth.mode === 'dev'
             ? 'Dev sign-in is on, so both buttons sign you in as a test student.'
-            : "Secure sign-in through Auth0. We'll send a verification email before you can post reviews."}
+            : 'Secure sign-in through Auth0. We’ll send a verification email before you can post reviews.'}
         </p>
-        <Link className={styles.browse} to={paths.home}>
+        <Link className={styles.browse} to={COURSES_PATH}>
           Keep browsing without an account →
         </Link>
       </section>
 
-      <section className={styles.perks} aria-labelledby="sign-in-perks">
-        <h2 id="sign-in-perks" className={styles.perksTitle}>
+      <section className={styles.perks} aria-labelledby={perksId}>
+        <h2 id={perksId} className={`${styles.perksTitle} wtc-rise wtc-d1`}>
           With an account you can
         </h2>
         <ul className={styles.perkList}>
-          {PERKS.map((perk) => (
-            <li key={perk.title} className={styles.perk}>
-              <span className={`${styles.perkIcon} ${perk.tint}`}>
-                <Icon path={perk.icon} size={24} strokeWidth={2} />
+          {PERKS.map(({ title, text, Icon, tint }, index) => (
+            <li key={title} className={`${styles.perk} wtc-rise ${PERK_DELAYS[index]}`}>
+              <span className={`${styles.perkIcon} ${tint}`}>
+                <Icon size={26} />
               </span>
               <span className={styles.perkText}>
-                <span className={styles.perkTitle}>{perk.title}</span>
-                <span className={styles.perkDetail}>{perk.text}</span>
+                <span className={styles.perkTitle}>{title}</span>
+                <span className={styles.perkDetail}>{text}</span>
               </span>
             </li>
           ))}
@@ -91,21 +102,23 @@ export default function SignInPage() {
   )
 }
 
-function Icon({ path, size, strokeWidth }: { path: string; size: number; strokeWidth: number }) {
+/** The board's envelope, drawn before "Continue with email". */
+function MailIcon() {
   return (
     <svg
-      width={size}
-      height={size}
+      width="20"
+      height="20"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={strokeWidth}
+      strokeWidth="2.2"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
     >
-      <path d={path} />
+      <rect x="3" y="5" width="18" height="14" rx="3" />
+      <path d="M3 7l9 6 9-6" />
     </svg>
   )
 }

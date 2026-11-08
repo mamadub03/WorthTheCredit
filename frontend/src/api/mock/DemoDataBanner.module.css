@@ -1,10 +1,12 @@
-/* Example B's warm band, so demo mode is obvious on every page without shouting. */
+/*
+ * A slim College carousel band in the butter tint with ink text, so demo mode
+ * is obvious on every page without shouting. Full width under the header.
+ */
 .banner {
   margin: 0;
-  padding: 9px 24px;
-  border-bottom: 1.5px solid var(--wtc-line-warm, #f0e4da);
-  background: var(--wtc-warm, #fff4eb);
-  color: var(--wtc-link-hover, #8a3700);
-  font: 600 14px/1.4 var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  padding: 7px 16px;
+  background: var(--wtc-butter, #fff0bf);
+  color: var(--wtc-ink, #1e2124);
+  font: 600 13px/1.4 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
   text-align: center;
 }

@@ -4,7 +4,8 @@ import styles from './DemoDataBanner.module.css'
 /**
  * Says so whenever the app shows sample data or a fake sign-in (project.mdc:
  * "Keep generated demo data clearly distinguishable from real student reviews").
- * Renders nothing against the real API with real sign-in. Owner: FE2 (#25).
+ * Renders nothing against the real API with real sign-in. A slim butter band
+ * under FE1's header, in the College carousel tints. Owner: FE2 (#25).
  */
 export default function DemoDataBanner() {
   const mocked = env.mockDomains.size > 0

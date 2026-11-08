@@ -1,0 +1,18 @@
+/*
+ * A centered column for FE2's StatusPanel on the sign-in screens, about the
+ * width of the sign-in board's welcome card. StatusPanel itself draws the
+ * card's 36 px corners and the coin in its art slot.
+ */
+
+.frame {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .frame {
+    padding: 4px 2px 0;
+  }
+}

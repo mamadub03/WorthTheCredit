@@ -1,14 +1,55 @@
 /*
- * Floats right inside FE1's block header, so it needs no change to the
- * header's own CSS. The top padding centres a 38px pill on the brand line.
+ * The header's right-hand slot (FE1's AppLayout .account), College carousel
+ * style. Signed out: the boards' dark Sign in pill, 44 px tall with a 32 px
+ * orange arrow dot (no dot on phones). Signed in: the lilac initials avatar,
+ * "Signed in", and a white 44 px "Log out" button.
  */
 .menu {
-  float: right;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 24px 0 0;
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  min-width: 0;
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+/* Two classes, so these win over wtc-btn and wtc-btn-small whatever the stylesheet order. */
+.menu .pill {
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 6px 6px 16px;
+  border-radius: 999px;
+  font: 600 14px/1.2 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.dot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--wtc-orange, #f76902);
+  color: var(--wtc-ink, #1e2124);
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* The pill floods orange, so the dot turns ink with an orange arrow and nudges right. */
+.pill:hover .dot,
+.pill:focus-visible .dot {
+  background: var(--wtc-ink, #1e2124);
+  color: var(--wtc-orange, #f76902);
+  transform: translateX(2px);
+}
+
+/* Both header controls flood orange on focus, so their ring is ink. */
+.menu .pill:focus-visible,
+.menu .logout:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
 }
 
 .account {
@@ -16,52 +57,59 @@
   align-items: center;
   gap: 8px;
   min-width: 0;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .avatar {
-  display: grid;
+  display: flex;
   flex: none;
-  place-items: center;
-  width: 34px;
-  height: 34px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-  background: var(--wtc-orange, #f76902);
-  color: var(--wtc-ink, #1e2124);
-  font-size: 15px;
-  font-weight: 800;
+  background: var(--wtc-lilac, #e9e1f8);
+  color: var(--wtc-lilac-ink, #4b2f86);
+  font: 800 14px/1 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
-.who {
-  max-width: 220px;
-  overflow: hidden;
-  color: var(--wtc-ink, #1e2124);
-  font-size: 15px;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+.menu .logout {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font: 600 14px/1.2 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
 @media (max-width: 640px) {
   .menu {
     gap: 8px;
-    padding-right: 16px;
   }
 
-  /* The avatar stays; the address is still read out to screen readers. */
-  .who {
+  /* The phone board's pill has no dot. */
+  .menu .pill {
+    padding: 0 16px;
+  }
+
+  .dot {
+    display: none;
+  }
+
+  /* The avatar stays; "Signed in" is still read out to screen readers. */
+  .signedIn {
     position: absolute;
     width: 1px;
     height: 1px;
     overflow: hidden;
     clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transition: none;
   }
 }
