@@ -111,6 +111,15 @@ Infrastructure:
 - Keep generated demo data clearly distinguishable
   from real student reviews.
 
+## Shared Technical Documentation
+
+- Database schema: docs/DATABASE_SCHEMA.md
+- All developers must follow the agreed database schema.
+- Backend 1 owns SQLAlchemy models and Alembic migrations.
+- Backend 2 coordinates any review schema changes with Backend 1.
+- Do not independently change shared database models.
+- API request/response structures must be agreed upon before integration.
+
 ## 5. Developer Ownership
 
 Backend Developer 1:
