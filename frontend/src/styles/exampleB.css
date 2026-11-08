@@ -1,25 +1,46 @@
 /*
- * Example B ("white + warm", Figtree), the design the team picked for WorthTheCredit.
- * These variables style FE2's screens. FE1 can adopt them app-wide in index.css
- * (or replace this file) when the header, home, and course pages move to Example B.
- * Owner: FE2. Values come from the design's Combo-HomeB board.
+ * Shared design tokens for WorthTheCredit. FE2's screens and FE1's pages both read
+ * these --wtc-* variables, so changing a value here restyles the whole app.
+ *
+ * Nov 8: moved from Example B ("white + warm", Figtree) to the "College carousel"
+ * look on the design canvas: a cream page, Inter for text, Outfit for headings and
+ * buttons, and five pastel tints of equal lightness. Ink, orange and link colors
+ * are unchanged. Shared file (FE1 + FE2), see docs/frontend-coordination.md.
  */
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --wtc-font: Figtree, 'Helvetica Neue', Arial, sans-serif;
+  --wtc-font: Inter, 'Helvetica Neue', Arial, sans-serif;
+  --wtc-display: Outfit, Inter, 'Helvetica Neue', Arial, sans-serif;
   --wtc-ink: #1e2124;
-  --wtc-body: #4a4f54;
+  --wtc-body: #3a4044;
   --wtc-muted: #555b60;
   --wtc-orange: #f76902;
+  --wtc-orange-hover: #e45f00;
   --wtc-link: #b84a00;
   --wtc-link-hover: #8a3700;
-  --wtc-warm: #fff4eb;
+  /* The page background, and the cream used inside white cards. */
+  --wtc-cream: #fbf7f1;
+  --wtc-warm: #fbf7f1;
   --wtc-warm-strong: #ffe6d2;
   --wtc-surface: #ffffff;
-  --wtc-gray: #f3f4f5;
-  --wtc-line: #ecedee;
-  --wtc-line-warm: #f0e4da;
+  --wtc-gray: #f3f1ec;
+  --wtc-line: #ece6dc;
+  --wtc-line-warm: #e8e2d8;
   --wtc-danger: #b42318;
   --wtc-danger-soft: #fef3f2;
+  --wtc-success: #3d5a00;
+  --wtc-success-soft: #e6f2cf;
+
+  /* Pastel tints, all the same lightness, with a readable text color for each. */
+  --wtc-peach: #ffe6d2;
+  --wtc-peach-ink: #8a3700;
+  --wtc-teal: #d3eff5;
+  --wtc-teal-ink: #00566a;
+  --wtc-lilac: #e9e1f8;
+  --wtc-lilac-ink: #4b2f86;
+  --wtc-butter: #fff0bf;
+  --wtc-butter-ink: #6b5200;
+  --wtc-mint: #e6f2cf;
+  --wtc-mint-ink: #3d5a00;
 }
