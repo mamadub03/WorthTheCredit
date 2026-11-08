@@ -76,3 +76,16 @@ Tiger Data / SQLAlchemy / Alembic wiring was generated with Cursor Agent on 7 No
 ### Suggested citation
 
 Course/User/Review SQLAlchemy models and initial migration were generated with Cursor Agent on 7 November 2026 for GitHub Issue #4 from `docs/DATABASE_SCHEMA.md`.
+
+## 2026-11-07 — Generate and seed mock RIT data (Issue #5)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue5`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** Idempotent seed script + fictional course/user/review fixtures marked as DEMO / FICTIONAL.
+
+### Files the agent added or substantially edited
+
+- `backend/app/db/seed_data.py`
+- `backend/scripts/seed_db.py`
+- `backend/README.md`
+- `docs/ai-contributions.md` (this file)

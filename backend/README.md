@@ -55,4 +55,8 @@ With `DATABASE_URL` set:
 
 ```bash
 alembic upgrade head
+python scripts/seed_db.py
 ```
+
+The seed script is **idempotent** (re-run safe) and loads clearly fictional
+demo courses/users/reviews from `app/db/seed_data.py`.
