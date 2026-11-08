@@ -2,53 +2,41 @@ import type { Review } from '../../api/reviews.ts'
 import CapsMeter from '../../components/ui/CapsMeter.tsx'
 import { ClockIcon } from '../../components/ui/icons.tsx'
 import { WorthBadge } from '../../components/ui/WorthScore.tsx'
-import { DIFFICULTY_LABELS, goalLabel, WORTH_SCORE_LABELS, weeklyHoursLabel, type Score } from '../../domain/reviewVocabulary.ts'
+import { GOAL_STYLE, hoursShort } from '../../domain/goalStyles.ts'
 import { postedLabel } from './insights.ts'
 import styles from './CoursePage.module.css'
 
-const GOAL_TINTS: Record<string, string> = {
-  career_preparation: 'var(--wtc-peach)',
-  skill_development: 'var(--wtc-teal)',
-  academic_development: 'var(--wtc-lilac)',
-  degree_requirements: 'var(--wtc-butter)',
-  personal_exploration: 'var(--wtc-mint)',
-}
-
 /**
- * One anonymous student review. It shows the course experience only: no
- * reviewer identity, and no professor or semester (the course page is about
- * the course, not who taught it). Owner: FE1 (#22).
+ * One anonymous review, laid out like the design's review card: Worth Score,
+ * when it was posted, what the student took it for, their words, then
+ * difficulty, weekly hours and skills. No reviewer identity, professor or
+ * semester. Owner: FE1 (#22).
  */
 export default function ReviewCard({ review }: { review: Review }) {
   return (
     <article className={styles.review}>
       <div className={styles.reviewHead}>
-        <WorthBadge score={review.worthScore} />
-        <span className={styles.reviewWho}>
-          <span className={styles.reviewName}>
-            Anonymous student · <span className={styles.reviewWorthWord}>Helped with their goals: {WORTH_SCORE_LABELS[review.worthScore as Score].toLowerCase()}</span>
+        <div className={styles.reviewWho}>
+          <WorthBadge score={review.worthScore} />
+          <span className={styles.reviewWhoText}>
+            <span className={styles.reviewName}>{postedLabel(review.createdAt)}</span>
+            <span className={styles.reviewDate}>Anonymous student</span>
           </span>
-          <span className={styles.reviewDate}>{postedLabel(review.createdAt)}</span>
-        </span>
+        </div>
+        {review.goals.length > 0 && (
+          <span className={styles.tookFor} style={{ background: `var(--wtc-${GOAL_STYLE[review.goals[0]].tint})` }}>
+            Took it for {review.goals.map((goal) => GOAL_STYLE[goal].short.toLowerCase()).join(' + ')}
+          </span>
+        )}
       </div>
-      {review.goals.length > 0 && (
-        <ul className={styles.goalChips} aria-label="Took it for">
-          {review.goals.map((goal) => (
-            <li key={goal} style={{ background: GOAL_TINTS[goal] }}>
-              {goalLabel(goal)}
-            </li>
-          ))}
-        </ul>
-      )}
       {review.feedback && <p className={styles.reviewText}>{review.feedback}</p>}
       <div className={styles.reviewFoot}>
-        <span className={styles.reviewStat} title={`Concept difficulty: ${DIFFICULTY_LABELS[review.conceptDifficulty as Score]}`}>
+        <span className={styles.reviewStat}>
           <CapsMeter value={review.conceptDifficulty} size={17} />
         </span>
-        <span className={styles.reviewStat}>
+        <span className={styles.reviewStat} title="Hours per week">
           <ClockIcon size={16} />
-          {weeklyHoursLabel(review.weeklyHoursRange)}
-          <span className={styles.muted}>a week</span>
+          {hoursShort(review.weeklyHoursRange)}h<span className={styles.muted}>/wk</span>
         </span>
         {review.skillsGained.length > 0 && <span className={styles.muted}>Gained {review.skillsGained.join(', ')}</span>}
       </div>

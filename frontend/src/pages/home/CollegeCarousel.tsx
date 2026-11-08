@@ -145,8 +145,8 @@ export default function CollegeCarousel() {
 
   return (
     <section className={styles.section} aria-labelledby="colleges-heading">
-      <h2 id="colleges-heading" className="wtc-sr">
-        Browse by college
+      <h2 id="colleges-heading" className={`${styles.heading} wtc-rise wtc-d3`}>
+        Explore by college
       </h2>
       <div
         ref={stageRef}

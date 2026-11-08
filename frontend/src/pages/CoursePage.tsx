@@ -8,10 +8,11 @@ import StateMessage, { ErrorMessage, Skeleton } from '../components/ui/StateMess
 import { reviewCountLabel } from '../components/ui/format.ts'
 import { WorthBadge } from '../components/ui/WorthScore.tsx'
 import { collegeForName } from '../domain/colleges.ts'
-import { DIFFICULTY_HINT, DIFFICULTY_LABELS, formatAverage, WEEKLY_HOURS, weeklyHoursLabel, type Score } from '../domain/reviewVocabulary.ts'
+import { GOAL_STYLE, hoursShort } from '../domain/goalStyles.ts'
+import { formatAverage, type GoalKey } from '../domain/reviewVocabulary.ts'
 import { errorMessage, isNotFound, useApiQuery } from '../hooks/useApiQuery.ts'
+import { useCourseInsights } from '../hooks/useCourseInsights.ts'
 import { useCourseReviews } from '../hooks/useCourseReviews.ts'
-import { useCourseStats } from '../hooks/useCourseStats.ts'
 import { coursesSearch } from '../routes/discoveryPaths.ts'
 import { paths } from '../routes/paths.ts'
 import { goalShares, mostCommonHours, topSkills, worthDistribution } from './course/insights.ts'
@@ -19,7 +20,14 @@ import ReviewCard from './course/ReviewCard.tsx'
 import styles from './course/CoursePage.module.css'
 
 const TINTS = ['var(--wtc-peach)', 'var(--wtc-teal)', 'var(--wtc-lilac)', 'var(--wtc-butter)', 'var(--wtc-mint)']
-const GOAL_BARS = ['#f76902', '#009cbd', '#7d55c7', '#f6be00', '#84bd00']
+/** The design's bar color for each goal in "Why students took it". */
+const GOAL_BARS: Record<GoalKey, string> = {
+  career_preparation: '#f76902',
+  skill_development: '#009cbd',
+  academic_development: '#7d55c7',
+  degree_requirements: '#f6be00',
+  personal_exploration: '#84bd00',
+}
 const REVIEWS_SHOWN = 5
 
 /**
@@ -65,7 +73,6 @@ function CourseView({ course }: { course: CourseDetail }) {
   const loaded = reviews.reviews
   const workload = summary.state.status === 'success' ? summary.state.data.workload : null
   const commonHours = workload ? mostCommonHours(workload) : null
-  const workloadTotal = workload ? WEEKLY_HOURS.reduce((sum, { key }) => sum + workload[key], 0) : 0
   const sampleNote = reviews.total > loaded.length ? ` (from the ${loaded.length} newest of ${reviews.total})` : ''
 
   return (
@@ -110,12 +117,9 @@ function CourseView({ course }: { course: CourseDetail }) {
                 <span className={styles.worthNumber}>{formatAverage(course.worthScore ?? 0)}</span>
                 <span className={styles.worthMeta}>
                   <strong>Worth Score</strong>
-                  <span>
-                    out of 5 · {reviewCountLabel(course.reviewCount)}
-                  </span>
+                  <span>{reviewCountLabel(course.reviewCount)}</span>
                 </span>
               </div>
-              <p className={styles.cardHint}>How well the course helped students reach the goals they took it for.</p>
               {loaded.length > 0 && (
                 <ul className={styles.dist} aria-label={`Worth Scores given${sampleNote}`}>
                   {worthDistribution(loaded).map((row) => (
@@ -150,39 +154,28 @@ function CourseView({ course }: { course: CourseDetail }) {
             <div className={styles.diffRow}>
               <CapsMeter value={course.averageDifficulty} size={32} animate />
               <span className={styles.bigNumber}>{formatAverage(course.averageDifficulty)}</span>
-              <span className={styles.muted}>{DIFFICULTY_LABELS[Math.min(5, Math.max(1, Math.round(course.averageDifficulty))) as Score]}</span>
             </div>
           ) : (
             <p className={styles.empty}>No ratings yet</p>
           )}
-          <p className={styles.cardHint}>{DIFFICULTY_HINT}</p>
+          <p className={styles.cardHint}>How hard the ideas are to understand. Not the professor, grading or workload.</p>
         </div>
 
         <div className={styles.scoreCard}>
-          <span className={styles.cardLabel}>Weekly time outside class</span>
+          <span className={styles.cardLabel}>Weekly time</span>
           {summary.state.status === 'loading' ? (
-            <Skeleton width={160} height={34} />
-          ) : commonHours && workload ? (
-            <>
-              <div className={styles.diffRow}>
-                <ClockIcon size={38} face="var(--wtc-butter)" />
-                <span className={styles.bigNumber}>{weeklyHoursLabel(commonHours).replace(' hours', 'h')}</span>
-              </div>
-              <ul className={styles.hours} aria-label="How many hours reviewers reported">
-                {WEEKLY_HOURS.map(({ key, label }) => (
-                  <li key={key} className={key === commonHours ? styles.hoursTop : undefined}>
-                    <span className={styles.hoursBar} style={{ height: `${workloadTotal ? Math.max(6, (workload[key] / workloadTotal) * 100) : 6}%` }} />
-                    <span className={styles.hoursKey}>{key}</span>
-                    <span className="wtc-sr">
-                      {label}: {workload[key]}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </>
+            <Skeleton width={160} height={40} />
+          ) : commonHours ? (
+            <div className={styles.diffRow}>
+              <ClockIcon size={40} face="var(--wtc-butter)" />
+              <span className={styles.bigNumber}>
+                {hoursShort(commonHours)}h<span className={styles.unit}>/wk</span>
+              </span>
+            </div>
           ) : (
             <p className={styles.empty}>No reports yet</p>
           )}
+          <p className={styles.cardHint}>Most common range students reported, including projects and studying.</p>
         </div>
       </section>
 
@@ -193,14 +186,14 @@ function CourseView({ course }: { course: CourseDetail }) {
               <section aria-labelledby="why-heading" className={styles.panel}>
                 <h2 id="why-heading">Why students took it</h2>
                 <ul className={styles.goalBars}>
-                  {goalShares(loaded).map((share, i) => (
+                  {goalShares(loaded).map((share) => (
                     <li key={share.key}>
                       <span className={styles.goalLine}>
-                        <span>{share.label}</span>
+                        <span>{GOAL_STYLE[share.key].short}</span>
                         <span>{share.pct}%</span>
                       </span>
                       <span className={styles.goalTrack}>
-                        <span style={{ width: `${share.pct}%`, background: GOAL_BARS[i % GOAL_BARS.length] }} />
+                        <span style={{ width: `${share.pct}%`, background: GOAL_BARS[share.key] }} />
                       </span>
                     </li>
                   ))}
@@ -281,16 +274,26 @@ function CourseView({ course }: { course: CourseDetail }) {
   )
 }
 
-/** Other courses from the same department. */
+/**
+ * The design's "Students also looked at" box. The API doesn't track what
+ * students viewed, so it shows courses from the same department first, then
+ * from the same college, and says so in its title.
+ */
 function SimilarCourses({ course }: { course: CourseDetail }) {
-  const department = course.department ?? ''
-  const similar = useApiQuery(department ? `similar:${department}` : null, (client, signal) => searchCourses(client, { department, limit: 8 }, signal))
-  const others = similar.state.status === 'success' ? similar.state.data.results.filter((other) => other.id !== course.id).slice(0, 3) : []
-  const stats = useCourseStats(others.map((other) => other.id))
-  if (!department || others.length === 0) return null
+  const catalog = useApiQuery('similar:catalog', (client, signal) => searchCourses(client, { limit: 100 }, signal))
+  const all = catalog.state.status === 'success' ? catalog.state.data.results.filter((other) => other.id !== course.id) : []
+  const others = [
+    ...all.filter((other) => course.department && other.department === course.department),
+    ...all.filter((other) => course.college && other.college === course.college && other.department !== course.department),
+  ].slice(0, 3)
+  const { stats } = useCourseInsights(
+    others.map((other) => other.id),
+    [],
+  )
+  if (others.length === 0) return null
   return (
     <section aria-labelledby="similar-heading" className={styles.panel}>
-      <h2 id="similar-heading">More from {department}</h2>
+      <h2 id="similar-heading">Similar courses</h2>
       <ul className={styles.similar}>
         {others.map((other) => (
           <li key={other.id}>

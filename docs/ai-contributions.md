@@ -165,6 +165,7 @@ FE2's Example B styling and the sign-in page were generated with Claude Code (Cl
 - **What the AI wrote:** the app layout (nav with the logo, footer, phone tab bar, skip link, scroll-to-top), the shared design tokens moved to the carousel look in `src/styles/exampleB.css`, global button and animation styles in `index.css`, display components (Worth Score badge, graduation-cap difficulty meter, flipping seal coin, course card, search bar, empty, error and loading states), the home page with the 3D college carousel, the `/courses` search page with a college filter, the course page (scores, difficulty, weekly time, why students took it, skills, the review list, catalog facts, more from the department), the 404 page, data hooks, course insight helpers, and tests.
 - **Assets:** the team logo pack, eleven original college marks (not RIT's official logos), and eleven Unsplash photos, credited in the footer.
 - **Not touched:** FE2's paths (auth, review form, recommendations, form components, API client, vocabulary, `paths.ts`). They pick up the new look through the shared tokens only.
+- **Follow-up the same day:** at Grace's request the AI rebuilt the home, courses and course pages to match her design boards closely (the design's course card with its "Top reason" panel, the two-line hero, the Department filter, goal chips and sort on `/courses`, the course advisor preview, and the design's score and review cards), loading each card's numbers from `/worth-score` and its reviews.
 
 ### Suggested citation
 
