@@ -1,7 +1,8 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage.tsx'
 import NotFoundPage from './pages/NotFoundPage.tsx'
-// FE2 (docs/frontend-coordination.md section 3): sign-in, the demo banner, and FE2's routes.
+// FE2 (docs/frontend-coordination.md section 3): Example B tokens, sign-in, the demo banner, and FE2's routes.
+import './styles/exampleB.css'
 import DemoDataBanner from './api/mock/DemoDataBanner.tsx'
 import AuthMenu from './features/auth/AuthMenu.tsx'
 import AuthProvider from './features/auth/AuthProvider.tsx'

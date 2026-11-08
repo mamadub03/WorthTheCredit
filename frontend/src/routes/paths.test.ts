@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { normalizeCourseCode, paths } from './paths.ts'
+import { normalizeCourseCode, paths, signInReturnPath } from './paths.ts'
 
 const id = 'c0a5e000-0000-4000-8000-000000000003'
 
@@ -11,6 +11,24 @@ describe('paths', () => {
   it('builds the review form URL, with the course preselected when given', () => {
     expect(paths.writeReview()).toBe('/review')
     expect(paths.writeReview(id)).toBe(`/review?course=${id}`)
+  })
+
+  it('builds the sign-in URL with the page to come back to', () => {
+    expect(paths.signIn()).toBe('/signin')
+    expect(paths.signIn(`/review?course=${id}`)).toBe(`/signin?next=%2Freview%3Fcourse%3D${id}`)
+  })
+})
+
+describe('signInReturnPath', () => {
+  it('returns to pages on this site', () => {
+    expect(signInReturnPath(`/review?course=${id}`)).toBe(`/review?course=${id}`)
+    expect(signInReturnPath('/recommendations')).toBe('/recommendations')
+  })
+
+  it('sends anything else home', () => {
+    for (const next of [null, undefined, '', 'https://evil.example', '//evil.example', '/\\evil.example', 'review', '/signin', '/signin?next=%2F', '/callback?code=1']) {
+      expect(signInReturnPath(next)).toBe('/')
+    }
   })
 })
 

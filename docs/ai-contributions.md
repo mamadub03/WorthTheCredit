@@ -147,3 +147,13 @@ The recommendation result cards were generated with Claude Code (Claude Opus 5.5
 ### Suggested citation
 
 The AI match page was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: Example B styling and the sign-in page (FE2, #26, #27)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/example-b-styling`, after the team picked Example B from the design canvas.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** Example B's design tokens and Figtree font (`src/styles/exampleB.css`), FE2's buttons and form controls restyled to match, a `ButtonLink` and a shared `StatusPanel`, the header's dark "Sign in" pill and signed-in account chip, the `/signin` page adapted from the design's sign-in board (with a same-site check on `?next=`), the review form, course picker, verify-email, callback, and demo-banner screens in the new style, the coordination doc and Cursor rule updates, and tests.
+
+### Suggested citation
+
+FE2's Example B styling and the sign-in page were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
