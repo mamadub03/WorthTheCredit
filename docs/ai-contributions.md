@@ -96,29 +96,15 @@ Course/User/Review SQLAlchemy models and initial migration were generated with C
 - `backend/README.md`
 - `docs/ai-contributions.md`
 
-## 2026-11-07 — Define review and recommendation contracts (Issue #10)
+## 2026-11-07 — Course details API (Issue #7)
 
-- **Requested by:** Backend Developer 2 (`as5161`), on branch `as5161-dev-issue10` (based on `backend`).
-- **Tool:** Cursor Agent (Grok 4.7).
-- **Scope:** Pydantic request and response contracts for reviews, Community Worth Score insights, and Gemini recommendations. No routes, database queries, migrations, or Gemini calls.
+- **Requested by:** Backend Developer 1 (`mamadub03`), branch `mamadu-dev-issue7` → `backend`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** `GET /courses/{course_id}` with course metadata + Community Worth Score / review_count / avg difficulty (null/0 when unreviewed).
 
-### Team sources the agent used (not written by the agent)
-
-- `docs/DATABASE_SCHEMA.md` — review columns, goal categories, weekly hour ranges, user/course relationships, check constraints, the Worth Score formula, and the Gemini input rules (sections 3–7 and 9).
-- `.cursor/rules/project.mdc` — MVP review rules, anonymity, descriptive match levels, and Backend Developer 2 ownership.
-- `backend/app/schemas/course.py` — `CourseSummary`, imported so a recommendation reuses Backend Developer 1's course card. That file was not edited.
-
-### Files the agent added or edited
-
-- `backend/app/schemas/review.py`
-- `backend/app/schemas/recommendation.py`
-- `backend/tests/test_issue10_contracts.py`
-- `docs/ai-contributions.md` (this entry)
-
-### Left unchanged on purpose
-
-Backend Developer 1 models, Alembic migrations, seed data, course routes, the API router, the course schema, `requirements.txt`, and `backend/README.md`.
-
-### Suggested citation
-
-Review and recommendation Pydantic contracts were generated with Cursor Agent on 7 November 2026 for GitHub Issue #10, encoding `docs/DATABASE_SCHEMA.md`. See `docs/ai-contributions.md`.
+### Files
+- `backend/app/schemas/course.py`
+- `backend/app/api/routes/courses.py`
+- `backend/app/schemas/__init__.py`
+- `backend/README.md`
+- `docs/ai-contributions.md`
