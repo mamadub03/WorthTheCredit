@@ -72,7 +72,7 @@
   height: 36px;
   border-radius: 999px;
   background: var(--wtc-lilac, #e9e1f8);
-  color: var(--wtc-lilac-ink, #4b2f86);
+  color: var(--wtc-ink, #1e2124);
   font: 800 14px/1 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 

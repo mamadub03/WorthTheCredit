@@ -44,6 +44,17 @@
   color: var(--wtc-ink, #1e2124);
 }
 
+/*
+ * The global orange ring is 2.5:1 on the peach panel; ink reads at 13:1. Two
+ * classes and an element so this wins over the buttons' and fields' own rings.
+ */
+.card button:focus-visible,
+.card input:focus-visible,
+.card textarea:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
+}
+
 /* The form: FE2's fields, with the board's uppercase brown labels and white boxes. */
 .fields {
   display: flex;
@@ -56,6 +67,10 @@
 }
 
 .fields > div > label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
   color: var(--wtc-peach-ink, #8a3700);
   font-size: 12px;
   font-weight: 700;
@@ -63,9 +78,11 @@
   text-transform: uppercase;
 }
 
+/* The "Optional" pill keeps its own capitalized look beside the uppercase label. */
 .fields > div > label > span {
+  margin-left: 0;
   letter-spacing: 0;
-  text-transform: none;
+  text-transform: capitalize;
 }
 
 .fields > div > p {
