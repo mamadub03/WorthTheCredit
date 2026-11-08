@@ -21,7 +21,7 @@ FE2 keeps all of its code in these paths, so it never lands in yours:
 | `src/domain/reviewVocabulary.ts` | Goal, Worth Score, difficulty, weekly hours, semester, and match-level keys and labels (section 7) | #25 |
 | `src/routes/paths.ts`, `src/routes/fe2Routes.tsx` | URL helpers and FE2's routes (section 2) | #25 |
 
-FE1 owns everything else in `frontend/`: build config, `index.html`, `main.tsx`, `App.tsx`, `index.css`, `src/pages/`, layout and display components, and the course API module (`src/api/courses.ts`, which FE2 started with search and details for the review form's course picker). `src/api/reviews.ts` is shared: FE1 writes the review list call (#22, #23), FE2 writes the create and worth-score calls (#28, #30), and the types in it follow BE2's contract on main (section 7). `src/styles/exampleB.css` is shared too: FE2 added Example B's tokens there, either of us can add to it, and you decide when `index.css` adopts them (section 4).
+FE1 owns everything else in `frontend/`: build config, `index.html`, `main.tsx`, `App.tsx`, `index.css`, `src/pages/`, layout and display components, and the course API module (`src/api/courses.ts`, which FE2 started with search and details for the review form's course picker). `src/api/reviews.ts` is shared: FE1 writes the review list call (#22, #23), FE2 writes the create and worth-score calls (#28, #30), and the types in it follow BE2's contract on main (section 7). `src/styles/exampleB.css` is shared too: it holds the design tokens (the College carousel look since PR #65), and either of us can add to it (section 4).
 
 Editing the other person's paths needs their OK first (project.mdc: "Do not modify another developer's feature without approval"). The shared files are in section 3.
 
@@ -33,7 +33,7 @@ Editing the other person's paths needs their OK first (project.mdc: "Do not modi
 | `/courses/:courseId` | Course details, insights, reviews | FE1 | Public |
 | `/review` | Write a review, with a course picker (`?course=<id>` preselects one) | FE2 | Signed in, email verified |
 | `/recommendations` | Personalization form and results | FE2 | Signed in |
-| `/signin` | Sign-in page from the Example B design, opened by the header's "Sign in" (`?next=<path>` returns there) | FE2 | Public |
+| `/signin` | Sign-in page from the College carousel design, opened by the header's "Sign in" (`?next=<path>` returns there) | FE2 | Public |
 | `/callback` | Auth0 return URL ("Signing you in") | FE2 | Public |
 | `*` | Not found | FE1 | Public |
 
@@ -71,8 +71,8 @@ Only these edits, each small, each announced to you before I push it.
 1. Wrap the app in `<AuthProvider>` inside `<BrowserRouter>`. It has to sit inside the router because the Auth0 redirect callback navigates with `useNavigate`.
 2. Render FE2's routes (`/review`, `/recommendations`, `/signin`, `/callback`) with one line, `{fe2Routes()}`, inside your `<Routes>`.
 3. Render `<DemoDataBanner />` below the header. It shows only with the mock API or dev sign-in on.
-4. Put `<AuthMenu />` at the right end of the header (Example B's dark "Sign in" pill, which opens `/signin`, or the student's account and "Log out"). If you'd rather place it yourself in #19, say so and I won't touch the header.
-5. Import `./styles/exampleB.css`, Example B's tokens and the Figtree font. It only defines `--wtc-*` variables, so nothing of yours changes.
+4. Put `<AuthMenu />` at the right end of the header (the dark "Sign in" pill, which opens `/signin`, or the student's avatar and "Log out"). Since PR #65 your `AppLayout` renders it in its `.account` slot, along with the demo banner.
+5. Import `./styles/exampleB.css`, the shared tokens and their fonts (Inter and Outfit since PR #65). It only defines `--wtc-*` variables, so nothing of yours changes.
 
 The resulting shape, with your markup unchanged:
 
@@ -101,7 +101,7 @@ If #19 moves to a layout route with `<Outlet />`, put `{fe2Routes()}` inside it 
 
 `src/main.tsx`: no change.
 
-`src/index.css`: FE2 adds nothing global. FE2's components use Example B's `--wtc-*` variables from `src/styles/exampleB.css` (section 4), each with a fixed fallback.
+`src/index.css`: FE2 adds nothing global. FE2's components use the shared `--wtc-*` variables from `src/styles/exampleB.css` (section 4), each with a fixed fallback, and your global `wtc-btn` and `wtc-rise` classes.
 
 `package.json`, added by FE2:
 
@@ -119,21 +119,21 @@ No dev proxy is needed: the backend already lets `http://localhost:5173` through
 
 ## 4. Styling
 
-Decided on Nov 7: the team picked Example B ("white + warm", Figtree) from the design canvas. Its tokens are in `src/styles/exampleB.css`: `--wtc-font`, `--wtc-ink` #1E2124, `--wtc-body`, `--wtc-muted`, `--wtc-orange` #F76902 (fills, with ink text), `--wtc-link` #B84A00 (orange text that passes contrast), `--wtc-warm` and `--wtc-warm-strong` (the warm band and active nav), `--wtc-line` and `--wtc-line-warm` (borders), and `--wtc-danger`. FE2's screens use them now: pill buttons, 14 to 32 px radii, warm-outlined cards, and the tag pill above page titles. Your header, home, and course pages can move over when you're ready (#19); then `index.css` can point its own variables at these or replace them, and the page background turns white.
+Decided on Nov 8: the standard is the "College carousel" look from Grace's design on the team canvas. It replaces Example B (picked Nov 7) and has been in the shared tokens in `src/styles/exampleB.css` since PR #65: Inter (`--wtc-font`) for text and Outfit (`--wtc-display`) for headings, the cream page (`--wtc-cream` #FBF7F1) with white cards (`--wtc-surface`), rounded-rectangle buttons (your global `wtc-btn` classes in `index.css`), and five tints with readable inks (`--wtc-peach`, `--wtc-teal`, `--wtc-lilac`, `--wtc-butter`, `--wtc-mint`, each with an `-ink`). `--wtc-orange` #F76902 fills still take ink text, and `--wtc-link` #B84A00 is the orange text that passes contrast. Your pages use it since PR #65, and FE2's controls and screens (sign in, the account menu, write a review, AI match) use it since FE2's College carousel restyle, which builds on #65.
 
 The question below (how we write styles) still stands; FE2 uses CSS Modules.
 
 My vote: keep what the scaffold has (CSS variables in `index.css`, plain CSS) and write component styles as CSS Modules (`Thing.module.css`). Vite supports them with no extra dependency, and they scope class names, so your classes and mine can't collide while we work in parallel. FE2's components are written that way already, so if you choose something else they're easy to move. Tailwind v4 (`@tailwindcss/vite`) is also fine with me. I'd push back on a component library (MUI, Mantine, Chakra): it adds a provider and a theme to `main.tsx` and is hard to back out mid-hackathon.
 
-State colors that Example B doesn't define yet go in `exampleB.css` as they're needed: `--wtc-danger` and `--wtc-danger-soft` exist (field errors, failed submits); success (review posted) and warning (unverified email) can follow the same pattern. Focus rings use ink, or orange on text fields.
+State colors the tokens don't define yet go in `exampleB.css` as they're needed: `--wtc-danger` and `--wtc-danger-soft` (field errors, failed submits) and `--wtc-success` and `--wtc-success-soft` (review posted) exist; warning (unverified email) can follow the same pattern. Focus rings are the global orange `:focus-visible` ring in `index.css`.
 
 Layout: mobile first, since students will use this during registration on their phones (user story 1). FE2's forms work at 360 px wide and use 640 px as their one breakpoint; using the same one keeps our pages in step.
 
 ## 5. Shared components
 
-FE2 builds its own form controls in `src/components/form/` (`Field`, `TextInput`, `TextArea`, `Select`, `ChoiceGroup`, `RatingScale`, `TagInput`), and you're welcome to use them; your search box could use `TextInput`. The same folder has FE2's Example B `Button` (primary, dark, secondary, quiet), `ButtonLink` (a router link that looks like a button), and `StatusPanel` (a full-page message such as "Verify your email").
+FE2 builds its own form controls in `src/components/form/` (`Field`, `TextInput`, `TextArea`, `Select`, `ChoiceGroup`, `RatingScale`, `TagInput`), and you're welcome to use them; your search box could use `TextInput`. The same folder has FE2's `Button` (primary, dark, secondary, quiet; sizes normal, small, large), `ButtonLink` (a router link that looks like a button), and `StatusPanel` (a full-page message such as "Verify your email"). `Button` and `ButtonLink` now render your global `wtc-btn` classes (`wtc-btn-orange`, `wtc-btn-dark`, `wtc-btn-white`, `wtc-btn-small`), so FE2's buttons and yours look and move the same. Only the large size and the quiet link-style button are FE2's own CSS.
 
-Where FE2 needs display pieces that are yours in #19 (a `Button`, a `WorthScore` display, chips, a match badge, loading and error states), it uses small local versions for now and will swap to yours when they land, so none of this blocks you.
+FE2's screens use your `src/components/ui/` pieces (`CapsMeter`, `Coin`, `ClockIcon` and the other icons in `icons.tsx`, `WorthBadge`) instead of local copies.
 
 Worth Score display rules, so a score looks the same in search results, on the course page, and on recommendation cards:
 

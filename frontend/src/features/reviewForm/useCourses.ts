@@ -68,3 +68,21 @@ export function useCourse(courseId: string | null): { course: CourseDetail | nul
   if (!courseId) return { course: null, status: 'idle' }
   return state.id === courseId ? state : { course: null, status: 'loading' }
 }
+
+/**
+ * The course the review is about: the one the student just picked, or (for a
+ * course from the link or a saved draft) a lookup by id. Lives on the page so
+ * the header, the side notes and the posted card can name the course too.
+ */
+export function useChosenCourse(courseId: string | null): {
+  course: CourseSummary | null
+  status: LoadStatus
+  choose: (course: CourseSummary | null) => void
+} {
+  const [chosen, setChosen] = useState<CourseSummary | null>(null)
+  const needsLookup = courseId !== null && chosen?.id !== courseId
+  const lookup = useCourse(needsLookup ? courseId : null)
+  if (!courseId) return { course: null, status: 'idle', choose: setChosen }
+  if (chosen?.id === courseId) return { course: chosen, status: 'done', choose: setChosen }
+  return { course: lookup.course, status: lookup.status, choose: setChosen }
+}

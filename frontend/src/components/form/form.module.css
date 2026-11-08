@@ -1,77 +1,149 @@
-/* FE2's form controls in the Example B style (src/styles/exampleB.css). */
+/*
+ * FE2's form controls in the College carousel style (src/styles/exampleB.css
+ * tokens, Write a review board section 4). Cream boxes with a warm 2 px border
+ * on white cards, pill chips that lift on hover, an orange ring on keyboard
+ * focus. Motion is off under prefers-reduced-motion (bottom of the file).
+ */
 
 .field {
   display: grid;
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
   gap: 6px;
   margin: 0 0 24px;
 }
 
 .fieldset {
   display: grid;
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
-  gap: 8px;
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+  gap: 10px;
   min-width: 0;
   margin: 0 0 24px;
   padding: 0;
   border: 0;
 }
 
+/* A field's label: Inter 700 14px, ink. */
 .label {
   padding: 0;
   color: var(--wtc-ink, #1e2124);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
+  line-height: 1.4;
 }
 
+/* A question group's title: Outfit 800 21px. */
+.legend {
+  padding: 0;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 21px/1.2 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+/* The "Optional" pill beside a label. */
 .optional {
-  margin-left: 6px;
+  display: inline-block;
+  margin-left: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--wtc-gray, #f3f1ec);
   color: var(--wtc-muted, #555b60);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: capitalize;
+  vertical-align: middle;
 }
 
 .hint {
   margin: 0;
   color: var(--wtc-muted, #555b60);
   font-size: 14px;
+  line-height: 1.45;
 }
 
+/* Field message under the control: danger text led by a 16 px alert icon. */
 .error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
   margin: 0;
   color: var(--wtc-danger, #b42318);
-  font-size: 0.9rem;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
+
+.errorIcon {
+  flex: none;
+  margin-top: 1px;
+}
+
+/* Text inputs, textareas and selects */
 
 .input,
 .textarea,
 .select {
+  box-sizing: border-box;
   width: 100%;
-  min-height: 48px;
-  padding: 10px 14px;
-  border: 1.5px solid var(--wtc-line, #ecedee);
-  border-radius: 14px;
-  background: var(--wtc-surface, #ffffff);
+  border: 2px solid var(--wtc-line-warm, #e8e2d8);
+  background: var(--wtc-cream, #fbf7f1);
   color: var(--wtc-ink, #1e2124);
-  font: 500 16px var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.input,
+.select {
+  min-height: 50px;
+  padding: 0 14px;
+  border-radius: 16px;
+  font: 500 15px var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .textarea {
-  min-height: 120px;
-  line-height: 1.45;
+  min-height: 110px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  font: 400 15px/1.55 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
   resize: vertical;
+}
+
+.select {
+  cursor: pointer;
+}
+
+.input::placeholder,
+.textarea::placeholder,
+.tagInput::placeholder {
+  color: var(--wtc-muted, #555b60);
+  opacity: 1;
+}
+
+.input:hover:not(:disabled),
+.textarea:hover:not(:disabled),
+.select:hover:not(:disabled),
+.tagBox:hover {
+  /* The board's cool gray hover border; exampleB.css has no token for it. */
+  border-color: #c8ccce;
 }
 
 .input:focus-visible,
 .textarea:focus-visible,
 .select:focus-visible {
-  border-color: var(--wtc-orange, #f76902);
   outline: 2px solid var(--wtc-orange, #f76902);
   outline-offset: 1px;
 }
 
-.invalid {
+.input:disabled,
+.textarea:disabled,
+.select:disabled {
+  background: var(--wtc-gray, #f3f1ec);
+  color: #8a8f93; /* the board's disabled ink; no token */
+  cursor: not-allowed;
+}
+
+.invalid,
+.invalid:hover {
   border-color: var(--wtc-danger, #b42318);
 }
 
@@ -79,67 +151,59 @@
   justify-self: end;
   margin: 0;
   color: var(--wtc-muted, #555b60);
-  font-size: 0.8rem;
+  font-size: 12px;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-/* Checkbox choices */
+/* Goal chips: a label around a transparent native checkbox */
 
 .choices {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .choice {
-  display: flex;
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border: 1.5px solid var(--wtc-line, #ecedee);
-  border-radius: 14px;
+  gap: 8px;
+  box-sizing: border-box;
+  min-height: 46px;
+  padding: 8px 16px 8px 12px;
+  border: 2px solid var(--wtc-line-warm, #e8e2d8);
+  border-radius: 999px;
   background: var(--wtc-surface, #ffffff);
-  font-weight: 600;
+  color: var(--wtc-ink, #1e2124);
+  font: 600 15px/1.3 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
   cursor: pointer;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 
-.choice:has(input:checked) {
-  border-color: var(--wtc-orange, #f76902);
-  background: var(--wtc-warm, #fff4eb);
+.choice:hover:not(:has(.choiceInput:disabled)) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 33, 36, 0.1);
 }
 
-/* Keyboard focus only: a mouse click already shows the checked state. */
-.choice:has(input:focus-visible) {
-  outline: 2px solid var(--wtc-ink, #1e2124);
+/* Keyboard focus only: a click already shows the checked state. */
+.choice:has(.choiceInput:focus-visible) {
+  outline: 2px solid var(--wtc-orange, #f76902);
   outline-offset: 2px;
 }
 
-.choice input {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--wtc-orange, #f76902);
+.choice:has(.choiceInput:disabled) {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-/* Segmented single choice (ratings, hours) */
-
-.scale {
-  display: grid;
-  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
-  gap: 6px;
-}
-
-.scaleOption {
-  position: relative;
-}
-
-.scaleOption input {
+/* Laid over the whole chip, like the radios, so a pointer lands on the checkbox itself. */
+.choiceInput {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -147,118 +211,652 @@
   cursor: pointer;
 }
 
-.scaleLabel {
+.choiceInput:disabled {
+  cursor: not-allowed;
+}
+
+.choiceOn {
+  border-color: var(--wtc-ink, #1e2124);
+}
+
+/* Checked chips take the tints in order, by the goal's position. */
+.choiceOn:nth-child(5n + 1) {
+  background: var(--wtc-peach, #ffe6d2);
+}
+
+.choiceOn:nth-child(5n + 2) {
+  background: var(--wtc-teal, #d3eff5);
+}
+
+.choiceOn:nth-child(5n + 3) {
+  background: var(--wtc-lilac, #e9e1f8);
+}
+
+.choiceOn:nth-child(5n + 4) {
+  background: var(--wtc-butter, #fff0bf);
+}
+
+.choiceOn:nth-child(5n) {
+  background: var(--wtc-mint, #e6f2cf);
+}
+
+.choiceDot {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--wtc-line-warm, #e8e2d8);
+  color: var(--wtc-surface, #ffffff);
+  transition: background-color 0.25s ease;
+}
+
+.choiceDot svg {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.choiceOn .choiceDot {
+  background: var(--wtc-ink, #1e2124);
+}
+
+.choiceOn .choiceDot svg {
+  opacity: 1;
+}
+
+/* Single choice: shared radio input, laid over its drawn option */
+
+.scaleInput {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.scaleInput:disabled {
+  cursor: not-allowed;
+}
+
+.scaleInput:disabled + label {
+  opacity: 0.55;
+}
+
+/* Number tiles (Worth Score) */
+
+.scale {
   display: grid;
-  place-items: center;
-  gap: 2px;
-  min-height: 60px;
-  padding: 8px 4px;
-  border: 1.5px solid var(--wtc-line, #ecedee);
-  border-radius: 14px;
-  background: var(--wtc-surface, #ffffff);
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  gap: 10px;
+}
+
+.scaleOption {
+  position: relative;
+}
+
+.scaleLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-sizing: border-box;
+  min-height: 96px;
+  padding: 10px 6px;
+  border: 2px solid transparent;
+  border-radius: 22px;
+  background: var(--wtc-cream, #fbf7f1);
+  color: var(--wtc-ink, #1e2124);
   text-align: center;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.scaleOption:hover .scaleInput:not(:disabled) + .scaleLabel {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 33, 36, 0.1);
 }
 
 .scaleValue {
-  font-size: 18px;
-  font-weight: 800;
+  font: 800 30px/1 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .scaleCaption {
   color: var(--wtc-muted, #555b60);
-  font-size: 0.75rem;
+  font-size: 13px;
+  font-weight: 600;
   line-height: 1.2;
+  transition: color 0.25s ease;
 }
 
-.scaleOption input:checked + .scaleLabel {
-  border-color: var(--wtc-orange, #f76902);
+.scaleInput:checked + .scaleLabel {
+  border-color: var(--wtc-ink, #1e2124);
   background: var(--wtc-orange, #f76902);
+}
+
+.scaleInput:checked + .scaleLabel .scaleCaption {
   color: var(--wtc-ink, #1e2124);
 }
 
-.scaleOption input:checked + .scaleLabel .scaleCaption {
-  color: var(--wtc-ink, #1e2124);
-}
-
-.scaleOption input:focus-visible + .scaleLabel {
-  outline: 2px solid var(--wtc-ink, #1e2124);
+.scaleInput:focus-visible + .scaleLabel,
+.scaleInput:focus-visible + .cap,
+.scaleInput:focus-visible + .clock {
+  outline: 2px solid var(--wtc-orange, #f76902);
   outline-offset: 2px;
 }
 
-/* Tags */
+/* Phone only: the ends and the picked word under the number tiles. */
+.scaleWords {
+  display: none;
+}
+
+.scaleWordsPicked {
+  color: var(--wtc-ink, #1e2124);
+}
+
+/* Graduation caps (concept difficulty) */
+
+.capRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.caps {
+  display: flex;
+  gap: 4px;
+}
+
+.capOption {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.cap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.capIcon {
+  fill: none;
+  /*
+   * Unlit caps are the radios' only visible shape, so they need 3:1 (WCAG
+   * 1.4.11). The board's #c8ccce is 1.6:1 on white; this gray is 3.9:1. No token.
+   */
+  stroke: #7d8287;
+}
+
+.capIcon path {
+  transition:
+    fill 0.2s ease,
+    stroke 0.2s ease;
+}
+
+.capLit .capIcon {
+  fill: var(--wtc-orange, #f76902);
+  stroke: var(--wtc-ink, #1e2124);
+}
+
+@media (hover: hover) {
+  .capOption:hover .scaleInput:not(:disabled) + .cap {
+    transform: translateY(-4px) rotate(-6deg);
+  }
+}
+
+.capReadout {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+}
+
+.capReadoutValue {
+  color: var(--wtc-ink, #1e2124);
+  font: 800 22px/1.1 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.capReadoutWord {
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Clock chips (weekly hours) */
+
+.clocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.clockOption {
+  position: relative;
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  min-height: 50px;
+  padding: 8px 16px;
+  border: 2px solid var(--wtc-line-warm, #e8e2d8);
+  border-radius: 16px;
+  background: var(--wtc-surface, #ffffff);
+  color: var(--wtc-ink, #1e2124);
+  font: 700 15px/1.2 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+  white-space: nowrap;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.clockOption:hover .scaleInput:not(:disabled) + .clock {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 33, 36, 0.1);
+}
+
+.clockIcon {
+  flex: none;
+}
+
+.clockIcon circle {
+  fill: var(--wtc-butter, #fff0bf);
+  transition: fill 0.25s ease;
+}
+
+.clockCaption {
+  margin-left: 2px;
+  color: var(--wtc-muted, #555b60);
+  font: 500 13px var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.scaleInput:checked + .clock {
+  border-color: var(--wtc-ink, #1e2124);
+  background: var(--wtc-butter, #fff0bf);
+}
+
+.scaleInput:checked + .clock .clockIcon circle {
+  fill: var(--wtc-surface, #ffffff);
+}
+
+/* Tags: a cream box of tinted pills and the entry input */
 
 .tagBox {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  min-height: 46px;
-  padding: 6px 8px;
-  border: 1.5px solid var(--wtc-line, #ecedee);
-  border-radius: 14px;
-  background: var(--wtc-surface, #ffffff);
+  gap: 8px;
+  box-sizing: border-box;
+  min-height: 56px;
+  padding: 8px 10px;
+  border: 2px solid var(--wtc-line-warm, #e8e2d8);
+  border-radius: 18px;
+  background: var(--wtc-cream, #fbf7f1);
+  transition: border-color 0.2s ease;
 }
 
-.tagBox:focus-within {
-  border-color: var(--wtc-orange, #f76902);
-  outline: 2px solid var(--wtc-orange, #f76902);
-  outline-offset: 1px;
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .tag {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 3px 4px 3px 10px;
+  gap: 4px;
+  padding: 4px 4px 4px 12px;
   border-radius: 999px;
-  background: var(--wtc-warm-strong, #ffe6d2);
-  color: var(--wtc-link-hover, #8a3700);
+  background: var(--wtc-peach, #ffe6d2);
+  color: var(--wtc-ink, #1e2124);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
+  animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Tags take the tints in order, by position. */
+.tag:nth-child(5n + 2) {
+  background: var(--wtc-teal, #d3eff5);
+}
+
+.tag:nth-child(5n + 3) {
+  background: var(--wtc-lilac, #e9e1f8);
+}
+
+.tag:nth-child(5n + 4) {
+  background: var(--wtc-butter, #fff0bf);
+}
+
+.tag:nth-child(5n) {
+  background: var(--wtc-mint, #e6f2cf);
 }
 
 .tagRemove {
-  display: inline-grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   border: 0;
   border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  line-height: 1;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--wtc-ink, #1e2124);
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Grows the touch target to 44 px without changing the drawn size. */
+.tagRemove::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 999px;
 }
 
 .tagRemove:hover {
-  background: rgba(184, 74, 0, 0.15);
+  background: var(--wtc-surface, #ffffff);
+}
+
+.tagRemove:active {
+  transform: scale(0.92);
 }
 
 .tagRemove:focus-visible {
-  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline: 2px solid var(--wtc-orange, #f76902);
+  outline-offset: 1px;
 }
 
 .tagInput {
   flex: 1 1 140px;
   min-width: 120px;
-  padding: 6px 4px;
+  height: 38px;
+  padding: 0 6px;
   border: 0;
+  border-radius: 10px;
   background: transparent;
   color: var(--wtc-ink, #1e2124);
-  font: 500 16px var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font: 500 15px var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .tagInput:focus {
   outline: none;
 }
 
+.tagInput:focus-visible {
+  outline: 2px solid var(--wtc-orange, #f76902);
+  outline-offset: 1px;
+}
+
+.tagInput:disabled {
+  color: #8a8f93; /* the board's disabled ink; no token */
+  cursor: not-allowed;
+}
+
+/* Phone */
+
 @media (max-width: 640px) {
-  .row {
-    grid-template-columns: 1fr;
+  .legend {
+    font-size: 18px;
   }
 
+  .hint {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .optional {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  /* 16 px text keeps iOS from zooming into a focused field. */
+  .input,
+  .select {
+    padding: 0 12px;
+    border-radius: 14px;
+    font-size: 16px;
+  }
+
+  .textarea {
+    min-height: 104px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    font: 400 16px/1.5 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+  }
+
+  .choices {
+    gap: 8px;
+  }
+
+  .choice {
+    gap: 7px;
+    min-height: 44px;
+    padding: 6px 13px 6px 9px;
+    font-size: 14px;
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 0.25s ease,
+      border-color 0.25s ease;
+  }
+
+  .choice:hover:not(:has(.choiceInput:disabled)) {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .choice:active:not(:has(.choiceInput:disabled)) {
+    transform: scale(0.95);
+  }
+
+  .choiceDot {
+    width: 20px;
+    height: 20px;
+  }
+
+  .choiceDot svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .scale {
+    gap: 6px;
+  }
+
+  .scaleLabel {
+    min-height: 56px;
+    padding: 0;
+    border-radius: 16px;
+  }
+
+  .scaleValue {
+    font-size: 22px;
+  }
+
+  /* The caption stays in the radio's name; the words row below shows it. */
   .scaleCaption {
-    font-size: 0.7rem;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .scaleWords {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0;
+    padding: 0 2px;
+    color: var(--wtc-muted, #555b60);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .capRow {
+    gap: 10px;
+  }
+
+  .caps {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+
+  .capOption {
+    height: 56px;
+  }
+
+  .cap {
+    border-radius: 14px;
+  }
+
+  .capIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .capOption:active .scaleInput:not(:disabled) + .cap {
+    transform: translateY(-3px) rotate(-6deg);
+  }
+
+  .capReadout {
+    flex: 1 1 100%;
+    flex-direction: row;
+    justify-content: center;
+    gap: 4px;
+    font-size: 14px;
+  }
+
+  .capReadoutValue {
+    font: 700 14px/1.4 var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+  }
+
+  .capReadoutWord::before {
+    content: '· ';
+    color: var(--wtc-ink, #1e2124);
+  }
+
+  .clocks {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .clock {
+    justify-content: center;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 14px;
+    font-size: 14px;
+  }
+
+  .clockIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* The phone board runs the range and its unit together: "6–10h". */
+  .clockCaption {
+    margin-left: 0;
+    color: inherit;
+    font: inherit;
+  }
+
+  .tagBox {
+    gap: 6px;
+    min-height: 52px;
+    padding: 6px 8px;
+    border-radius: 16px;
+  }
+
+  .tag {
+    gap: 2px;
+    padding: 2px 2px 2px 11px;
+    font-size: 13px;
+  }
+
+  .tagRemove {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+  }
+
+  .tagRemove::after {
+    inset: -6px;
+  }
+
+  .tagInput {
+    flex: 1 1 110px;
+    min-width: 100px;
+    height: 36px;
+    padding: 0 4px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+}
+
+/* Reduced motion: no lifts, tilts, pops or fades. */
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .textarea,
+  .select,
+  .choice,
+  .choiceDot,
+  .choiceDot svg,
+  .scaleLabel,
+  .scaleCaption,
+  .cap,
+  .capIcon path,
+  .clock,
+  .clockIcon circle,
+  .tagBox,
+  .tagRemove {
+    transition: none;
+  }
+
+  .tag {
+    animation: none;
+  }
+
+  .choice:hover:not(:has(.choiceInput:disabled)),
+  .choice:active:not(:has(.choiceInput:disabled)),
+  .scaleOption:hover .scaleInput:not(:disabled) + .scaleLabel,
+  .capOption:hover .scaleInput:not(:disabled) + .cap,
+  .capOption:active .scaleInput:not(:disabled) + .cap,
+  .clockOption:hover .scaleInput:not(:disabled) + .clock,
+  .tagRemove:active {
+    transform: none;
   }
 }

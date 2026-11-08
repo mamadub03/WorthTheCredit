@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import Button from '../../components/form/Button.tsx'
-import StatusPanel from '../../components/form/StatusPanel.tsx'
 import { paths } from '../../routes/paths.ts'
+import AuthStatusPanel from './AuthStatusPanel.tsx'
 import { useAuth } from './authContext.ts'
 
 /**
@@ -21,13 +21,13 @@ export default function AuthCallbackPage() {
 
   if (auth.mode === 'auth0' && auth.error) {
     return (
-      <StatusPanel
+      <AuthStatusPanel
         title="Sign-in didn't finish"
         actions={<Button onClick={() => void auth.login({ returnTo: paths.home })}>Try again</Button>}
       >
         <p>{auth.error.message}</p>
-      </StatusPanel>
+      </AuthStatusPanel>
     )
   }
-  return <StatusPanel title="Signing you in" live />
+  return <AuthStatusPanel title="Signing you in" live />
 }

@@ -3,7 +3,9 @@ import styles from './form.module.css'
 
 /**
  * Labeled text, textarea, and select fields with a hint and an error, wired up
- * with aria-describedby so screen readers read both. Owner: FE2 (#27).
+ * with aria-describedby so screen readers read both. Styled to the College
+ * carousel boards: cream boxes with a warm 2 px border, the hint under the
+ * label and the error under the control. Owner: FE2 (#27).
  */
 
 interface BaseProps {
@@ -28,21 +30,37 @@ function Label({ id, label, optional }: Pick<BaseProps, 'id' | 'label' | 'option
   )
 }
 
-function Messages({ id, hint, error }: Pick<BaseProps, 'id' | 'hint' | 'error'>) {
-  return (
-    <>
-      {error ? (
-        <p id={`${id}-error`} className={styles.error}>
-          {error}
-        </p>
-      ) : null}
-      {hint ? (
-        <p id={`${id}-hint`} className={styles.hint}>
-          {hint}
-        </p>
-      ) : null}
-    </>
-  )
+function Hint({ id, hint }: Pick<BaseProps, 'id' | 'hint'>) {
+  return hint ? (
+    <p id={`${id}-hint`} className={styles.hint}>
+      {hint}
+    </p>
+  ) : null
+}
+
+/** The field message under a control: danger text with a small alert icon. */
+export function FieldError({ id, error }: { id: string; error?: string }) {
+  return error ? (
+    <p id={`${id}-error`} className={styles.error}>
+      <svg
+        className={styles.errorIcon}
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v5M12 16.5v.01" />
+      </svg>
+      {error}
+    </p>
+  ) : null
 }
 
 export function TextField({
@@ -59,7 +77,7 @@ export function TextField({
   return (
     <div className={styles.field}>
       <Label id={id} label={label} optional={optional} />
-      <Messages id={id} hint={hint} error={error} />
+      <Hint id={id} hint={hint} />
       <input
         id={id}
         className={`${styles.input} ${error ? styles.invalid : ''}`}
@@ -70,6 +88,7 @@ export function TextField({
         aria-describedby={describedBy(id, hint, error)}
         onChange={(event) => onChange(event.target.value)}
       />
+      <FieldError id={id} error={error} />
     </div>
   )
 }
@@ -88,7 +107,7 @@ export function TextAreaField({
   return (
     <div className={styles.field}>
       <Label id={id} label={label} optional={optional} />
-      <Messages id={id} hint={hint} error={error} />
+      <Hint id={id} hint={hint} />
       <textarea
         id={id}
         className={`${styles.textarea} ${error ? styles.invalid : ''}`}
@@ -98,6 +117,7 @@ export function TextAreaField({
         aria-describedby={describedBy(id, hint, error)}
         onChange={(event) => onChange(event.target.value)}
       />
+      <FieldError id={id} error={error} />
       <p className={styles.counter} aria-live="polite">
         {value.trim().length.toLocaleString('en-US')} / {maxLength.toLocaleString('en-US')}
       </p>
@@ -124,7 +144,7 @@ export function SelectField({
   return (
     <div className={styles.field}>
       <Label id={id} label={label} optional={optional} />
-      <Messages id={id} hint={hint} error={error} />
+      <Hint id={id} hint={hint} />
       <select
         id={id}
         className={`${styles.select} ${error ? styles.invalid : ''}`}
@@ -140,6 +160,7 @@ export function SelectField({
           </option>
         ))}
       </select>
+      <FieldError id={id} error={error} />
     </div>
   )
 }

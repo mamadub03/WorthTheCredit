@@ -1,14 +1,19 @@
+/*
+ * About you, the peach panel at the top of the AI board's aside. The deep
+ * brown (#5a2800) for the Edit text and the footnote has no token; it's the
+ * board's darker peach ink and reads at 9:1 on the peach.
+ */
 .card {
   display: flex;
   flex: 1 1 280px;
   flex-direction: column;
-  align-self: flex-start;
   gap: 14px;
-  padding: 22px;
+  min-width: 0;
+  padding: 24px;
   border-radius: 28px;
-  background: var(--wtc-warm-strong, #ffe6d2);
+  background: var(--wtc-peach, #ffe6d2);
   color: var(--wtc-ink, #1e2124);
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .head {
@@ -20,47 +25,222 @@
 
 .title {
   margin: 0;
-  font-size: 20px;
-  font-weight: 800;
+  font: 800 20px/1.2 var(--wtc-display, Outfit, Inter, sans-serif);
 }
 
+/* Edit: the board's white 40 px button, 44 px tall here for touch. */
+:global(.wtc-btn).edit {
+  flex: none;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  box-shadow: none;
+  color: #5a2800;
+  font: 600 13px var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+:global(.wtc-btn).edit:hover,
+:global(.wtc-btn).edit:focus-visible {
+  color: var(--wtc-ink, #1e2124);
+}
+
+/*
+ * The global orange ring is 2.5:1 on the peach panel; ink reads at 13:1. Two
+ * classes and an element so this wins over the buttons' and fields' own rings.
+ */
+.card button:focus-visible,
+.card input:focus-visible,
+.card textarea:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
+}
+
+/* The form: FE2's fields, with the board's uppercase brown labels and white boxes. */
 .fields {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.rows {
-  display: grid;
-  gap: 10px;
+.fields > div {
   margin: 0;
 }
 
-.rows dt {
-  color: #8a3700;
+.fields > div > label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  color: var(--wtc-peach-ink, #8a3700);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.rows dd {
-  margin: 2px 0 0;
-  font-size: 14px;
+/* The "Optional" pill keeps its own capitalized look beside the uppercase label. */
+.fields > div > label > span {
+  margin-left: 0;
+  letter-spacing: 0;
+  text-transform: capitalize;
+}
+
+.fields > div > p {
+  font-size: 13px;
+}
+
+/* The text boxes and the tag box sit on white inside the tint. */
+.fields > div > input,
+.fields > div > textarea,
+.fields > div > div {
+  background: var(--wtc-surface, #ffffff);
+}
+
+.fields > div > textarea {
+  min-height: 88px;
+}
+
+:global(.wtc-btn).done {
+  align-self: flex-start;
+}
+
+/* The summary the board draws: label over value, one block per field. */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.row dt {
+  color: var(--wtc-peach-ink, #8a3700);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.row dd {
+  margin: 0;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .unset {
-  color: #8a3700;
+  color: var(--wtc-peach-ink, #8a3700);
   font-weight: 500;
-  opacity: 0.7;
+}
+
+:global(.wtc-btn).match {
+  width: 100%;
 }
 
 .note {
   margin: 0;
   color: #5a2800;
   font-size: 12px;
+  line-height: 1.45;
 }
 
 .error {
   margin: 0;
-  color: #b42318;
-  font-size: 0.9rem;
+  color: var(--wtc-danger, #b42318);
+  font-size: 14px;
   font-weight: 600;
+}
+
+/*
+ * Phone: the summary turns into the board's single scrolling chip row on the
+ * cream ground (no panel, no visible heading), with Edit at its end. The form
+ * keeps its peach panel.
+ */
+@media (max-width: 640px) {
+  .card {
+    flex: none;
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .summary {
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 8px 6px;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .summary .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .summary .head {
+    order: 2;
+    flex: none;
+  }
+
+  .summary .rows {
+    order: 1;
+    flex: 1 1 0;
+    flex-direction: row;
+    gap: 6px;
+    min-width: 0;
+    margin: 0 0 0 -12px;
+    padding: 2px 0 2px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .summary .row {
+    flex: none;
+    display: block;
+    padding: 7px 11px;
+    border-radius: 12px;
+    background: var(--wtc-peach, #ffe6d2);
+    font-size: 13px;
+    line-height: 20px;
+    white-space: nowrap;
+  }
+
+  .summary .row dt,
+  .summary .row dd {
+    display: inline;
+  }
+
+  .summary .row dt {
+    margin-right: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .summary .row dd {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .summary .rowUnset {
+    display: none;
+  }
+
+  .summary > :global(.wtc-btn).match,
+  .summary > .note,
+  .summary > .error {
+    order: 3;
+    flex-basis: 100%;
+  }
 }

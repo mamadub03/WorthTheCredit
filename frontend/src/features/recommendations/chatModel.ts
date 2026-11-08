@@ -12,7 +12,10 @@ import type { RecommendationRequest, RecommendationResult } from '../../api/reco
 import { toRecommendationRequest, type ProfileFormValues } from './profileFormModel.ts'
 
 export const GREETING =
-  "Hi! Tell me your major, what you're into, skills you already have, and where you want to end up. I'll suggest real RIT courses and tell you what students said about them."
+  'Hi! Tell me your major, what you’re into, skills you already have, and where you want to end up. I’ll suggest real RIT courses and tell you what students said about them.'
+
+/** The phone board's shorter opening line. */
+export const GREETING_SHORT = 'Hi! Tell me your major, skills, and where you want to end up.'
 
 export const FOLLOW_UPS = ['Something lighter', 'More hands-on projects', 'Less math', 'Better for my career goal'] as const
 

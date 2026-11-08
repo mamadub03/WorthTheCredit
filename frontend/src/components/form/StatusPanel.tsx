@@ -2,6 +2,8 @@ import { useId, type ReactNode } from 'react'
 import styles from './StatusPanel.module.css'
 
 interface StatusPanelProps {
+  /** Decorative art at the top of the card, above the tag (the sign-in coin). Hidden from screen readers. */
+  art?: ReactNode
   /** A short label above the title, like "One more step". */
   tag?: string
   title: string
@@ -14,14 +16,19 @@ interface StatusPanelProps {
 }
 
 /**
- * A full-page message in the Example B style: sign-in states, the verify-email
- * step, and other moments that replace a page's content. Lives with FE2's
- * Button until FE1's shared components (#19) land. Owner: FE2.
+ * A full-page message in the College carousel style: sign-in states, the
+ * verify-email step, and other moments that replace a page's content. A white
+ * card on the cream page that rises in with Grace's global wtc-rise. Owner: FE2.
  */
-export default function StatusPanel({ tag, title, children, actions, live = false }: StatusPanelProps) {
+export default function StatusPanel({ art, tag, title, children, actions, live = false }: StatusPanelProps) {
   const titleId = useId()
   return (
-    <section className={styles.panel} aria-labelledby={titleId} aria-live={live ? 'polite' : undefined}>
+    <section className={`${styles.panel} wtc-rise`} aria-labelledby={titleId} aria-live={live ? 'polite' : undefined}>
+      {art ? (
+        <span className={styles.art} aria-hidden="true">
+          {art}
+        </span>
+      ) : null}
       {tag ? <span className={styles.tag}>{tag}</span> : null}
       <h1 id={titleId} className={styles.title}>
         {title}

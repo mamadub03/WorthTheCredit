@@ -1,10 +1,11 @@
-import { useState, type KeyboardEvent } from 'react'
+import { useState, type KeyboardEvent, type ReactNode } from 'react'
+import { FieldError } from './Field.tsx'
 import styles from './form.module.css'
 
 interface TagInputProps {
   id: string
   label: string
-  hint?: string
+  hint?: ReactNode
   tags: readonly string[]
   /** Returns true when the text was accepted (or was empty), so the box clears. */
   onAdd: (text: string) => boolean
@@ -13,14 +14,20 @@ interface TagInputProps {
   error?: string
   optional?: boolean
   placeholder?: string
+  /** Keep the label as the box's accessible name but hide it, when the screen draws its own visible title. */
+  labelHidden?: boolean
+  /** Another element's id whose text joins the label in the box's name, so a visible title is part of it. */
+  labelledBy?: string
 }
 
 /**
  * Short free-text tags. Enter or a comma adds one, Backspace in an empty box
  * removes the last, and leaving the box adds what's typed. The parent decides
- * what's acceptable (trimming, duplicates, limits). Owner: FE2 (#27).
+ * what's acceptable (trimming, duplicates, limits). Each tag is a tinted pill
+ * (five tints by position) that pops in, with a round remove button whose hit
+ * area reaches 44 px. Owner: FE2 (#27).
  */
-export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, error, optional, placeholder }: TagInputProps) {
+export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, error, optional, placeholder, labelHidden = false, labelledBy }: TagInputProps) {
   const [draft, setDraft] = useState('')
   const describedBy = [hint ? `${id}-hint` : '', error ? `${id}-error` : '', `${id}-count`].filter(Boolean).join(' ')
 
@@ -39,15 +46,10 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
 
   return (
     <div className={styles.field}>
-      <label className={styles.label} htmlFor={id}>
+      <label id={`${id}-label`} className={labelHidden ? 'wtc-sr' : styles.label} htmlFor={id}>
         {label}
         {optional ? <span className={styles.optional}>optional</span> : null}
       </label>
-      {error ? (
-        <p id={`${id}-error`} className={styles.error}>
-          {error}
-        </p>
-      ) : null}
       {hint ? (
         <p id={`${id}-hint`} className={styles.hint}>
           {hint}
@@ -58,7 +60,19 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
           <span key={tag} className={styles.tag}>
             {tag}
             <button type="button" className={styles.tagRemove} aria-label={`Remove ${tag}`} onClick={() => onRemove(tag)}>
-              ×
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
             </button>
           </span>
         ))}
@@ -68,6 +82,7 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
           value={draft}
           placeholder={tags.length === 0 ? placeholder : undefined}
           aria-invalid={error ? true : undefined}
+          aria-labelledby={labelledBy ? `${id}-label ${labelledBy}` : undefined}
           aria-describedby={describedBy}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={onKeyDown}
@@ -76,6 +91,7 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
           }}
         />
       </div>
+      <FieldError id={id} error={error} />
       <p id={`${id}-count`} className={styles.counter}>
         {tags.length} of {max}
       </p>

@@ -15,6 +15,9 @@ import { toFormErrors } from './useReviewSubmission.ts'
 import WriteReviewPage from './WriteReviewPage.tsx'
 
 const BASE = 'http://localhost:8000'
+
+/** Questions whose visible title differs add it to the group's name (WCAG 2.5.3), so match the start. */
+const startsWith = (text: string) => (name: string) => name.startsWith(text)
 const course = MOCK_COURSES.find((item) => item.code === 'GCIS-124')!
 
 function setup({ token = 'dev:alice' as string | null, fetch }: { token?: string | null; fetch?: FetchLike } = {}) {
@@ -37,8 +40,8 @@ function setup({ token = 'dev:alice' as string | null, fetch }: { token?: string
 async function answerAndPost(user: UserEvent) {
   await screen.findByText(course.title)
   await user.click(screen.getByRole('checkbox', { name: 'Specific skill development' }))
-  await user.click(within(screen.getByRole('group', { name: WORTH_SCORE_QUESTION })).getByRole('radio', { name: /5\s*Completely/ }))
-  await user.type(screen.getByRole('textbox', { name: 'Skills or knowledge you gained' }), 'Java{Enter}')
+  await user.click(within(screen.getByRole('group', { name: startsWith(WORTH_SCORE_QUESTION) })).getByRole('radio', { name: /5\s*Completely/ }))
+  await user.type(screen.getByRole('textbox', { name: /^Skills or knowledge you gained/ }), 'Java{Enter}')
   await user.click(within(screen.getByRole('group', { name: DIFFICULTY_QUESTION })).getByRole('radio', { name: /2\s*Easy/ }))
   await user.click(within(screen.getByRole('group', { name: WEEKLY_HOURS_QUESTION })).getByRole('radio', { name: /3-6/ }))
   await user.click(screen.getByRole('button', { name: 'Post review' }))
@@ -50,7 +53,9 @@ describe('review submission', () => {
     setup()
     await answerAndPost(user)
     expect(await screen.findByRole('heading', { name: 'Review posted' })).toBeTruthy()
+    expect(screen.getByRole('region', { name: 'Review posted' }).getAttribute('aria-live')).toBe('polite')
     expect(screen.getByRole('link', { name: 'See the course' }).getAttribute('href')).toBe(`/courses/${course.id}`)
+    expect(screen.getByRole('link', { name: 'Find your next course' }).getAttribute('href')).toBe('/recommendations')
     expect(sessionStorage.getItem(draftKey('dev|student'))).toBeNull()
   })
 
@@ -70,6 +75,8 @@ describe('review submission', () => {
     })
     await answerAndPost(user)
     expect(await screen.findByRole('heading', { name: "You've already reviewed this course" })).toBeTruthy()
+    expect(screen.getByRole('region', { name: "You've already reviewed this course" }).getAttribute('aria-live')).toBe('polite')
+    expect(screen.getByRole('link', { name: 'See the course' }).getAttribute('href')).toBe(`/courses/${course.id}`)
 
     await user.click(screen.getByRole('button', { name: 'Review a different course' }))
     expect(await screen.findByRole('combobox', { name: 'Course' })).toBeTruthy()

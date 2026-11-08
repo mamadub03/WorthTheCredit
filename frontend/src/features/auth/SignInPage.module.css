@@ -1,49 +1,65 @@
-/* The Example B sign-in page: a welcome card beside what an account adds. */
+/*
+ * The College carousel sign-in board (Carousel-SignIn, Carousel-PhoneSignIn):
+ * a white welcome card beside what an account adds. The board's 1060 px main
+ * (996 px of content) sits centered in AppLayout's 1180 px column; below
+ * about 780 px the two sections wrap, card first, purely by flex-wrap.
+ */
 
 .page {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  gap: 16px;
+  gap: 20px;
+  width: 100%;
+  max-width: 996px;
+  margin: 0 auto;
+  padding: 20px 0 8px;
   color: var(--wtc-ink, #1e2124);
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
+
+/* Welcome card */
 
 .card {
   display: flex;
-  flex: 1 1 380px;
+  flex: 1 1 400px;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   min-width: 0;
-  padding: 44px 40px;
-  border: 1.5px solid var(--wtc-line-warm, #f0e4da);
-  border-radius: 32px;
+  padding: 40px;
+  border: 0;
+  border-radius: 36px;
   background: var(--wtc-surface, #ffffff);
   text-align: center;
 }
 
-.mark {
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: var(--wtc-orange, #f76902);
-  color: var(--wtc-ink, #1e2124);
+.coinWide,
+.coinPhone {
+  display: flex;
+}
+
+.coinPhone {
+  display: none;
 }
 
 .title {
   margin: 0;
   color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
   font-size: 34px;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
+/* The board's darker orange, so the R, I and T pass contrast on white. */
+.accent {
+  color: #c2410c;
+}
+
 .lead {
-  max-width: 340px;
+  max-width: 360px;
   margin: 0;
   color: var(--wtc-muted, #555b60);
   font-size: 16px;
@@ -51,7 +67,7 @@
 }
 
 .error {
-  max-width: 340px;
+  max-width: 360px;
   margin: 0;
   padding: 10px 14px;
   border-radius: 14px;
@@ -61,55 +77,78 @@
   font-weight: 600;
 }
 
-/* Two classes, so these sizes win over Button's own regardless of CSS order. */
-.card .cta {
+/*
+ * The two full-width actions: 56 px on the desktop board, 54 on the phone.
+ * Three classes, so these win over the large Button's own sizes whatever
+ * order the stylesheets load in.
+ */
+.card :global(.wtc-btn).cta {
+  gap: 10px;
   width: 100%;
-  max-width: 340px;
-  min-height: 54px;
-  font-size: 17px;
+  max-width: 360px;
+  min-height: 56px;
+  border-radius: 18px;
 }
 
-.card .cta:first-of-type {
+.card :global(.wtc-btn).primary {
   margin-top: 6px;
+  font: 700 17px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.card :global(.wtc-btn).dark {
+  font: 600 16px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+/* The dark button floods orange on focus, so its ring is ink, outside the fill. */
+.card :global(.wtc-btn).dark:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
 }
 
 .note {
-  max-width: 320px;
+  max-width: 330px;
   margin: 0;
   color: var(--wtc-muted, #555b60);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
 .browse {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 10px;
   color: var(--wtc-link, #b84a00);
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .browse:hover {
   color: var(--wtc-link-hover, #8a3700);
 }
 
+/* What an account adds */
+
 .perks {
   display: flex;
-  flex: 1 1 340px;
+  flex: 1 1 360px;
   flex-direction: column;
+  justify-content: center;
   gap: 12px;
   min-width: 0;
 }
 
 .perksTitle {
-  margin: 8px 8px 4px;
+  margin: 0 8px 6px;
   color: var(--wtc-ink, #1e2124);
-  font-size: 22px;
+  font-family: var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+  font-size: 24px;
   font-weight: 800;
-  letter-spacing: -0.01em;
 }
 
 .perkList {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   margin: 0;
   padding: 0;
@@ -121,40 +160,58 @@
   align-items: center;
   gap: 14px;
   padding: 8px;
-  border: 1.5px solid var(--wtc-line, #ecedee);
-  border-radius: 24px;
+  border-radius: 26px;
   background: var(--wtc-surface, #ffffff);
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.25s ease;
+}
+
+/* The board's hover nudge, only where there is a pointer that hovers. */
+@media (hover: hover) {
+  .perk:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 20px rgba(30, 33, 36, 0.08);
+  }
 }
 
 .perkIcon {
-  display: grid;
+  display: flex;
   flex: none;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
+  align-items: center;
+  justify-content: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 20px;
   color: var(--wtc-ink, #1e2124);
 }
 
-.tintBlue {
-  background: #d3eff5;
+.perkIcon svg {
+  width: 26px;
+  height: 26px;
 }
 
-.tintGreen {
-  background: #e6f2cf;
+.tintTeal {
+  background: var(--wtc-teal, #d3eff5);
 }
 
-.tintWarm {
-  background: var(--wtc-warm-strong, #ffe6d2);
+.tintMint {
+  background: var(--wtc-mint, #e6f2cf);
+}
+
+.tintLilac {
+  background: var(--wtc-lilac, #e9e1f8);
 }
 
 .perkText {
-  display: grid;
-  gap: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
   padding-right: 10px;
 }
 
 .perkTitle {
+  font-family: var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
   font-size: 17px;
   font-weight: 700;
 }
@@ -165,13 +222,105 @@
   line-height: 1.45;
 }
 
+/* Phone board: one 14 px column, a tighter card, smaller coin and perk rows. */
 @media (max-width: 640px) {
+  .page {
+    flex-direction: column;
+    gap: 14px;
+    padding: 4px 2px 0;
+  }
+
   .card {
-    padding: 32px 20px;
-    border-radius: 24px;
+    flex: none;
+    gap: 14px;
+    padding: 28px 22px;
+    border-radius: 32px;
+  }
+
+  .coinWide {
+    display: none;
+  }
+
+  .coinPhone {
+    display: flex;
   }
 
   .title {
     font-size: 28px;
+  }
+
+  .lead {
+    max-width: none;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .card :global(.wtc-btn).cta {
+    max-width: none;
+    min-height: 54px;
+  }
+
+  .card :global(.wtc-btn).primary {
+    margin-top: 4px;
+    font-size: 16px;
+  }
+
+  .note {
+    max-width: none;
+  }
+
+  .browse {
+    font-size: 14px;
+  }
+
+  .perks {
+    flex: none;
+    gap: 14px;
+  }
+
+  .perksTitle {
+    margin: 8px 8px 0;
+    font-size: 20px;
+  }
+
+  .perkList {
+    gap: 14px;
+  }
+
+  .perk {
+    gap: 12px;
+    padding: 7px;
+    border-radius: 22px;
+  }
+
+  .perkIcon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+  }
+
+  .perkIcon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .perkText {
+    gap: 2px;
+    padding-right: 8px;
+  }
+
+  .perkTitle {
+    font-size: 15px;
+  }
+
+  .perkDetail {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .perk {
+    transition: none;
   }
 }

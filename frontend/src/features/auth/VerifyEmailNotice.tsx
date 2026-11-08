@@ -1,20 +1,25 @@
 import Button from '../../components/form/Button.tsx'
-import StatusPanel from '../../components/form/StatusPanel.tsx'
+import AuthStatusPanel from './AuthStatusPanel.tsx'
 import { useEmailVerification } from './useEmailVerification.ts'
 import styles from './VerifyEmailNotice.module.css'
 
-/** What an unverified student sees instead of the review form. Owner: FE2 (#26). */
+/**
+ * What an unverified student sees instead of the review form. No board draws
+ * it, so it takes the sign-in card's pattern: the coin heading a white card,
+ * an Outfit title and a dark 56 px action. Owner: FE2 (#26).
+ */
 export default function VerifyEmailNotice() {
   const verification = useEmailVerification()
   const checking = verification.checkStatus === 'checking'
 
   return (
-    <StatusPanel
+    <AuthStatusPanel
+      coin
       tag="One more step"
       title="Verify your email"
       actions={
         <>
-          <Button onClick={() => void verification.check()} busy={checking}>
+          <Button variant="dark" size="large" className={styles.check} onClick={() => void verification.check()} busy={checking}>
             I've verified my email
           </Button>
           <p className={styles.status} role="status">
@@ -29,6 +34,6 @@ export default function VerifyEmailNotice() {
         it, then come back here.
       </p>
       <p>Reviews need a verified email so every rating comes from a real student.</p>
-    </StatusPanel>
+    </AuthStatusPanel>
   )
 }

@@ -299,3 +299,15 @@ Python files under `docs/brand/source/` start with an `# AI-GENERATED (Claude Co
 ### Suggested citation
 
 The WorthTheCredit logo and brand assets were designed and generated with Claude Code (Claude Opus 5.5) on 7 November 2026, building on the team's earlier "cRedIT" wordmark ideas. See `docs/ai-contributions.md`.
+
+## 2026-11-08: FE2's screens in the College carousel design (FE2, #26, #27, #28, #31)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/new-standard-screens`, after the team made Grace's College carousel design the standard for the whole app. The branch builds on Grace's PR #65.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`). One session ran a multi-agent workflow (specs written from the design boards, builders, integration, a design and a quality review, and fixes), then checked the result itself: tests, type check, lint, build, PR #61's end-to-end suite, and the screens in a browser at desktop and phone widths.
+- **What the AI changed:** FE2's `Button` and `ButtonLink` now render FE1's global `wtc-btn` classes, plus a large size and the quiet link style. `StatusPanel` got the carousel card and an art slot. The form controls were restyled, and `RatingScale` can draw graduation caps (concept difficulty) and clock chips (weekly hours). Sign-in has FE1's seal coin and the perks list; the header shows the Sign in pill, or the student's avatar and Log out; the demo banner is a butter band. The review form follows the board's layout, with a live preview, the "Before you post" notes, a phone submit bar, and the posted and already-reviewed screens (first moved from FE1's `.panel` to `StatusPanel`, then restyled). The AI match page got the About you panel, the advisor header, the bubbles, match cards with FE1's cap meter and clock, the follow-up chips and the composer. The coordination doc, the Cursor rule and the tests were updated to match.
+- **Reused, not copied:** FE1's tokens, global button and motion classes, `CapsMeter`, `Coin`, icons, `WorthBadge` and brand assets from PR #65.
+- **Left out on purpose:** what the app doesn't have yet: the shortlist and Save buttons, past chats, course photos, and editing reviews.
+
+### Suggested citation
+
+FE2's screens were restyled to the College carousel design with Claude Code (Claude Opus 5.5) on 8 November 2026, building on FE1's shared components, for review by the FE2 developer. See `docs/ai-contributions.md`.

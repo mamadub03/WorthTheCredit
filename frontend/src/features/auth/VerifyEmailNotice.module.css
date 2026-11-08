@@ -9,3 +9,23 @@
   font-size: 15px;
   font-weight: 600;
 }
+
+/* The sign-in card's dark action: 56 px, 18 px corners, Outfit 600 16px. */
+:global(.wtc-btn).check.check {
+  min-height: 56px;
+  padding: 0 26px;
+  border-radius: 18px;
+  font: 600 16px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.check:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  :global(.wtc-btn).check.check {
+    width: 100%;
+    min-height: 54px;
+  }
+}

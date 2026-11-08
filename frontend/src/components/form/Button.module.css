@@ -1,75 +1,52 @@
-/* Example B buttons: pills, Figtree, RIT orange for the main action. */
+/*
+ * FE2's additions to Grace's global buttons (src/index.css): the filled
+ * variants use wtc-btn plus wtc-btn-orange, -dark or -white, and wtc-btn-small.
+ * This file holds only what those don't cover: the large size and the quiet,
+ * link-style button.
+ */
 
-.button {
+/*
+ * Large: the full-width sign-in actions (56 px on the desktop board, 54 on the
+ * phone; 54 everywhere here). Two classes so it wins over .wtc-btn whatever
+ * order the stylesheets load in.
+ */
+:global(.wtc-btn).large {
+  min-height: 54px;
+  border-radius: 18px;
+  font: 700 16px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+/* Quiet: a text action in link colors, no fill and no fill circle. */
+.quiet {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 46px;
-  padding: 10px 22px;
-  border: 1.5px solid transparent;
-  border-radius: 999px;
-  font: 800 16px var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  min-height: 44px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--wtc-link, #b84a00);
+  font: 700 16px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
   line-height: 1.2;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
-  transition: background-color 120ms ease, border-color 120ms ease;
 }
 
-.button:focus-visible {
-  outline: 2px solid var(--wtc-ink, #1e2124);
-  outline-offset: 2px;
+.quiet:not(:disabled):hover {
+  color: var(--wtc-link-hover, #8a3700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.button:disabled {
+.quiet:disabled {
   cursor: not-allowed;
   opacity: 0.55;
 }
 
-.primary {
-  background: var(--wtc-orange, #f76902);
-  color: var(--wtc-ink, #1e2124);
-}
-
-.primary:hover:not(:disabled) {
-  background: #e45f00;
-}
-
-.dark {
-  background: var(--wtc-ink, #1e2124);
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.dark:hover:not(:disabled) {
-  background: #000000;
-}
-
-.secondary {
-  border-color: var(--wtc-line, #ecedee);
-  background: var(--wtc-surface, #ffffff);
-  color: var(--wtc-ink, #1e2124);
-  font-weight: 700;
-}
-
-.secondary:hover:not(:disabled) {
-  border-color: var(--wtc-orange, #f76902);
-}
-
-.quiet {
-  padding-inline: 6px;
-  background: transparent;
-  color: var(--wtc-link, #b84a00);
-  font-weight: 700;
-}
-
-.quiet:hover:not(:disabled) {
-  color: var(--wtc-link-hover, #8a3700);
-  text-decoration: underline;
-}
-
-.small {
-  min-height: 38px;
-  padding: 6px 16px;
-  font-size: 15px;
+/* Small changes the type size only; the 44 px target stays. Large has no quiet form. */
+.quietSmall {
+  font-size: 14px;
 }

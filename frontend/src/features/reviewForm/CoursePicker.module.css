@@ -1,4 +1,14 @@
-/* The course combobox in the Example B style (src/styles/exampleB.css). */
+/*
+ * The course combobox and the chosen-course card in the College carousel
+ * style (Write a review spec section 3, src/styles/exampleB.css tokens). The
+ * boards open with the course fixed, so this is built from their tokens: a
+ * white listbox with a soft shadow and peach active row, and a cream card for
+ * the chosen course.
+ */
+
+.picker {
+  margin: 0;
+}
 
 .combo {
   position: relative;
@@ -14,54 +24,80 @@
   margin: 0;
   padding: 6px;
   overflow-y: auto;
-  border: 1.5px solid var(--wtc-line, #ecedee);
+  border: 0;
   border-radius: 18px;
   background: var(--wtc-surface, #ffffff);
-  box-shadow: 0 8px 24px rgba(184, 74, 0, 0.1);
+  box-shadow: 0 6px 16px rgba(30, 33, 36, 0.1);
   list-style: none;
 }
 
 .option {
   display: flex;
+  align-items: center;
   gap: 10px;
-  align-items: baseline;
-  padding: 10px 12px;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 12px;
   border-radius: 12px;
   color: var(--wtc-ink, #1e2124);
-  font-weight: 500;
+  font-size: 15px;
   cursor: pointer;
 }
 
-.option strong {
+.optionCode {
   flex: none;
-  color: var(--wtc-link, #b84a00);
-  font-weight: 800;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 15px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.optionTitle {
+  min-width: 0;
+  color: var(--wtc-muted, #555b60);
+  font-weight: 500;
 }
 
 .active {
-  background: var(--wtc-warm, #fff4eb);
+  background: var(--wtc-peach, #ffe6d2);
+}
+
+.active .optionTitle {
+  color: var(--wtc-ink, #1e2124);
 }
 
 .selected {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 14px;
-  border: 1.5px solid var(--wtc-orange, #f76902);
-  border-radius: 14px;
-  background: var(--wtc-warm, #fff4eb);
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--wtc-cream, #fbf7f1);
 }
 
 .selectedText {
-  display: grid;
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
   gap: 2px;
   min-width: 0;
-  color: var(--wtc-ink, #1e2124);
-  font-weight: 600;
 }
 
-.selectedText strong {
-  color: var(--wtc-link, #b84a00);
-  font-weight: 800;
+.selectedCode {
+  color: var(--wtc-ink, #1e2124);
+  font: 800 18px/1.2 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.selectedTitle {
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Two classes so the 44 px size wins over Grace's .wtc-btn in any load order. */
+:global(.wtc-btn).change {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font: 600 15px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
 }

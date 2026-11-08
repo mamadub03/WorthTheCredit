@@ -1,99 +1,692 @@
-/* The review form in the Example B style (src/styles/exampleB.css). */
+/*
+ * The review form on the College carousel Write a review boards (spec
+ * sections 1 to 6, src/styles/exampleB.css tokens): borderless white cards on
+ * the cream page, a step badge per required question, a form column beside a
+ * sticky rules card on desktop, and a dark sticky submit bar on a phone.
+ * Entrance is Grace's global wtc-rise; motion here is off under reduced motion.
+ */
 
-.form {
-  display: grid;
-  gap: 16px;
-  color: var(--wtc-ink, #1e2124);
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
-}
+/* Header: the course tag and h1, with the progress bar on the right */
 
 .header {
-  display: grid;
-  justify-items: start;
-  gap: 10px;
-  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
 }
 
-.tag {
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--wtc-warm, #fff4eb);
-  color: var(--wtc-link-hover, #8a3700);
-  font-size: 13px;
+.heading {
+  display: flex;
+  flex: 1 1 360px;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.reviewing {
+  margin: 0;
+  color: var(--wtc-teal-ink, #00566a);
+  font-size: 14px;
   font-weight: 700;
+  line-height: 1.35;
 }
 
 .title {
   margin: 0;
   color: var(--wtc-ink, #1e2124);
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font: 800 44px/1.05 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+  letter-spacing: -0.03em;
 }
 
-.lead {
-  max-width: 600px;
+.progress {
+  display: flex;
+  flex: 0 1 300px;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 240px;
+}
+
+.progressRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
   margin: 0;
-  color: var(--wtc-body, #4a4f54);
-  font-size: 17px;
-  line-height: 1.55;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 14px;
+  font-weight: 700;
 }
 
-.section {
-  padding: 28px 28px 4px;
-  border: 1.5px solid var(--wtc-line-warm, #f0e4da);
+.progressTime {
+  color: var(--wtc-muted, #555b60);
+  font-weight: 500;
+}
+
+.track,
+.barTrack {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--wtc-surface, #ffffff);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--wtc-orange, #f76902);
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Form column and the side card */
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.form {
+  display: flex;
+  flex: 999 1 560px;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.aside {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Cards: the course card and the optional section (no badge) */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
+  padding: 26px;
+  border: 0;
   border-radius: 28px;
   background: var(--wtc-surface, #ffffff);
 }
 
-.sectionTitle {
-  margin: 0 0 16px;
+/* A required question: badge at the top left, everything else lined up with the title. */
+.question {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 26px 26px 26px 76px;
+  border-radius: 28px;
+  background: var(--wtc-surface, #ffffff);
+}
+
+.invalidCard {
+  box-shadow: inset 0 0 0 2px var(--wtc-danger, #b42318);
+}
+
+.step {
+  position: absolute;
+  top: 26px;
+  left: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--wtc-gray, #f3f1ec);
   color: var(--wtc-ink, #1e2124);
-  font-size: 20px;
-  font-weight: 800;
+  font: 800 15px/1 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.stepDone {
+  background: var(--wtc-orange, #f76902);
+  transform: scale(1.08);
+}
+
+.questionTitle {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 21px/1.25 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
   letter-spacing: -0.01em;
 }
 
-.footer {
-  display: grid;
-  justify-items: start;
-  gap: 10px;
-  padding-top: 4px;
-}
-
-.note {
+/* The shared controls bring their own outer margin and gaps; the card sets them here. */
+.questionBody > fieldset,
+.questionBody > div {
   margin: 0;
-  color: var(--wtc-muted, #555b60);
-  font-size: 14px;
 }
 
-.submitError {
+.questionBody > fieldset {
+  gap: 14px;
+}
+
+.questionBody > div {
+  gap: 12px;
+}
+
+/* Optional section */
+
+.optionalHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.optionalTitle {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 21px/1.25 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+  letter-spacing: -0.01em;
+}
+
+.optionalPill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--wtc-gray, #f3f1ec);
+  color: var(--wtc-muted, #555b60);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/*
+ * wtc-rise leaves every card its own stacking context, so the course list
+ * would open under the question cards after it. Lift the picker's card above them.
+ */
+.pickerCard {
+  position: relative;
+  z-index: 2;
+}
+
+.card > div,
+.selects > div {
+  margin: 0;
+}
+
+.selects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+/* Live preview: the peach side card above the rules (desktop only) */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 30px;
+  background: var(--wtc-peach, #ffe6d2);
+}
+
+.previewHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 4px 6px 0;
+}
+
+.previewTitle {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 18px/1.25 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.previewNote {
+  margin: 0;
+  color: var(--wtc-peach-ink, #8a3700);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.previewCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 18px;
+  border-radius: 22px;
+  background: var(--wtc-surface, #ffffff);
+  color: var(--wtc-ink, #1e2124);
+}
+
+.previewTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.previewWorth {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--wtc-peach, #ffe6d2);
+  font: 800 18px/1 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.previewWho {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.previewWho p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.previewTerm {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.previewProfessor {
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+}
+
+.previewGoals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.previewGoals li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.previewTips {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* The board draws the empty text in #8a8f93 (3.3:1 on white); muted keeps it at text contrast. */
+.previewEmpty {
+  color: var(--wtc-muted, #555b60);
+  font-style: italic;
+}
+
+.previewStats {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin: 0;
-  padding: 10px 12px;
-  border: 1px solid #f3c5c0;
-  border-radius: 10px;
-  background: #fef3f2;
-  color: #b42318;
-  font-weight: 550;
+  gap: 14px;
+  padding-top: 10px;
+  border-top: 1.5px solid var(--wtc-gray, #f3f1ec);
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.submitError p {
+.previewHours {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.previewUnit,
+.previewUnset {
+  color: var(--wtc-muted, #555b60);
+  font-weight: 500;
+}
+
+.previewGained {
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.previewGained strong {
+  color: var(--wtc-ink, #1e2124);
+}
+
+/* Rules: the side card on desktop, one line on a phone */
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  border-radius: 28px;
+  background: var(--wtc-surface, #ffffff);
+}
+
+.rulesTitle {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 18px/1.25 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ruleIcon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  color: var(--wtc-ink, #1e2124);
+}
+
+.tintLilac {
+  background: var(--wtc-lilac, #e9e1f8);
+}
+
+.tintTeal {
+  background: var(--wtc-teal, #d3eff5);
+}
+
+.tintButter {
+  background: var(--wtc-butter, #fff0bf);
+}
+
+.tintMint {
+  background: var(--wtc-mint, #e6f2cf);
+}
+
+.ruleText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ruleTitle {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.ruleBody {
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.rulesLine {
+  margin: 0 6px;
+  color: var(--wtc-muted, #555b60);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Form-level alert (API errors, an expired session) with a dark fix-it action */
+
+.alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: var(--wtc-peach, #ffe6d2);
+  color: var(--wtc-ink, #1e2124);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.alert p {
+  flex: 1 1 240px;
   margin: 0;
   color: inherit;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Two classes so these sizes win over Grace's .wtc-btn in any load order. */
+:global(.wtc-btn).alertAction {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font: 700 15px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+/* Submit row: button, Cancel and the live "Still need" line */
+
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 4px 0;
+}
+
+:global(.wtc-btn).submit {
+  min-height: 56px;
+  padding: 0 32px;
+  border-radius: 18px;
+  font: 800 17px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.cancel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  border-radius: 10px;
+  color: var(--wtc-link, #b84a00);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cancel:hover {
+  color: var(--wtc-link-hover, #8a3700);
+  text-decoration: underline;
+}
+
+/* The global orange ring is 2.8:1 on the cream page; ink reads at 15:1. */
+.cancel:focus-visible {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
+}
+
+.status {
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.barProgress {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.barCount {
+  margin: 0;
+  color: var(--wtc-surface, #ffffff);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.barTrack {
+  height: 7px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Not in the board's d1 to d3 globals: the skills and optional cards come in last. */
+:global(.wtc-rise).d4 {
+  animation-delay: 0.32s;
 }
 
 @media (max-width: 640px) {
-  .section {
-    padding: 22px 18px 4px;
-    border-radius: 22px;
+  .header {
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding: 4px 4px 0;
+  }
+
+  .reviewing {
+    font-size: 12px;
   }
 
   .title {
     font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .aside {
+    display: none;
+  }
+
+  .form {
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+
+  .card {
+    gap: 14px;
+    padding: 18px;
+    border-radius: 26px;
+  }
+
+  .question {
+    gap: 2px;
+    padding: 18px;
+    border-radius: 26px;
+  }
+
+  .step {
+    top: 18px;
+    left: 18px;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  /* On a phone only the title and hint sit beside the badge; the controls use the full width. */
+  .questionTitle,
+  .question [id$='-hint'] {
+    padding-left: 40px;
+  }
+
+  .questionTitle {
+    min-height: 30px;
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .questionBody > fieldset {
+    gap: 12px;
+  }
+
+  .optionalTitle {
+    font-size: 18px;
+  }
+
+  .optionalPill {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .selects {
+    grid-template-columns: 1fr;
+  }
+
+  /*
+   * The dark sticky bar, kept above Grace's phone tab bar (fixed at bottom
+   * 14px, about 80 px tall with its gap, no safe-area term). The AI page's dock
+   * uses the same 92px.
+   */
+  .submitRow {
+    position: sticky;
+    z-index: 5;
+    bottom: 92px;
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding: 10px 10px 10px 18px;
+    border-radius: 26px;
+    background: var(--wtc-ink, #1e2124);
+    box-shadow: 0 12px 30px rgba(30, 33, 36, 0.28);
+    color: var(--wtc-surface, #ffffff);
+  }
+
+  /*
+   * The sticky bar and the tab bar cover about 160 px at the bottom, so a
+   * field focused by keyboard stops above them (WCAG 2.4.11).
+   */
+  .question,
+  .card,
+  .form :is(input, textarea, select) {
+    scroll-margin-bottom: 180px;
+  }
+
+  :global(.wtc-btn).submit {
+    flex: none;
+    min-height: 50px;
+    padding: 0 22px;
+    font-size: 16px;
+  }
+}
+
+/* Width switches last, so they win over each element's own display. */
+@media (min-width: 641px) {
+  .narrow {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .wide {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step,
+  .fill {
+    transition: none;
   }
 }
