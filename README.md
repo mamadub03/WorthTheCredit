@@ -2,9 +2,11 @@
 
 Crowdsourced RIT course discovery with **Community Worth Scores** and **Gemini-ranked elective recommendations**.
 
+**Live:** [https://worththecredit.courses/](https://worththecredit.courses/)
+
 Students browse a course catalog, leave structured reviews (goals, worth score, difficulty, workload, skills), and get personalized matches. Gemini only ranks courses that already exist in our database — it does not invent classes or calculate Worth Scores.
 
-**HACK.COMS 2026** prize tracks we built for: SpaceXSI (Cursor), Gemini API, Tiger Data; Vultr deploy next.
+**HACK.COMS 2026** prize tracks: SpaceXSI (Cursor), Gemini API, Tiger Data, Vultr.
 
 ## What’s in the repo
 
@@ -123,7 +125,7 @@ In Auth0 → Application → **URLs**:
 | Allowed Logout URLs | `http://localhost:5173`, `http://127.0.0.1:5173` |
 | Allowed Web Origins | `http://localhost:5173`, `http://127.0.0.1:5173` |
 
-Production will need your Vercel (or other) HTTPS origins added the same way.
+Also add production HTTPS origins (see **Production deploy** below).
 
 ## What works end-to-end
 
@@ -135,16 +137,72 @@ Production will need your Vercel (or other) HTTPS origins added the same way.
 | Submit review | Yes | One review per user per course |
 | AI recommendations | Yes | Needs Gemini key; optional resume paste |
 
-## Know before deployment (Vercel + Vultr)
+## Production deploy (Vercel + Vultr)
 
-1. **Secrets stay on the API host.** Vultr (or similar) runs FastAPI with `DATABASE_URL`, `AUTH0_*`, `GEMINI_*`. Vercel only gets `VITE_*` public Auth0 + API base URL.
-2. **CORS:** set `CORS_ORIGINS` to the exact Vercel URL(s) (scheme + host, no trailing slash mismatch).
-3. **Auth0:** add production callback `/callback`, logout, and web origins for the Vercel domain.
-4. **`APP_ENV`:** use something other than `development` in prod so `AUTH_SKIP_EMAIL_VERIFICATION` cannot apply.
-5. **Gemini model:** prefer `gemini-flash-latest`; older `gemini-2.5-flash` is blocked for many new keys.
-6. **Tiger:** keep `sslmode=require`; run `alembic upgrade head` and `python scripts/seed_db.py` against the prod DB once (or seed only what you want for demo).
-7. **Frontend mocks:** production build should use `VITE_API_MOCKS=none` and a real `VITE_API_BASE_URL` pointing at the Vultr API.
-8. **Do not commit** `.env` / `.env.local` — only `.env.example` files.
+**Live site:** [https://worththecredit.courses/](https://worththecredit.courses/)
+
+| Piece | Where | Role |
+|-------|--------|------|
+| Frontend | **Vercel** (`frontend/` root directory, Vite → `dist`) | Custom domain `worththecredit.courses` (+ `www`) via DNS (Porkbun) |
+| API | **Vultr** Ubuntu + uvicorn on `:8000` | FastAPI + Tiger + Auth0 JWT + Gemini |
+| HTTPS → API | Vercel rewrite | Browser calls same-origin `/backend/*`; `frontend/vercel.json` proxies to the Vultr host (avoids mixed-content HTTPS→HTTP) |
+
+### Frontend (Vercel) env
+
+```bash
+VITE_API_BASE_URL=https://worththecredit.courses/backend
+VITE_API_MOCKS=none
+VITE_DEV_AUTH=false
+VITE_AUTH0_DOMAIN=…          # same SPA tenant as local
+VITE_AUTH0_CLIENT_ID=…
+VITE_AUTH0_AUDIENCE=https://worththecredit.api
+```
+
+`VITE_*` are public. After changing them, **Redeploy** (Vite bakes env at build time).
+
+`frontend/vercel.json` must keep:
+
+- `/backend/:path*` → Vultr `http://<VULTR_IP>:8000/:path*`
+- SPA fallback to `/index.html` for client routes
+
+### Backend (Vultr) env essentials
+
+| Variable | Production note |
+|----------|-----------------|
+| `DATABASE_URL` | Tiger URL with `postgresql+psycopg://…` and `sslmode=require` |
+| `AUTH0_DOMAIN` / `AUTH0_API_AUDIENCE` | Same tenant/audience as the SPA |
+| `GEMINI_API_KEY` / `GEMINI_MODEL` | Prefer `gemini-flash-latest` |
+| `CORS_ORIGINS` | Include `https://worththecredit.courses`, `https://www.worththecredit.courses`, and any `*.vercel.app` preview you still use |
+| `APP_ENV` | Prefer `production` so `AUTH_SKIP_EMAIL_VERIFICATION` cannot apply |
+| Firewall | Allow TCP **22** and **8000** (or put nginx/HTTPS in front later) |
+
+Run on the box (from `backend/`): `alembic upgrade head`, optional `python scripts/seed_db.py`, then uvicorn bound to `0.0.0.0:8000` (e.g. `nohup` or systemd so SSH disconnect does not kill it).
+
+### Auth0 production URLs
+
+| Setting | Include |
+|---------|---------|
+| Allowed Callback URLs | `https://worththecredit.courses/callback`, `https://www.worththecredit.courses/callback` |
+| Allowed Logout URLs | `https://worththecredit.courses`, `https://www.worththecredit.courses` |
+| Allowed Web Origins | `https://worththecredit.courses`, `https://www.worththecredit.courses` |
+
+Keep localhost entries for local dev. Auth0 does **not** need the Vultr IP — only frontend origins.
+
+### DNS (custom domain)
+
+Point the apex (and `www`) at Vercel as shown in the project **Domains** UI (A/CNAME). Remove conflicting apex A records (e.g. old WordPress/parking IPs) so only Vercel’s record remains. Wait until Vercel marks the domain **Valid**.
+
+### Smoke checks
+
+- Site: https://worththecredit.courses/
+- API via proxy: https://worththecredit.courses/backend/health → `{"status":"ok",…}`
+- Direct API (ops): `http://<VULTR_IP>:8000/health`
+
+### Still true for any redeploy
+
+1. Secrets stay on Vultr — never put `DATABASE_URL` / Gemini / Auth0 secrets in Vercel.
+2. Do not commit `.env` / `.env.local` — only `.env.example`.
+3. Prefer verified Auth0 emails in real prod; `AUTH_SKIP_EMAIL_VERIFICATION` only works when `APP_ENV=development`.
 
 ## Docs
 
