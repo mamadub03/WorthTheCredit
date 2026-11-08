@@ -2,17 +2,17 @@ import { useEffect } from 'react'
 import { Link, Outlet, useLocation, useNavigationType } from 'react-router'
 import DemoDataBanner from '../api/mock/DemoDataBanner.tsx'
 import logoUrl from '../assets/brand/logo-horizontal.svg'
-import { HomeIcon, PencilIcon, SearchIcon, SparkIcon } from '../components/ui/icons.tsx'
+import { HomeIcon, SearchIcon, SparkIcon } from '../components/ui/icons.tsx'
 import { PHOTO_CREDITS } from '../domain/colleges.ts'
 import AuthMenu from '../features/auth/AuthMenu.tsx'
 import { COURSES_PATH } from '../routes/discoveryPaths.ts'
 import { paths } from '../routes/paths.ts'
 import styles from './AppLayout.module.css'
 
+// The design's nav: Courses and AI match. (Its Shortlist link is out of the MVP.)
 const NAV = [
-  { to: COURSES_PATH, label: 'Courses', icon: SearchIcon, matches: (path: string) => path.startsWith('/courses') },
-  { to: paths.recommendations, label: 'AI match', icon: SparkIcon, matches: (path: string) => path.startsWith(paths.recommendations) },
-  { to: paths.writeReview(), label: 'Write a review', icon: PencilIcon, matches: (path: string) => path.startsWith(paths.writeReview()) },
+  { to: COURSES_PATH, label: 'Courses', tab: 'Courses', icon: SearchIcon, matches: (path: string) => path.startsWith('/courses') },
+  { to: paths.recommendations, label: 'AI match', tab: 'Match', icon: SparkIcon, matches: (path: string) => path.startsWith(paths.recommendations) },
 ]
 
 /**
@@ -27,7 +27,7 @@ export default function AppLayout() {
   useEffect(() => {
     if (navigationType !== 'POP') window.scrollTo(0, 0)
   }, [pathname, navigationType])
-  const tabs = [{ to: paths.home, label: 'Home', icon: HomeIcon, matches: (path: string) => path === paths.home }, ...NAV]
+  const tabs = [{ to: paths.home, label: 'Home', tab: 'Home', icon: HomeIcon, matches: (path: string) => path === paths.home }, ...NAV]
 
   return (
     <div className={styles.app}>
@@ -66,10 +66,10 @@ export default function AppLayout() {
       </footer>
 
       <nav className={styles.tabs} aria-label="App">
-        {tabs.map(({ to, label, icon: Icon, matches }) => (
+        {tabs.map(({ to, tab, icon: Icon, matches }) => (
           <Link key={to} to={to} className={styles.tab} aria-current={matches(pathname) ? 'page' : undefined}>
             <Icon size={20} />
-            {label === 'Write a review' ? 'Review' : label === 'AI match' ? 'Match' : label}
+            {tab}
           </Link>
         ))}
       </nav>

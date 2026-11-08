@@ -61,71 +61,6 @@
   color: #8a8f93;
 }
 
-/* Course card. */
-.courseCard {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-  padding: 12px 16px 12px 12px;
-  border-radius: 24px;
-  background: #ffffff;
-  color: var(--wtc-ink, #1e2124);
-  text-decoration: none;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
-}
-
-a.courseCard:hover {
-  color: var(--wtc-ink, #1e2124);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(30, 33, 36, 0.08);
-}
-
-.courseBody {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.courseMeta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--wtc-muted, #555b60);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.courseMark {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-}
-
-.courseCollege {
-  overflow: hidden;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.courseTitle {
-  font: 700 17px/1.25 var(--wtc-display, Outfit, sans-serif);
-}
-
-.courseStats {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  min-height: 18px;
-  color: var(--wtc-muted, #555b60);
-  font-size: 13px;
-  font-weight: 600;
-}
-
 /* Empty and error states. */
 .state {
   display: flex;
@@ -229,8 +164,7 @@ a.courseCard:hover {
     animation: none;
   }
 
-  .capsFill,
-  .courseCard {
+  .capsFill {
     transition: none;
   }
 }

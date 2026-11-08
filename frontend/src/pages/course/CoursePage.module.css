@@ -228,38 +228,10 @@
   font: 800 34px var(--wtc-display, Outfit, sans-serif);
 }
 
-.hours {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  height: 70px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.hours li {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 4px;
-}
-
-.hoursBar {
-  width: 100%;
-  border-radius: 8px 8px 4px 4px;
-  background: var(--wtc-butter, #fff0bf);
-}
-
-.hoursTop .hoursBar {
-  background: var(--wtc-orange, #f76902);
-}
-
-.hoursKey {
+.unit {
   color: var(--wtc-muted, #555b60);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 /* Two columns below the scores. */
@@ -381,11 +353,19 @@
 
 .reviewHead {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.reviewWho {
+  display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.reviewWho {
+.reviewWhoText {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -397,26 +377,12 @@
   font-weight: 600;
 }
 
-.reviewWorthWord {
-  color: var(--wtc-muted, #555b60);
-  font-weight: 500;
-}
-
 .reviewDate {
   color: var(--wtc-muted, #555b60);
   font-size: 13px;
 }
 
-.goalChips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.goalChips li {
+.tookFor {
   padding: 5px 10px;
   border-radius: 999px;
   font-size: 12px;
