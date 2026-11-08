@@ -1,13 +1,30 @@
 # AI-GENERATED (Cursor Agent) — Issue #5: Generate and seed mock RIT data
 # Owned by Backend Developer 1 (mamadub03).
-# File-level AI attribution for this module (not per-symbol).
-# All records are fictional hackathon demo data — not real RIT students/reviews.
+# ---------------------------------------------------------------------------
+# FILE PURPOSE
+#   Static fixture data used by `scripts/seed_db.py` to populate Tiger Data
+#   with hackathon demo content. Nothing here is a live RIT SIS feed or a
+#   real student review.
+#
+# HOW TO USE
+#   Imported by `scripts/seed_db.py`. Do not connect to the DB from this file.
+#
+# AI ATTRIBUTION
+#   Whole-file Cursor Agent authorship for Issue #5 (file-level tag only).
+# ---------------------------------------------------------------------------
 
 """Static mock RIT-style courses, demo users, and fictional reviews."""
 
 from __future__ import annotations
 
-# Courses keyed by unique `code` so re-seeding upserts instead of duplicating.
+# =============================================================================
+# COMPONENT: MOCK_COURSES
+# -----------------------------------------------------------------------------
+# What: RIT-flavored elective/core-adjacent course rows for discovery demos.
+# Key:  `code` is unique (matches DB unique constraint) so seeding can upsert.
+# Shape: keys align with the Course model / docs/DATABASE_SCHEMA.md.
+# Note:  Descriptions include "DEMO DATA" so demo rows stay distinguishable.
+# =============================================================================
 MOCK_COURSES: list[dict] = [
     {
         "code": "GCIS-123",
@@ -219,7 +236,14 @@ MOCK_COURSES: list[dict] = [
     },
 ]
 
-# Demo Auth0-style subjects — clearly not real students.
+# =============================================================================
+# COMPONENT: MOCK_USERS
+# -----------------------------------------------------------------------------
+# What: Fake student profiles linked to demo Auth0 subject strings.
+# Key:  `auth0_sub` is unique (matches DB). Prefix `demo|` marks them as fake.
+# Shape: keys align with the User model / docs/DATABASE_SCHEMA.md.
+# Note:  No passwords — Auth0 owns auth; we only store profile fields.
+# =============================================================================
 MOCK_USERS: list[dict] = [
     {
         "auth0_sub": "demo|worththecredit-seed-001",
@@ -251,8 +275,14 @@ MOCK_USERS: list[dict] = [
     },
 ]
 
-# Reviews reference course codes + auth0_sub; resolved to IDs at seed time.
-# feedback always states these are fictional.
+# =============================================================================
+# COMPONENT: MOCK_REVIEWS
+# -----------------------------------------------------------------------------
+# What: Fictional Worth Score reviews for demo Community Worth Score math.
+# Join: Uses `auth0_sub` + `course_code` (resolved to UUIDs in seed_db.py).
+# Rules: goals / weekly_hours_range / scores follow docs/DATABASE_SCHEMA.md.
+# Note:  `feedback` always starts with [FICTIONAL DEMO REVIEW].
+# =============================================================================
 MOCK_REVIEWS: list[dict] = [
     {
         "auth0_sub": "demo|worththecredit-seed-001",
