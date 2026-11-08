@@ -11,8 +11,10 @@
 # - backend/app/db/models.py Review (read and inserted; file not edited)
 # GET /courses/{course_id}/worth-score was added for Issue #13.
 # Its query lives in backend/app/reviews/scoring.py.
+# GET /courses/{course_id}/reviews was added for Issue #14.
+# Its query lives in backend/app/reviews/retrieval.py.
 
-"""Authenticated review submission and public Worth Score reads.
+"""Authenticated review submission and public review reads.
 
 ``POST /courses/{course_id}/reviews`` stores one review for the verified
 student. ``user_id`` is ``users.id`` from the Auth0 token. The response
@@ -21,13 +23,16 @@ update or delete route in the MVP.
 
 ``GET /courses/{course_id}/worth-score`` is public. It returns the
 Issue #13 aggregate and does not list reviewers.
+
+``GET /courses/{course_id}/reviews`` is public. Pages use ``limit``
+(default 20, max 100) and ``offset`` (default 0), matching course search.
 """
 
 from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -35,8 +40,14 @@ from app.api.deps import AuthenticatedUser, require_verified_email
 from app.db.models import Course, Review
 from app.db.session import get_db
 from app.reviews.policy import ReviewPolicyError, prepare_review
+from app.reviews.retrieval import list_public_reviews
 from app.reviews.scoring import worth_score_summary
-from app.schemas.review import ReviewCreate, ReviewPublic, WorthScoreSummary
+from app.schemas.review import (
+    ReviewCreate,
+    ReviewListResponse,
+    ReviewPublic,
+    WorthScoreSummary,
+)
 
 router = APIRouter(prefix="/courses", tags=["reviews"])
 
@@ -111,3 +122,20 @@ def get_worth_score(
             detail="Course not found",
         )
     return worth_score_summary(db, course_id)
+
+
+@router.get("/{course_id}/reviews", response_model=ReviewListResponse)
+def get_reviews(
+    course_id: uuid.UUID,
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+) -> ReviewListResponse:
+    """Return a page of anonymous reviews for one course."""
+
+    if db.get(Course, course_id) is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found",
+        )
+    return list_public_reviews(db, course_id, limit=limit, offset=offset)
