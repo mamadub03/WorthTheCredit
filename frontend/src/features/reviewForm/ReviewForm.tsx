@@ -52,9 +52,11 @@ export default function ReviewForm({ form, submitting, submitError, onSubmit }: 
       }}
     >
       <header className={styles.header}>
-        <p className="eyebrow">Write a review</p>
-        <h1 id="review-title">Was it worth the credit?</h1>
-        <p>
+        <span className={styles.tag}>Write a review</span>
+        <h1 id="review-title" className={styles.title}>
+          Was it worth the credit?
+        </h1>
+        <p className={styles.lead}>
           Your review is anonymous. Rate the course itself, so future students can tell whether it fits their goals.
         </p>
       </header>

@@ -1,18 +1,52 @@
-/* Floats right inside FE1's block header, so it needs no change to the header's own CSS. */
+/*
+ * Floats right inside FE1's block header, so it needs no change to the
+ * header's own CSS. The top padding centres a 38px pill on the brand line.
+ */
 .menu {
   float: right;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 11px 24px 11px 0;
+  padding: 9px 24px 0 0;
+  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
 }
 
-.email {
+.account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--wtc-orange, #f76902);
+  color: var(--wtc-ink, #1e2124);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.who {
   max-width: 220px;
   overflow: hidden;
-  color: var(--muted);
-  font-size: 0.9rem;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 15px;
+  font-weight: 600;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
   white-space: nowrap;
 }
 
@@ -22,7 +56,12 @@
     padding-right: 16px;
   }
 
-  .email {
-    display: none;
+  /* The avatar stays; the address is still read out to screen readers. */
+  .who {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
 }

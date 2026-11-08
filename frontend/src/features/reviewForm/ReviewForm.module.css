@@ -1,33 +1,71 @@
+/* The review form in the Example B style (src/styles/exampleB.css). */
+
 .form {
   display: grid;
   gap: 16px;
+  color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
 }
 
-.header h1 {
+.header {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
   margin-bottom: 8px;
 }
 
+.tag {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--wtc-warm, #fff4eb);
+  color: var(--wtc-link-hover, #8a3700);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.title {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  max-width: 600px;
+  margin: 0;
+  color: var(--wtc-body, #4a4f54);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
 .section {
-  padding: 24px 24px 2px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
+  padding: 28px 28px 4px;
+  border: 1.5px solid var(--wtc-line-warm, #f0e4da);
+  border-radius: 28px;
+  background: var(--wtc-surface, #ffffff);
 }
 
 .sectionTitle {
   margin: 0 0 16px;
-  font-size: 1.1rem;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .footer {
   display: grid;
   justify-items: start;
   gap: 10px;
+  padding-top: 4px;
 }
 
 .note {
   margin: 0;
-  font-size: 0.9rem;
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
 }
 
 .submitError {
@@ -42,6 +80,11 @@
 
 @media (max-width: 640px) {
   .section {
-    padding: 18px 16px 2px;
+    padding: 22px 18px 4px;
+    border-radius: 22px;
+  }
+
+  .title {
+    font-size: 26px;
   }
 }

@@ -11,7 +11,7 @@ export default function DemoDataBanner() {
   if (!mocked && !env.devAuth) return null
   const notes: string[] = []
   if (mocked) notes.push('Demo mode: sample data, not real student reviews.')
-  if (env.devAuth) notes.push('Dev sign-in is on, so you are signed in as a test student.')
+  if (env.devAuth) notes.push('Dev sign-in is on, so signing in uses a test student account.')
   return (
     <p className={styles.banner} role="note">
       {notes.join(' ')}

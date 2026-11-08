@@ -1,0 +1,177 @@
+/* The Example B sign-in page: a welcome card beside what an account adds. */
+
+.page {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 16px;
+  color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+}
+
+.card {
+  display: flex;
+  flex: 1 1 380px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 44px 40px;
+  border: 1.5px solid var(--wtc-line-warm, #f0e4da);
+  border-radius: 32px;
+  background: var(--wtc-surface, #ffffff);
+  text-align: center;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: var(--wtc-orange, #f76902);
+  color: var(--wtc-ink, #1e2124);
+}
+
+.title {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  max-width: 340px;
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.error {
+  max-width: 340px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--wtc-danger-soft, #fef3f2);
+  color: var(--wtc-danger, #b42318);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Two classes, so these sizes win over Button's own regardless of CSS order. */
+.card .cta {
+  width: 100%;
+  max-width: 340px;
+  min-height: 54px;
+  font-size: 17px;
+}
+
+.card .cta:first-of-type {
+  margin-top: 6px;
+}
+
+.note {
+  max-width: 320px;
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.browse {
+  padding: 10px;
+  color: var(--wtc-link, #b84a00);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.browse:hover {
+  color: var(--wtc-link-hover, #8a3700);
+}
+
+.perks {
+  display: flex;
+  flex: 1 1 340px;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.perksTitle {
+  margin: 8px 8px 4px;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.perkList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perk {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px;
+  border: 1.5px solid var(--wtc-line, #ecedee);
+  border-radius: 24px;
+  background: var(--wtc-surface, #ffffff);
+}
+
+.perkIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  color: var(--wtc-ink, #1e2124);
+}
+
+.tintBlue {
+  background: #d3eff5;
+}
+
+.tintGreen {
+  background: #e6f2cf;
+}
+
+.tintWarm {
+  background: var(--wtc-warm-strong, #ffe6d2);
+}
+
+.perkText {
+  display: grid;
+  gap: 2px;
+  padding-right: 10px;
+}
+
+.perkTitle {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.perkDetail {
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 32px 20px;
+    border-radius: 24px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+}

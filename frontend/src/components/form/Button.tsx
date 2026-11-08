@@ -1,15 +1,17 @@
 import type { ButtonHTMLAttributes } from 'react'
-import styles from './Button.module.css'
+import { buttonClassName, type ButtonSize, type ButtonVariant } from './buttonClassName.ts'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'quiet'
-  size?: 'normal' | 'small'
+  /** primary: the page's main action (RIT orange). dark: the header's sign-in pill. secondary: outlined. quiet: link style. */
+  variant?: ButtonVariant
+  size?: ButtonSize
   /** Disables the button and tells assistive tech work is in progress. */
   busy?: boolean
 }
 
 /**
- * FE2's button, until FE1's shared Button lands (#19); then swap the import.
+ * FE2's button in the Example B style, until FE1's shared Button lands (#19);
+ * then swap the import. For an action that navigates, use ButtonLink.
  * Owner: FE2 (#26).
  */
 export default function Button({
@@ -22,9 +24,14 @@ export default function Button({
   children,
   ...rest
 }: ButtonProps) {
-  const classes = [styles.button, styles[variant], size === 'small' ? styles.small : '', className ?? ''].filter(Boolean).join(' ')
   return (
-    <button type={type} className={classes} disabled={disabled || busy} aria-busy={busy || undefined} {...rest}>
+    <button
+      type={type}
+      className={buttonClassName(variant, size, className)}
+      disabled={disabled || busy}
+      aria-busy={busy || undefined}
+      {...rest}
+    >
       {children}
     </button>
   )

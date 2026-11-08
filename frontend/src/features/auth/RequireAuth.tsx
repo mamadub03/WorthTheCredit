@@ -1,5 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { useLocation } from 'react-router'
+import Button from '../../components/form/Button.tsx'
+import StatusPanel from '../../components/form/StatusPanel.tsx'
 import { useAuth } from './authContext.ts'
 import VerifyEmailNotice from './VerifyEmailNotice.tsx'
 
@@ -21,28 +23,18 @@ export default function RequireAuth({ requireVerifiedEmail = false, children }: 
     void auth.login({ returnTo })
   }, [mustSignIn, auth, returnTo])
 
-  if (auth.mode === 'unconfigured') return <StatusPanel title="Sign-in isn't set up yet" detail={auth.error?.message} />
-  if (auth.isLoading) return <StatusPanel title="Checking your sign-in" />
-  if (!auth.isAuthenticated && auth.justLoggedOut) {
-    return <StatusPanel title="You're signed out" action={{ label: 'Sign in again', onClick: () => void auth.login({ returnTo }) }} />
+  if (auth.mode === 'unconfigured') {
+    return <StatusPanel title="Sign-in isn't set up yet">{auth.error ? <p>{auth.error.message}</p> : null}</StatusPanel>
   }
+  if (auth.isLoading) return <StatusPanel title="Checking your sign-in" live />
   if (!auth.isAuthenticated) {
-    return <StatusPanel title="Taking you to sign in" action={{ label: 'Sign in', onClick: () => void auth.login({ returnTo }) }} />
+    const signIn = <Button onClick={() => void auth.login({ returnTo })}>{auth.justLoggedOut ? 'Sign in again' : 'Sign in'}</Button>
+    return auth.justLoggedOut ? (
+      <StatusPanel title="You're signed out" actions={signIn} />
+    ) : (
+      <StatusPanel title="Taking you to sign in" live actions={signIn} />
+    )
   }
   if (requireVerifiedEmail && !auth.user?.emailVerified) return <VerifyEmailNotice />
   return <>{children}</>
-}
-
-function StatusPanel({ title, detail, action }: { title: string; detail?: string; action?: { label: string; onClick: () => void } }) {
-  return (
-    <section className="panel" aria-live="polite">
-      <h1>{title}</h1>
-      {detail ? <p>{detail}</p> : null}
-      {action ? (
-        <button type="button" onClick={action.onClick}>
-          {action.label}
-        </button>
-      ) : null}
-    </section>
-  )
 }

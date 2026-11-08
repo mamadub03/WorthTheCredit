@@ -1,10 +1,11 @@
-.actions {
-  margin-top: 20px;
-}
-
+/*
+ * Sits beside the button in StatusPanel's action row, and wraps under it when
+ * long. Never display: none, or screen readers can miss the first message.
+ */
 .status {
-  min-height: 1.5em;
-  margin-top: 12px;
-  color: var(--accent);
-  font-size: 0.95rem;
+  flex: 1 1 220px;
+  margin: 0;
+  color: var(--wtc-link-hover, #8a3700);
+  font-size: 15px;
+  font-weight: 600;
 }

@@ -1,0 +1,25 @@
+/*
+ * Example B ("white + warm", Figtree), the design the team picked for WorthTheCredit.
+ * These variables style FE2's screens. FE1 can adopt them app-wide in index.css
+ * (or replace this file) when the header, home, and course pages move to Example B.
+ * Owner: FE2. Values come from the design's Combo-HomeB board.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --wtc-font: Figtree, 'Helvetica Neue', Arial, sans-serif;
+  --wtc-ink: #1e2124;
+  --wtc-body: #4a4f54;
+  --wtc-muted: #555b60;
+  --wtc-orange: #f76902;
+  --wtc-link: #b84a00;
+  --wtc-link-hover: #8a3700;
+  --wtc-warm: #fff4eb;
+  --wtc-warm-strong: #ffe6d2;
+  --wtc-surface: #ffffff;
+  --wtc-gray: #f3f4f5;
+  --wtc-line: #ecedee;
+  --wtc-line-warm: #f0e4da;
+  --wtc-danger: #b42318;
+  --wtc-danger-soft: #fef3f2;
+}

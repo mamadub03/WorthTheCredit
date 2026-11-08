@@ -1,13 +1,15 @@
-/* Shared styles for FE2's form controls. Colors come from FE1's variables in index.css. */
+/* FE2's form controls in the Example B style (src/styles/exampleB.css). */
 
 .field {
   display: grid;
+  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
   gap: 6px;
   margin: 0 0 24px;
 }
 
 .fieldset {
   display: grid;
+  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
   gap: 8px;
   min-width: 0;
   margin: 0 0 24px;
@@ -17,27 +19,27 @@
 
 .label {
   padding: 0;
-  color: var(--text);
-  font-size: 1rem;
-  font-weight: 650;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .optional {
   margin-left: 6px;
-  color: var(--muted);
-  font-size: 0.85rem;
-  font-weight: 400;
+  color: var(--wtc-muted, #555b60);
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .hint {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
 }
 
 .error {
   margin: 0;
-  color: #b42318;
+  color: var(--wtc-danger, #b42318);
   font-size: 0.9rem;
   font-weight: 550;
 }
@@ -46,13 +48,13 @@
 .textarea,
 .select {
   width: 100%;
-  min-height: 46px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface);
-  color: var(--text);
-  font: inherit;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--wtc-line, #ecedee);
+  border-radius: 14px;
+  background: var(--wtc-surface, #ffffff);
+  color: var(--wtc-ink, #1e2124);
+  font: 500 16px var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .textarea {
@@ -64,19 +66,19 @@
 .input:focus-visible,
 .textarea:focus-visible,
 .select:focus-visible {
-  border-color: var(--accent);
-  outline: 2px solid var(--accent);
+  border-color: var(--wtc-orange, #f76902);
+  outline: 2px solid var(--wtc-orange, #f76902);
   outline-offset: 1px;
 }
 
 .invalid {
-  border-color: #b42318;
+  border-color: var(--wtc-danger, #b42318);
 }
 
 .counter {
   justify-self: end;
   margin: 0;
-  color: var(--muted);
+  color: var(--wtc-muted, #555b60);
   font-size: 0.8rem;
 }
 
@@ -97,28 +99,30 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface);
+  padding: 12px 14px;
+  border: 1.5px solid var(--wtc-line, #ecedee);
+  border-radius: 14px;
+  background: var(--wtc-surface, #ffffff);
+  font-weight: 600;
   cursor: pointer;
 }
 
 .choice:has(input:checked) {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  border-color: var(--wtc-orange, #f76902);
+  background: var(--wtc-warm, #fff4eb);
 }
 
-.choice:focus-within {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+/* Keyboard focus only: a mouse click already shows the checked state. */
+.choice:has(input:focus-visible) {
+  outline: 2px solid var(--wtc-ink, #1e2124);
+  outline-offset: 2px;
 }
 
 .choice input {
   width: 18px;
   height: 18px;
   margin: 0;
-  accent-color: var(--accent);
+  accent-color: var(--wtc-orange, #f76902);
 }
 
 /* Segmented single choice (ratings, hours) */
@@ -149,35 +153,35 @@
   gap: 2px;
   min-height: 60px;
   padding: 8px 4px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface);
+  border: 1.5px solid var(--wtc-line, #ecedee);
+  border-radius: 14px;
+  background: var(--wtc-surface, #ffffff);
   text-align: center;
 }
 
 .scaleValue {
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
 }
 
 .scaleCaption {
-  color: var(--muted);
+  color: var(--wtc-muted, #555b60);
   font-size: 0.75rem;
   line-height: 1.2;
 }
 
 .scaleOption input:checked + .scaleLabel {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
+  border-color: var(--wtc-orange, #f76902);
+  background: var(--wtc-orange, #f76902);
+  color: var(--wtc-ink, #1e2124);
 }
 
 .scaleOption input:checked + .scaleLabel .scaleCaption {
-  color: #fff;
+  color: var(--wtc-ink, #1e2124);
 }
 
 .scaleOption input:focus-visible + .scaleLabel {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--wtc-ink, #1e2124);
   outline-offset: 2px;
 }
 
@@ -190,14 +194,14 @@
   gap: 6px;
   min-height: 46px;
   padding: 6px 8px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface);
+  border: 1.5px solid var(--wtc-line, #ecedee);
+  border-radius: 14px;
+  background: var(--wtc-surface, #ffffff);
 }
 
 .tagBox:focus-within {
-  border-color: var(--accent);
-  outline: 2px solid var(--accent);
+  border-color: var(--wtc-orange, #f76902);
+  outline: 2px solid var(--wtc-orange, #f76902);
   outline-offset: 1px;
 }
 
@@ -207,10 +211,10 @@
   gap: 2px;
   padding: 3px 4px 3px 10px;
   border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 0.9rem;
-  font-weight: 600;
+  background: var(--wtc-warm-strong, #ffe6d2);
+  color: var(--wtc-link-hover, #8a3700);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .tagRemove {
@@ -228,11 +232,11 @@
 }
 
 .tagRemove:hover {
-  background: rgba(194, 65, 12, 0.15);
+  background: rgba(184, 74, 0, 0.15);
 }
 
 .tagRemove:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--wtc-ink, #1e2124);
 }
 
 .tagInput {
@@ -241,8 +245,8 @@
   padding: 6px 4px;
   border: 0;
   background: transparent;
-  color: var(--text);
-  font: inherit;
+  color: var(--wtc-ink, #1e2124);
+  font: 500 16px var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .tagInput:focus {

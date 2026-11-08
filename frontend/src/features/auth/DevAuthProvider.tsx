@@ -32,7 +32,8 @@ export default function DevAuthProvider({ children, startUnverified = false }: {
   const signIn = useCallback(
     async (options?: SignInOptions) => {
       remember({ name: 'student', verified: !startUnverified })
-      if (options?.returnTo && options.returnTo !== here) navigate(options.returnTo)
+      // Replace, like Auth0's return through /callback, so Back doesn't land on /signin again.
+      if (options?.returnTo && options.returnTo !== here) navigate(options.returnTo, { replace: true })
     },
     [remember, startUnverified, here, navigate],
   )
