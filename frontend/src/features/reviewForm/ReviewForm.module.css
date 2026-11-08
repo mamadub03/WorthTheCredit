@@ -208,6 +208,15 @@
   line-height: 1.2;
 }
 
+/*
+ * wtc-rise leaves every card its own stacking context, so the course list
+ * would open under the question cards after it. Lift the picker's card above them.
+ */
+.pickerCard {
+  position: relative;
+  z-index: 2;
+}
+
 .card > div,
 .selects > div {
   margin: 0;

@@ -160,7 +160,7 @@
   gap: 14px;
 }
 
-/* Goal chips: a label around a visually hidden checkbox */
+/* Goal chips: a label around a transparent native checkbox */
 
 .choices {
   display: flex;
@@ -205,14 +205,20 @@
   cursor: not-allowed;
 }
 
+/* Laid over the whole chip, like the radios, so a pointer lands on the checkbox itself. */
 .choiceInput {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
   margin: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.choiceInput:disabled {
+  cursor: not-allowed;
 }
 
 .choiceOn {

@@ -121,7 +121,7 @@ export default function ReviewForm({
             onSubmit()
           }}
         >
-          <div className={`${styles.card} ${errors.courseId ? styles.invalidCard : ''} wtc-rise`}>
+          <div className={`${styles.card} ${styles.pickerCard} ${errors.courseId ? styles.invalidCard : ''} wtc-rise`}>
             <CoursePicker
               id={reviewFieldId('courseId')}
               courseId={values.courseId}
