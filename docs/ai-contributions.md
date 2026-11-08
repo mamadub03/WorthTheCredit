@@ -26,3 +26,54 @@ WorthTheCredit allows AI assistance when it is cited. This file is the running l
 ### Suggested citation
 
 Frontend initialization (Vite, React, TypeScript, and React Router) was generated with Cursor Agent (Grok 4.7) on 7 November 2026 from the official Vite React TypeScript template, then adapted into the WorthTheCredit app shell. See `docs/ai-contributions.md`.
+
+## 2026-11-07: Frontend coordination proposal (FE2, #25)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/25-frontend-coordination`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **Inputs:** the team's product and technical decisions, `.cursor/rules/project.mdc`, GitHub issues #1 to #32, the frontend scaffold from PR #33, BE1's `docs/DATABASE_SCHEMA.md` and course search API (PR #38), and BE2's `worththecredit-api/docs/api-contract.md` (branch `BackPart2`).
+- **What the AI wrote:** a coordination proposal between Frontend Developer 1 and Frontend Developer 2 (ownership, routes, the shared-file edits FE2 needs, styling options, shared components, the API client and mock mode, the review data both frontends handle, and what the frontend needs from the backend), and a Cursor rule that points agents working in `frontend/` at it.
+- **Not decided by the AI:** everything in the doc is a proposal. Rameen reviews it before it is shared, and it takes effect only when Frontend Developer 1 approves the PR.
+- **No application code:** this change adds no code and no dependencies.
+
+### Files the AI added or substantially edited
+
+- `docs/frontend-coordination.md`
+- `.cursor/rules/frontend-coordination.mdc`
+- `docs/ai-contributions.md` (this entry)
+
+### Suggested citation
+
+The FE1 and FE2 frontend coordination proposal was drafted with Claude Code (Claude Opus 5.5) on 7 November 2026 from the team's product decisions, project rules, GitHub issues, and both backend branches, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: API client, contracts, and mock mode (FE2, #25)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/25-frontend-coordination`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **Inputs:** `docs/frontend-coordination.md` and BE2's `worththecredit-api/docs/api-contract.md` (branch `BackPart2`).
+- **What the AI wrote:** the shared API client with one error type, zod schemas and calls for courses (a starter for FE1), reviews, profile, recommendations, and account, an in-browser mock of BE2's API with clearly labeled sample data and a demo banner, typed env settings, the review vocabulary, URL helpers, a Vitest setup, and 52 tests.
+- **Dependencies it added:** `zod`; dev only: `vitest`, `@testing-library/react`, `@testing-library/dom`, `@testing-library/user-event`, `jsdom`.
+- **Not decided by the AI:** the API contract itself, which is BE2's.
+
+### Files the AI added or substantially edited
+
+- `frontend/src/api/` (`client.ts`, `errors.ts`, `appClient.ts`, `courses.ts`, `reviews.ts`, `profile.ts`, `recommendations.ts`, `account.ts`, `mock/`), with tests
+- `frontend/src/config/env.ts`, `frontend/src/domain/reviewVocabulary.ts`, `frontend/src/routes/paths.ts`, with tests
+- `frontend/src/test/setup.ts`, `frontend/vitest.config.ts`, `frontend/.env.example`
+- `frontend/package.json`, `frontend/package-lock.json` (dependencies and the `test` script)
+- `docs/frontend-coordination.md`, `.cursor/rules/frontend-coordination.mdc` (ownership list), and this entry
+
+### Suggested citation
+
+The frontend API client, schemas, and mock API were generated with Claude Code (Claude Opus 5.5) on 7 November 2026 against BE2's API contract, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: API layer aligned with the contracts on main (FE2, #25)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/25-api-contracts`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **Why:** the backend merged into main (#43) with BE1's course routes and BE2's #10 contracts, which use `docs/DATABASE_SCHEMA.md` names. The first version of this layer followed BE2's earlier `BackPart2` app.
+- **What the AI changed:** UUID course ids and the `{results, total, limit, offset}` envelope; review fields `concept_difficulty`, `weekly_hours_range`, `skills_gained`, `instructor_name`; nested `POST /courses/{id}/reviews` and `GET /courses/{id}/worth-score`; recommendations with four match levels and an `explanation`; removed the profile and resend-verification calls, which main's contract doesn't have; rewrote the mock and the tests to match; updated `docs/frontend-coordination.md`, the Cursor rule, and `frontend/.env.example`.
+
+### Suggested citation
+
+The FE2 API layer was realigned to the merged backend contracts with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
