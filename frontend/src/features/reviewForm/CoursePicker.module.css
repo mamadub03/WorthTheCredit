@@ -1,0 +1,59 @@
+.combo {
+  position: relative;
+}
+
+.options {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  max-height: 320px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 10px 30px rgba(28, 25, 23, 0.12);
+  list-style: none;
+}
+
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.option strong {
+  flex: none;
+  color: var(--accent);
+}
+
+.active {
+  background: var(--accent-soft);
+}
+
+.selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-soft);
+}
+
+.selectedText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.selectedText strong {
+  color: var(--accent);
+}

@@ -1,0 +1,47 @@
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.header h1 {
+  margin-bottom: 8px;
+}
+
+.section {
+  padding: 24px 24px 2px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+}
+
+.footer {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+
+.note {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.submitError {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #f3c5c0;
+  border-radius: 10px;
+  background: #fef3f2;
+  color: #b42318;
+  font-weight: 550;
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 18px 16px 2px;
+  }
+}
