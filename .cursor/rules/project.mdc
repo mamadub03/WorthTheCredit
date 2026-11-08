@@ -1,0 +1,57 @@
+
+---
+description: WorthTheCredit shared project instructions
+alwaysApply: true
+---
+
+# WorthTheCredit
+
+## Product
+WorthTheCredit helps RIT students discover electives
+that align with their academic, career, skills, and
+personal-development goals.
+
+## Locked MVP
+- Mock RIT course data stored in Tiger Data PostgreSQL.
+- Course discovery and search.
+- Anonymous public course reviews.
+- One review per user per course.
+- Community Worth Score based on reported goal relevance.
+- Gemini-powered personalized course recommendations.
+- Auth0 authentication with email verification.
+- No professor ratings or comparisons.
+- Instructor and semester appear as review context only.
+
+## Technology Stack
+- Backend: Python, FastAPI, SQLAlchemy
+- Frontend: React, Vite, TypeScript
+- Database: Tiger Data PostgreSQL
+- Authentication: Auth0
+- AI: Google Gemini
+- Backend hosting (later): Vultr
+
+## Architecture
+- Frontend communicates with FastAPI using REST/JSON.
+- Backend owns business logic and Worth Score calculations.
+- Gemini only recommends courses retrieved from our database.
+- Do not invent API routes or response fields.
+- Follow agreed API contracts.
+- Never present mock data as real student feedback.
+
+## Development Rules
+- Work only on assigned GitHub issues.
+- Use a separate feature branch for each task.
+- Do not independently modify another developer's files.
+- Keep changes small and focused.
+- Never commit secrets or .env files.
+- Add relevant tests and run available checks.
+- Explain intended changes before implementation.
+- Do not merge pull requests or deploy without approval.
+- Ask before making significant architectural changes.
+
+## Definition of Done
+A feature is complete only when:
+1. Its acceptance criteria are satisfied.
+2. Relevant tests or checks pass.
+3. Changes have been reviewed and merged.
+4. Integration with dependent components is verified.
