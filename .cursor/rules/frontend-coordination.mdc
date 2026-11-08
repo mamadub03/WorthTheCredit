@@ -1,0 +1,26 @@
+---
+description: Who owns what in frontend/ (FE1 and FE2) and how to change shared frontend files
+globs: frontend/**
+alwaysApply: false
+---
+
+# Frontend ownership (FE1 and FE2)
+
+The full agreement is docs/frontend-coordination.md. Read it before changing routes, shared files, styles, or API code in frontend/. Until the backend pair settles on one schema, API field names follow BE2's worththecredit-api/docs/api-contract.md (branch BackPart2).
+
+Frontend Developer 2 owns these paths:
+- frontend/src/features/auth/, frontend/src/features/reviewForm/, frontend/src/features/recommendations/
+- frontend/src/components/form/
+- frontend/src/api/client.ts, frontend/src/api/recommendations.ts, frontend/src/api/profile.ts, frontend/src/api/mock/
+- frontend/src/domain/reviewVocabulary.ts, frontend/src/routes/paths.ts
+
+Frontend Developer 1 owns everything else in frontend/, including App.tsx, main.tsx, index.css, vite.config.ts, index.html, and src/pages/. frontend/src/api/reviews.ts is shared: FE1 writes the list and stats calls, FE2 writes the create and "already reviewed" calls.
+
+When working in frontend/:
+- Do not edit the other developer's paths without that developer's approval.
+- Keep edits to shared files (App.tsx, index.css, package.json, vite.config.ts) as small as possible, and list them in the PR description.
+- Never hand-merge package-lock.json. Take the base branch's copy and run npm install.
+- Build URLs with the helpers in src/routes/paths.ts, not string literals. Course URLs use the course code.
+- Take review goal, Worth Score, difficulty, weekly hours, and semester keys and labels from src/domain/reviewVocabulary.ts.
+- Read auth state through useAuth() from src/features/auth, not from @auth0/auth0-react.
+- Show "No reviews yet" when worth_score is null, never 0.
