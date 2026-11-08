@@ -1,25 +1,28 @@
-# AI-GENERATED (Cursor Agent) — Issue #6: Implement course search API
+# AI-GENERATED (Cursor Agent) — Issues #6–#7: course search + details APIs
 # Owned by Backend Developer 1 (mamadub03).
 # File-level AI attribution for this module (not per-symbol).
 #
 # FILE PURPOSE
-#   Public course discovery endpoints for Frontend 1 / Frontend 2.
-#   Search does not require Auth0 (browse is public in the MVP).
+#   Public course discovery + details for Frontend 1 / Frontend 2.
+#   No Auth0 required (browse is public in the MVP).
 #
 # ENDPOINTS
-#   GET /courses — filter by q (keyword), code, department; paginate.
+#   GET /courses              — search / filter / paginate
+#   GET /courses/{course_id}  — one course + Worth Score aggregates
 
-"""Course search routes."""
+"""Course search and details routes."""
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, Query
+import uuid
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
-from app.db.models import Course
+from app.db.models import Course, Review
 from app.db.session import get_db
-from app.schemas.course import CourseSearchResponse, CourseSummary
+from app.schemas.course import CourseDetail, CourseSearchResponse, CourseSummary
 
 router = APIRouter(prefix="/courses", tags=["courses"])
 
@@ -87,4 +90,49 @@ def search_courses(
         total=total,
         limit=limit,
         offset=offset,
+    )
+
+
+# =============================================================================
+# COMPONENT: GET /courses/{course_id} (details)
+# -----------------------------------------------------------------------------
+# What: Single-course page data after a user clicks a search result.
+# Flow: Frontend → this route → course row + AVG/COUNT over reviews.
+# 404 when the UUID is not in the catalog.
+# =============================================================================
+@router.get("/{course_id}", response_model=CourseDetail)
+def get_course_detail(
+    course_id: uuid.UUID,
+    db: Session = Depends(get_db),
+) -> CourseDetail:
+    """Return one course with Community Worth Score aggregates."""
+    course = db.get(Course, course_id)
+    if course is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found",
+        )
+
+    # ---------------------------------------------------------------------
+    # COMPONENT STEP: review aggregates (MVP formula from DATABASE_SCHEMA)
+    # Community Worth Score = SUM(worth_score) / COUNT(reviews)
+    # Unreviewed courses → null score, review_count 0
+    # ---------------------------------------------------------------------
+    agg = db.execute(
+        select(
+            func.count(Review.id),
+            func.avg(Review.worth_score),
+            func.avg(Review.concept_difficulty),
+        ).where(Review.course_id == course_id)
+    ).one()
+    review_count = int(agg[0] or 0)
+    worth_avg = float(agg[1]) if agg[1] is not None else None
+    difficulty_avg = float(agg[2]) if agg[2] is not None else None
+
+    summary = CourseSummary.model_validate(course)
+    return CourseDetail(
+        **summary.model_dump(),
+        community_worth_score=worth_avg,
+        review_count=review_count,
+        average_concept_difficulty=difficulty_avg,
     )
