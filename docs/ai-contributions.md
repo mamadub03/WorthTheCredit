@@ -157,3 +157,15 @@ The AI match page was generated with Claude Code (Claude Opus 5.5) on 7 November
 ### Suggested citation
 
 FE2's Example B styling and the sign-in page were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-08: Carousel design, home, search, course page and layout (FE1, #19 to #24)
+
+- **Requested by:** Grace Pimentel (Frontend Developer 1), on branch `fe1/carousel-pages`, after designing the "College carousel" look on the team's design canvas with the same tool.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the app layout (nav with the logo, footer, phone tab bar, skip link, scroll-to-top), the shared design tokens moved to the carousel look in `src/styles/exampleB.css`, global button and animation styles in `index.css`, display components (Worth Score badge, graduation-cap difficulty meter, flipping seal coin, course card, search bar, empty, error and loading states), the home page with the 3D college carousel, the `/courses` search page with a college filter, the course page (scores, difficulty, weekly time, why students took it, skills, the review list, catalog facts, more from the department), the 404 page, data hooks, course insight helpers, and tests.
+- **Assets:** the team logo pack, eleven original college marks (not RIT's official logos), and eleven Unsplash photos, credited in the footer.
+- **Not touched:** FE2's paths (auth, review form, recommendations, form components, API client, vocabulary, `paths.ts`). They pick up the new look through the shared tokens only.
+
+### Suggested citation
+
+FE1's pages and layout were generated with Claude Code (Claude Opus 5.5) on 8 November 2026 from Grace Pimentel's College carousel design, for review by the FE1 developer. See `docs/ai-contributions.md`.
