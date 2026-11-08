@@ -1,12 +1,13 @@
-# AI-GENERATED (Cursor Agent) — Issue #2: Initialize FastAPI backend
-# Owned by Backend Developer 1 (mamadub03). Aggregates route modules so
-# main.py stays thin as course/review/auth routers are added later.
+# AI-GENERATED (Cursor Agent) — Issues #2 / #6: API router composition
+# Owned by Backend Developer 1 (mamadub03).
+# File-level AI attribution for this module (not per-symbol).
 
 """Top-level API router composition."""
 
 from fastapi import APIRouter
 
-from app.api.routes import health
+from app.api.routes import courses, health
 
 api_router = APIRouter()
 api_router.include_router(health.router)
+api_router.include_router(courses.router)
