@@ -28,6 +28,7 @@ const profile: RecommendationRequest = {
   skills: ['Python'],
   career_goals: 'ML engineer',
   academic_goals: null,
+  resume_text: null,
 }
 
 let mock: MockApi
@@ -130,7 +131,14 @@ describe('reviews', () => {
 describe('recommendations', () => {
   it('needs at least one preference', async () => {
     const error = await failure(
-      getRecommendations(clientAs('dev:erin'), { major: ' ', interests: [], skills: [], career_goals: null, academic_goals: null }),
+      getRecommendations(clientAs('dev:erin'), {
+        major: ' ',
+        interests: [],
+        skills: [],
+        career_goals: null,
+        academic_goals: null,
+        resume_text: null,
+      }),
     )
     expect(error.code).toBe('validation_error')
     expect(error.fieldErrors._form).toMatch(/Provide a major/)

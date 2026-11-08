@@ -19,6 +19,8 @@ export interface RecommendationRequest {
   skills: string[]
   career_goals: string | null
   academic_goals: string | null
+  /** Optional resume paste for this match only — not stored by the API. */
+  resume_text: string | null
 }
 
 export interface Recommendation {

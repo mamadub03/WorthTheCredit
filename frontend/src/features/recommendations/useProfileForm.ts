@@ -21,7 +21,7 @@ type TagField = 'interests' | 'skills'
 export interface ProfileFormState {
   values: ProfileFormValues
   errors: ProfileErrors
-  setText(field: 'major' | 'careerGoals' | 'academicGoals', value: string): void
+  setText(field: 'major' | 'careerGoals' | 'academicGoals' | 'resumeText', value: string): void
   /** Returns true when the tag box should clear. */
   addTag(field: TagField, text: string): boolean
   removeTag(field: TagField, tag: string): void
@@ -35,7 +35,9 @@ export function profileKey(sub: string): string {
 /** The page renders behind RequireAuth, so the student is known on the first render. */
 function savedProfile(sub: string | null): ProfileFormValues {
   const saved = sub ? readStored<ProfileFormValues>(profileKey(sub), 'local') : null
-  return saved && Array.isArray(saved.interests) && Array.isArray(saved.skills) ? { ...emptyProfile(), ...saved } : emptyProfile()
+  if (!saved || !Array.isArray(saved.interests) || !Array.isArray(saved.skills)) return emptyProfile()
+  // Never restore pasted resume text from browser storage (ephemeral only).
+  return { ...emptyProfile(), ...saved, resumeText: '' }
 }
 
 export function useProfileForm(sub: string | null): ProfileFormState {
@@ -44,14 +46,17 @@ export function useProfileForm(sub: string | null): ProfileFormState {
   const [tagErrors, setTagErrors] = useState<Partial<Record<TagField, string>>>({})
 
   useEffect(() => {
-    if (sub) writeStored(profileKey(sub), values, 'local')
+    if (!sub) return
+    // Persist profile fields only — omit resume paste from browser storage.
+    const { resumeText: _resume, ...persistable } = values
+    writeStored(profileKey(sub), persistable, 'local')
   }, [sub, values])
 
   const problems = useMemo(() => validateProfile(values), [values])
 
   const errors = useMemo(() => {
     const visible: ProfileErrors = {}
-    for (const field of ['major', 'careerGoals', 'academicGoals'] as const) {
+    for (const field of ['major', 'careerGoals', 'academicGoals', 'resumeText'] as const) {
       if (problems[field]) visible[field] = problems[field]
     }
     if (attempted && problems.form) visible.form = problems.form
@@ -61,7 +66,7 @@ export function useProfileForm(sub: string | null): ProfileFormState {
     return visible
   }, [problems, attempted, tagErrors])
 
-  const setText = useCallback((field: 'major' | 'careerGoals' | 'academicGoals', value: string) => {
+  const setText = useCallback((field: 'major' | 'careerGoals' | 'academicGoals' | 'resumeText', value: string) => {
     setValues((current) => ({ ...current, [field]: value }))
   }, [])
 
