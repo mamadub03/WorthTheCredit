@@ -5,11 +5,18 @@
 
 """FastAPI application factory and ASGI entrypoint."""
 
+from pathlib import Path
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import api_router
 from app.core.config import get_settings
+
+# Load .env into os.environ so modules that read os.environ directly
+# (e.g. Gemini GEMINI_API_KEY) see the same values as Settings.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 
 def create_app() -> FastAPI:
