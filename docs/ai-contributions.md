@@ -57,3 +57,22 @@ FastAPI backend initialization (project layout, settings, CORS, and `/health`) w
 ### Suggested citation
 
 Tiger Data / SQLAlchemy / Alembic wiring was generated with Cursor Agent on 7 November 2026 for GitHub Issue #3. See `docs/ai-contributions.md`.
+
+## 2026-11-07 — Implement database models (Issue #4)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue4` (bases on `backend`).
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** Course, User, Review ORM models + initial Alembic migration from `docs/DATABASE_SCHEMA.md`.
+
+### Files the agent added or substantially edited
+
+- `backend/app/db/models.py`
+- `backend/app/db/__init__.py`
+- `backend/app/db/base.py`
+- `backend/alembic/env.py`
+- `backend/alembic/versions/d6f2fb02932e_create_courses_users_reviews.py`
+- `docs/ai-contributions.md` (this file)
+
+### Suggested citation
+
+Course/User/Review SQLAlchemy models and initial migration were generated with Cursor Agent on 7 November 2026 for GitHub Issue #4 from `docs/DATABASE_SCHEMA.md`.

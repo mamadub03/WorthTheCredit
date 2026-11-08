@@ -48,5 +48,11 @@ alembic revision --autogenerate -m "message"   # after models exist (Issue #4)
 alembic upgrade head
 ```
 
-Issue #3 ships the engine/session + Alembic wiring only. **No Course/User/Review
-models yet** — that is Issue #4 and needs a Backend Dev 2 cross-check.
+Issue #4 adds Course/User/Review models from `docs/DATABASE_SCHEMA.md` and the
+initial Alembic revision `d6f2fb02932e_create_courses_users_reviews`.
+
+With `DATABASE_URL` set:
+
+```bash
+alembic upgrade head
+```
