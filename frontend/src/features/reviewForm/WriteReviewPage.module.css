@@ -1,0 +1,202 @@
+/*
+ * The Write a review page frame and its outcome cards (spec sections 1 and 7,
+ * src/styles/exampleB.css tokens): the desktop breadcrumb, and the centered
+ * white card with Grace's tossed seal coin that replaces the form once a
+ * review posts. The already-reviewed card reuses it with a still seal. Grace's
+ * Coin and wtc-rise stop moving under reduced motion.
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 8px 0 32px;
+}
+
+/* Breadcrumb (desktop only) */
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 14px;
+  list-style: none;
+}
+
+.breadcrumb li {
+  display: flex;
+  gap: 8px;
+}
+
+.breadcrumb a {
+  color: var(--wtc-muted, #555b60);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--wtc-ink, #1e2124);
+  text-decoration: underline;
+}
+
+.current {
+  color: var(--wtc-ink, #1e2124);
+  font-weight: 600;
+}
+
+/* Outcome card */
+
+.outcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 720px;
+  margin: 20px auto 0;
+  padding: 48px 32px;
+  border-radius: 36px;
+  background: var(--wtc-surface, #ffffff);
+  color: var(--wtc-ink, #1e2124);
+  text-align: center;
+}
+
+.coin {
+  display: flex;
+  justify-content: center;
+}
+
+.seal {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(30, 33, 36, 0.18);
+}
+
+.outcomeTitle {
+  margin: 0;
+  color: var(--wtc-ink, #1e2124);
+  font: 800 40px/1.05 var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+  letter-spacing: -0.02em;
+}
+
+.outcomeText {
+  max-width: 460px;
+  margin: 0;
+  color: var(--wtc-muted, #555b60);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.pills span {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--wtc-ink, #1e2124);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.pillWorth {
+  background: var(--wtc-peach, #ffe6d2);
+}
+
+.pillDifficulty {
+  background: var(--wtc-teal, #d3eff5);
+}
+
+.pillHours {
+  background: var(--wtc-butter, #fff0bf);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Two classes so these sizes win over Grace's .wtc-btn in any load order. */
+:global(.wtc-btn).action {
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 16px;
+  font: 700 16px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+/* The quieter action: cream on the white card, orange fill circle on hover (wtc-btn-white). */
+:global(.wtc-btn).actionSoft {
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: 16px;
+  background: var(--wtc-cream, #fbf7f1);
+  box-shadow: none;
+  font: 600 15px var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
+}
+
+@media (max-width: 640px) {
+  .page {
+    gap: 12px;
+    padding: 0 0 16px;
+  }
+
+  .breadcrumb {
+    display: none;
+  }
+
+  .outcome {
+    gap: 14px;
+    margin: 16px 0 0;
+    padding: 32px 22px;
+    border-radius: 32px;
+  }
+
+  /* Grace's Coin sets its size inline; the phone board draws it at 110 px. */
+  .coin > span {
+    --coin: 110px !important;
+  }
+
+  .outcomeTitle {
+    font-size: 30px;
+    line-height: 1.08;
+  }
+
+  .outcomeText {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .pills {
+    gap: 6px;
+  }
+
+  .pills span {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-self: stretch;
+    margin-top: 6px;
+  }
+
+  :global(.wtc-btn).action,
+  :global(.wtc-btn).actionSoft {
+    justify-content: center;
+    min-height: 54px;
+    border-radius: 18px;
+  }
+}

@@ -1,71 +1,55 @@
 import { useState, type KeyboardEvent } from 'react'
 import type { CourseSummary } from '../../api/courses.ts'
 import Button from '../../components/form/Button.tsx'
+import { FieldError } from '../../components/form/Field.tsx'
 import formStyles from '../../components/form/form.module.css'
 import styles from './CoursePicker.module.css'
-import { useCourse, useCourseSearch } from './useCourses.ts'
+import { useCourseSearch, type LoadStatus } from './useCourses.ts'
 
 interface CoursePickerProps {
   /** Used for focusing this question when it needs an answer. */
   id: string
   courseId: string | null
+  /** The chosen course once it's known (useChosenCourse on the page). */
+  course: CourseSummary | null
+  status: LoadStatus
   onChange: (course: CourseSummary | null) => void
   error?: string
 }
 
 /**
  * Picks the course being reviewed: a search box over GET /courses, or the
- * chosen course with a way to change it. Owner: FE2 (#27).
+ * chosen course on a cream card with a way to change it. The page looks the
+ * course up (useChosenCourse) so its header can name it too. Owner: FE2 (#27).
  */
-export default function CoursePicker({ id, courseId, onChange, error }: CoursePickerProps) {
-  const [chosen, setChosen] = useState<CourseSummary | null>(null)
-  const needsLookup = courseId !== null && chosen?.id !== courseId
-  const lookup = useCourse(needsLookup ? courseId : null)
-  const course = chosen?.id === courseId ? chosen : lookup.course
-
+export default function CoursePicker({ id, courseId, course, status, onChange, error }: CoursePickerProps) {
   if (courseId) {
     return (
-      <div id={id} className={formStyles.field}>
+      <div id={id} className={`${formStyles.field} ${styles.picker}`}>
         <span className={formStyles.label}>Course</span>
         <div className={styles.selected}>
           <div className={styles.selectedText} aria-live="polite">
             {course ? (
               <>
-                <strong>{course.code}</strong>
-                <span>{course.title}</span>
+                <strong className={styles.selectedCode}>{course.code}</strong>
+                <span className={styles.selectedTitle}>{course.title}</span>
               </>
-            ) : lookup.status === 'error' ? (
-              <span>We couldn't find that course. Pick it again.</span>
+            ) : status === 'error' ? (
+              <span className={styles.selectedTitle}>We couldn't find that course. Pick it again.</span>
             ) : (
-              <span>Loading the course…</span>
+              <span className={styles.selectedTitle}>Loading the course…</span>
             )}
           </div>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => {
-              setChosen(null)
-              onChange(null)
-            }}
-          >
+          <Button variant="secondary" className={styles.change} onClick={() => onChange(null)}>
             Change
           </Button>
         </div>
-        {error ? <p className={formStyles.error}>{error}</p> : null}
+        <FieldError id={id} error={error} />
       </div>
     )
   }
 
-  return (
-    <CourseSearch
-      id={id}
-      error={error}
-      onPick={(picked) => {
-        setChosen(picked)
-        onChange(picked)
-      }}
-    />
-  )
+  return <CourseSearch id={id} error={error} onPick={onChange} />
 }
 
 function CourseSearch({ id, error, onPick }: { id: string; error?: string; onPick: (course: CourseSummary) => void }) {
@@ -108,15 +92,10 @@ function CourseSearch({ id, error, onPick }: { id: string; error?: string; onPic
   }
 
   return (
-    <div id={id} className={formStyles.field}>
+    <div id={id} className={`${formStyles.field} ${styles.picker}`}>
       <label className={formStyles.label} htmlFor={inputId}>
         Course
       </label>
-      {error ? (
-        <p id={`${id}-error`} className={formStyles.error}>
-          {error}
-        </p>
-      ) : null}
       <p id={`${id}-hint`} className={formStyles.hint}>
         Search by code or name, like SWEN-261 or software engineering.
       </p>
@@ -154,12 +133,13 @@ function CourseSearch({ id, error, onPick }: { id: string; error?: string; onPic
               onMouseEnter={() => setActive(index)}
               onClick={() => pick(course)}
             >
-              <strong>{course.code}</strong>
-              <span>{course.title}</span>
+              <strong className={styles.optionCode}>{course.code}</strong>
+              <span className={styles.optionTitle}>{course.title}</span>
             </li>
           ))}
         </ul>
       </div>
+      <FieldError id={id} error={error} />
       {note ? (
         <p className={formStyles.hint} aria-live="polite">
           {note}

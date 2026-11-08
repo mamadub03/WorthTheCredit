@@ -71,6 +71,10 @@ describe('review form', () => {
     await user.click(screen.getByRole('button', { name: 'Post review' }))
 
     expect(await screen.findByRole('heading', { name: 'Review posted' })).toBeTruthy()
+    expect(screen.getByText(/^Posted anonymously to SWEN-261\./)).toBeTruthy()
+    expect(screen.getByText('Worth 4 / 5')).toBeTruthy()
+    expect(screen.getByText('Difficulty 3 / 5')).toBeTruthy()
+    expect(screen.getByText('6-10 h/wk')).toBeTruthy()
     expect(sent).toEqual([
       {
         url: `${BASE}/courses/${swen.id}/reviews`,
@@ -92,6 +96,33 @@ describe('review form', () => {
     renderPage(`/review?course=${swen.id}`)
     expect(await screen.findByText('Introduction to Software Engineering')).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Change' })).toBeTruthy()
+    // The header, breadcrumb and rules card name the course once it is known.
+    expect(screen.getByText('Reviewing SWEN-261 · Introduction to Software Engineering')).toBeTruthy()
+    expect(within(screen.getByRole('navigation', { name: 'Breadcrumb' })).getByRole('link', { name: 'SWEN-261' }).getAttribute('href')).toBe(
+      `/courses/${swen.id}`,
+    )
+    expect(screen.getByText('You can review SWEN-261 once.')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Cancel' }).getAttribute('href')).toBe(`/courses/${swen.id}`)
+  })
+
+  it('counts the five required answers and says what is still missing', async () => {
+    const user = userEvent.setup()
+    renderPage(`/review?course=${swen.id}`)
+    await screen.findByText('Introduction to Software Engineering')
+    const [progress] = screen.getAllByRole('progressbar', { name: 'Required questions answered' })
+    expect(progress.getAttribute('aria-valuenow')).toBe('0')
+    expect(screen.getByText('Still need your goals, a Worth Score, a difficulty, weekly hours, one skill.')).toBeTruthy()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Career preparation' }))
+    await user.click(within(screen.getByRole('group', { name: WORTH_SCORE_QUESTION })).getByRole('radio', { name: /^5/ }))
+    await user.click(within(screen.getByRole('group', { name: DIFFICULTY_QUESTION })).getByRole('radio', { name: /^2/ }))
+    expect(progress.getAttribute('aria-valuenow')).toBe('3')
+    expect(screen.getByText('Still need weekly hours, one skill.')).toBeTruthy()
+
+    await user.click(within(screen.getByRole('group', { name: WEEKLY_HOURS_QUESTION })).getByRole('radio', { name: /^3-6/ }))
+    await user.type(screen.getByRole('textbox', { name: 'Skills or knowledge you gained' }), 'Git{Enter}')
+    expect(progress.getAttribute('aria-valuenow')).toBe('5')
+    expect(screen.getByText("Ready to post. You can't edit it afterward.")).toBeTruthy()
   })
 
   it('removes a skill with its button', async () => {
