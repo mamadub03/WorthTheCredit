@@ -1,29 +1,35 @@
-/* Example B message panel: warm outline, large radius, Figtree (src/styles/exampleB.css). */
+/*
+ * College carousel message panel: a white card on the cream page, no border,
+ * peach tag pill, Outfit title (src/styles/exampleB.css tokens). The entrance
+ * is Grace's global wtc-rise, which also handles reduced motion.
+ */
 
 .panel {
   display: grid;
   justify-items: start;
   gap: 14px;
   padding: 36px 32px;
-  border: 1.5px solid var(--wtc-line-warm, #f0e4da);
+  border: 0;
   border-radius: 32px;
   background: var(--wtc-surface, #ffffff);
   color: var(--wtc-ink, #1e2124);
-  font-family: var(--wtc-font, Figtree, 'Helvetica Neue', Arial, sans-serif);
+  font-family: var(--wtc-font, Inter, 'Helvetica Neue', Arial, sans-serif);
 }
 
 .tag {
   padding: 6px 12px;
   border-radius: 999px;
-  background: var(--wtc-warm, #fff4eb);
-  color: var(--wtc-link-hover, #8a3700);
+  background: var(--wtc-peach, #ffe6d2);
+  color: var(--wtc-peach-ink, #8a3700);
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .title {
   margin: 0;
   color: var(--wtc-ink, #1e2124);
+  font-family: var(--wtc-display, Outfit, Inter, 'Helvetica Neue', Arial, sans-serif);
   font-size: 30px;
   font-weight: 800;
   line-height: 1.1;
@@ -38,7 +44,7 @@
 
 .body p {
   margin: 0;
-  color: var(--wtc-body, #4a4f54);
+  color: var(--wtc-body, #3a4044);
   font-size: 16px;
   line-height: 1.55;
 }

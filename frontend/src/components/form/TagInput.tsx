@@ -1,4 +1,5 @@
 import { useState, type KeyboardEvent } from 'react'
+import { FieldError } from './Field.tsx'
 import styles from './form.module.css'
 
 interface TagInputProps {
@@ -18,7 +19,9 @@ interface TagInputProps {
 /**
  * Short free-text tags. Enter or a comma adds one, Backspace in an empty box
  * removes the last, and leaving the box adds what's typed. The parent decides
- * what's acceptable (trimming, duplicates, limits). Owner: FE2 (#27).
+ * what's acceptable (trimming, duplicates, limits). Each tag is a tinted pill
+ * (five tints by position) that pops in, with a round remove button whose hit
+ * area reaches 44 px. Owner: FE2 (#27).
  */
 export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, error, optional, placeholder }: TagInputProps) {
   const [draft, setDraft] = useState('')
@@ -43,11 +46,6 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
         {label}
         {optional ? <span className={styles.optional}>optional</span> : null}
       </label>
-      {error ? (
-        <p id={`${id}-error`} className={styles.error}>
-          {error}
-        </p>
-      ) : null}
       {hint ? (
         <p id={`${id}-hint`} className={styles.hint}>
           {hint}
@@ -58,7 +56,19 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
           <span key={tag} className={styles.tag}>
             {tag}
             <button type="button" className={styles.tagRemove} aria-label={`Remove ${tag}`} onClick={() => onRemove(tag)}>
-              ×
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
             </button>
           </span>
         ))}
@@ -76,6 +86,7 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
           }}
         />
       </div>
+      <FieldError id={id} error={error} />
       <p id={`${id}-count`} className={styles.counter}>
         {tags.length} of {max}
       </p>
