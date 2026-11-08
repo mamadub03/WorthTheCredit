@@ -108,3 +108,14 @@ Course/User/Review SQLAlchemy models and initial migration were generated with C
 - `backend/app/schemas/__init__.py`
 - `backend/README.md`
 - `docs/ai-contributions.md`
+
+## 2026-11-07 — Auth0 backend JWT validation (Issue #8)
+
+- **Requested by:** Backend Developer 1 (`mamadub03`), branch `mamadu-dev-issue8` → `backend`.
+- **Tool:** Cursor Agent (Composer).
+- **Scope:** Auth0 settings, JWKS JWT verification, `get_current_user` / `require_verified_email` deps, `/auth/me` + `/auth/verified-check` smoke routes.
+
+### Files
+- `backend/app/core/auth.py`, `backend/app/core/config.py`
+- `backend/app/api/deps.py`, `backend/app/api/routes/auth_routes.py`
+- `backend/app/api/router.py`, `backend/requirements.txt`, `backend/.env.example`, `backend/README.md`
