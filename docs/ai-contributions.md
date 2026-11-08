@@ -105,6 +105,17 @@ The frontend sign-in layer (Auth0 and dev sign-in) was generated with Claude Cod
 
 The review form and course picker were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
 
+## 2026-11-07: Review submission and feedback (FE2, #28)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/28-review-submission`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the submission hook that maps every response of BE2's planned `POST /courses/{id}/reviews` to a screen or message (posted, already reviewed, signed out, unverified, missing course, field-level 422s, network failures), the "posted" and "already reviewed" screens, a sessionStorage draft that survives an Auth0 redirect, and tests.
+- **Not finished until:** BE2's review endpoint (#12) and BE1's JWT validation (#8) exist, per the comments on #28. Until then the mock answers.
+
+### Suggested citation
+
+The review submission flow was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
 ## 2026-11-07: AI personalization form (FE2, #29)
 
 - **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/29-personalization-form`.
@@ -124,6 +135,18 @@ The AI personalization form was generated with Claude Code (Claude Opus 5.5) on 
 ### Suggested citation
 
 The recommendation result cards were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: AI match page wired to the recommendations API (FE2, #31)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/31-recommendations-api`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the AI match page in the team's Example B layout ("About you" beside a chat with the course advisor), the conversation hook (one request at a time, stop, retry, and finished turns kept in sessionStorage for Back navigation), plain-language failure messages, follow-up suggestions, and tests. It replaces #29's standalone form view and #30's list wrapper, keeping their models, hooks, and cards.
+- **Contract gap it works around:** main's `RecommendationRequest` has no free-text field, so typed requests travel in `academic_goals`, labelled "Student's request:". BE2 is asked to add a `query` field.
+- **Not finished until:** BE2's recommendation endpoint (#16) exists, per the comment on #31. Until then the mock answers.
+
+### Suggested citation
+
+The AI match page was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, following the team's Example B design, for review by the FE2 developer. See `docs/ai-contributions.md`.
 
 ## 2026-11-07: Example B styling and the sign-in page (FE2, #26, #27)
 

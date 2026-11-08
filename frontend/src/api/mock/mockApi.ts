@@ -79,7 +79,8 @@ const GOAL_KEYS: GoalKey[] = GOALS.map((goal) => goal.key)
 const REVIEW_FIELDS = new Set(['goals', 'worth_score', 'concept_difficulty', 'weekly_hours_range', 'skills_gained', 'feedback', 'instructor_name', 'semester'])
 const REQUEST_FIELDS = new Set(['major', 'interests', 'skills', 'career_goals', 'academic_goals'])
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-const STOP_WORDS = new Set(['with', 'that', 'want', 'something', 'without', 'into', 'about', 'more', 'some', 'like', 'work', 'and', 'the', 'for', 'one', 'need', 'year'])
+// The last two are the label the AI match chat puts on typed requests (chatModel.requestFor).
+const STOP_WORDS = new Set(['with', 'that', 'want', 'something', 'without', 'into', 'about', 'more', 'some', 'like', 'work', 'and', 'the', 'for', 'one', 'need', 'year', 'student', 'request'])
 
 /** Who a bearer token says the student is (the mock's stand-in for Auth0). */
 export function userFromAuthorization(header: string | null): MockUser | null {

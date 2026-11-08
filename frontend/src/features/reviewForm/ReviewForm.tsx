@@ -33,11 +33,13 @@ interface ReviewFormProps {
   submitting: boolean
   /** A problem with the whole submission, shown above the button. */
   submitError: string | null
+  /** An action that fixes the problem, such as signing in again. */
+  submitErrorAction?: { label: string; onClick: () => void }
   onSubmit: () => void
 }
 
 /** The structured review form (#27). State and rules live in useReviewForm. Owner: FE2. */
-export default function ReviewForm({ form, submitting, submitError, onSubmit }: ReviewFormProps) {
+export default function ReviewForm({ form, submitting, submitError, submitErrorAction, onSubmit }: ReviewFormProps) {
   const { values, errors } = form
   const yearOptions = semesterYears().map((year) => ({ value: year, label: year }))
 
@@ -170,9 +172,14 @@ export default function ReviewForm({ form, submitting, submitError, onSubmit }: 
 
       <footer className={styles.footer}>
         {submitError ? (
-          <p className={styles.submitError} role="alert">
-            {submitError}
-          </p>
+          <div className={styles.submitError} role="alert">
+            <p>{submitError}</p>
+            {submitErrorAction ? (
+              <Button variant="secondary" size="small" onClick={submitErrorAction.onClick}>
+                {submitErrorAction.label}
+              </Button>
+            ) : null}
+          </div>
         ) : null}
         <Button type="submit" busy={submitting}>
           {submitting ? 'Posting…' : 'Post review'}
