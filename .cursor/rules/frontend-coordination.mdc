@@ -14,7 +14,7 @@ Frontend Developer 2 owns these paths:
 - frontend/src/api/client.ts, frontend/src/api/errors.ts, frontend/src/api/appClient.ts, frontend/src/api/recommendations.ts, frontend/src/api/mock/
 - frontend/src/config/env.ts, frontend/src/domain/reviewVocabulary.ts, frontend/src/routes/paths.ts, frontend/src/routes/fe2Routes.tsx
 
-Frontend Developer 1 owns everything else in frontend/, including App.tsx, main.tsx, index.css, vite.config.ts, index.html, src/pages/, and src/api/courses.ts. frontend/src/api/reviews.ts is shared: FE1 writes the review list call, FE2 writes the create and worth-score calls. frontend/src/styles/exampleB.css is shared: it holds the Example B design tokens; either developer can add tokens.
+Frontend Developer 1 owns everything else in frontend/, including App.tsx, main.tsx, index.css, vite.config.ts, index.html, src/pages/, and src/api/courses.ts. frontend/src/api/reviews.ts is shared: FE1 writes the review list call, FE2 writes the create and worth-score calls. frontend/src/styles/exampleB.css is shared: it holds the design tokens (the College carousel look since PR #65); either developer can add tokens.
 
 When working in frontend/:
 - Do not edit the other developer's paths without that developer's approval.
