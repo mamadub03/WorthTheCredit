@@ -77,7 +77,14 @@ const ALL_DOMAINS: MockDomain[] = ['courses', 'reviews', 'recommendations']
 const HOURS: WeeklyHoursKey[] = WEEKLY_HOURS.map((hours) => hours.key)
 const GOAL_KEYS: GoalKey[] = GOALS.map((goal) => goal.key)
 const REVIEW_FIELDS = new Set(['goals', 'worth_score', 'concept_difficulty', 'weekly_hours_range', 'skills_gained', 'feedback', 'instructor_name', 'semester'])
-const REQUEST_FIELDS = new Set(['major', 'interests', 'skills', 'career_goals', 'academic_goals'])
+const REQUEST_FIELDS = new Set([
+  'major',
+  'interests',
+  'skills',
+  'career_goals',
+  'academic_goals',
+  'resume_text',
+])
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 // The last two are the label the AI match chat puts on typed requests (chatModel.requestFor).
 const STOP_WORDS = new Set(['with', 'that', 'want', 'something', 'without', 'into', 'about', 'more', 'some', 'like', 'work', 'and', 'the', 'for', 'one', 'need', 'year', 'student', 'request'])
@@ -234,10 +241,23 @@ export function createMockApi(options: MockApiOptions): MockApi {
     const major = readText(data, 'major', issues)
     const careerGoals = readText(data, 'career_goals', issues)
     const academicGoals = readText(data, 'academic_goals', issues)
+    const resumeText = readText(data, 'resume_text', issues)
     const interests = readPhrases(data.interests, 'interests', issues) ?? []
     const skills = readPhrases(data.skills, 'skills', issues) ?? []
-    if (issues.length === 0 && !major && !careerGoals && !academicGoals && interests.length === 0 && skills.length === 0) {
-      issues.push({ type: 'value_error', loc: ['body'], msg: 'Value error, Provide a major, interest, skill, career goal, or academic goal' })
+    if (
+      issues.length === 0 &&
+      !major &&
+      !careerGoals &&
+      !academicGoals &&
+      !resumeText &&
+      interests.length === 0 &&
+      skills.length === 0
+    ) {
+      issues.push({
+        type: 'value_error',
+        loc: ['body'],
+        msg: 'Value error, Provide a major, interest, skill, career goal, academic goal, or resume text',
+      })
     }
     if (issues.length > 0) return invalid(issues)
 
@@ -247,6 +267,7 @@ export function createMockApi(options: MockApiOptions): MockApi {
       ...keywords(careerGoals).map((phrase) => ({ phrase, weight: 1 })),
       ...keywords(academicGoals).map((phrase) => ({ phrase, weight: 1 })),
       ...keywords(major).map((phrase) => ({ phrase, weight: 0.5 })),
+      ...keywords(resumeText).map((phrase) => ({ phrase, weight: 0.75 })),
     ]
     const scored = MOCK_COURSES.map((course) => {
       const text = [course.code, course.title, course.description.replace(/DEMO DATA\.?/g, ''), course.department, ...course.tags].join(' ').toLowerCase()

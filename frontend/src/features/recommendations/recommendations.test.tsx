@@ -56,8 +56,22 @@ describe('profile form model', () => {
 
   it("builds exactly BE2's RecommendationRequest keys", () => {
     expect(
-      toRecommendationRequest({ major: ' Software Engineering ', interests: ['machine learning'], skills: [], careerGoals: 'ML engineer', academicGoals: '  ' }),
-    ).toEqual({ major: 'Software Engineering', interests: ['machine learning'], skills: [], career_goals: 'ML engineer', academic_goals: null })
+      toRecommendationRequest({
+        major: ' Software Engineering ',
+        interests: ['machine learning'],
+        skills: [],
+        careerGoals: 'ML engineer',
+        academicGoals: '  ',
+        resumeText: '',
+      }),
+    ).toEqual({
+      major: 'Software Engineering',
+      interests: ['machine learning'],
+      skills: [],
+      career_goals: 'ML engineer',
+      academic_goals: null,
+      resume_text: null,
+    })
   })
 
   it('cleans and limits tags', () => {
@@ -67,7 +81,14 @@ describe('profile form model', () => {
 })
 
 describe('chat model', () => {
-  const profile = { major: 'Applied Arts', interests: ['AI', 'games'], skills: ['Java'], careerGoals: 'ML engineer.', academicGoals: '' }
+  const profile = {
+    major: 'Applied Arts',
+    interests: ['AI', 'games'],
+    skills: ['Java'],
+    careerGoals: 'ML engineer.',
+    academicGoals: '',
+    resumeText: '',
+  }
 
   it('summarizes the profile in the first person', () => {
     expect(profileSentence(profile)).toBe("I'm an Applied Arts major. I know Java. I'm into AI and games. Career goal: ML engineer.")
@@ -107,7 +128,14 @@ describe('AI match page', () => {
     const log = screen.getByRole('log', { name: 'Conversation' })
     expect(await within(log).findByText("I'm a Software Engineering major. I'm into machine learning. Career goal: ML engineer.")).toBeTruthy()
     expect((await within(log).findAllByRole('article')).length).toBeGreaterThan(0)
-    expect(sent[0]).toEqual({ major: 'Software Engineering', interests: ['machine learning'], skills: [], career_goals: 'ML engineer', academic_goals: null })
+    expect(sent[0]).toEqual({
+      major: 'Software Engineering',
+      interests: ['machine learning'],
+      skills: [],
+      career_goals: 'ML engineer',
+      academic_goals: null,
+      resume_text: null,
+    })
 
     await user.click(screen.getByRole('button', { name: 'Something lighter' }))
     expect(await within(log).findByText('Something lighter')).toBeTruthy()

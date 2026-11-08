@@ -45,6 +45,7 @@ def keywords_from_profile(
     skills: list[str],
     career_goals: str | None,
     academic_goals: str | None,
+    resume_text: str | None = None,
 ) -> list[str]:
     """Keep distinctive words from the profile fields, in first-seen order."""
 
@@ -54,6 +55,9 @@ def keywords_from_profile(
             chunks.append(value)
     chunks.extend(interests)
     chunks.extend(skills)
+    # Resume last so explicit form fields keep keyword priority.
+    if resume_text:
+        chunks.append(resume_text)
 
     found: list[str] = []
     for chunk in chunks:

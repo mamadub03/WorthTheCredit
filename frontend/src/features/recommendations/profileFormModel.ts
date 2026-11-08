@@ -15,6 +15,8 @@ export interface ProfileFormValues {
   skills: string[]
   careerGoals: string
   academicGoals: string
+  /** Ephemeral paste — used for matching; not written to backend storage. */
+  resumeText: string
 }
 
 export type ProfileField = keyof ProfileFormValues
@@ -25,15 +27,21 @@ export const PROFILE_LIMITS = {
   tagLength: 40,
   majorLength: 100,
   goalsLength: 500,
+  resumeLength: 8000,
 } as const
 
 export function emptyProfile(): ProfileFormValues {
-  return { major: '', interests: [], skills: [], careerGoals: '', academicGoals: '' }
+  return { major: '', interests: [], skills: [], careerGoals: '', academicGoals: '', resumeText: '' }
 }
 
 export function hasPreference(values: ProfileFormValues): boolean {
   return Boolean(
-    values.major.trim() || values.careerGoals.trim() || values.academicGoals.trim() || values.interests.length || values.skills.length,
+    values.major.trim() ||
+      values.careerGoals.trim() ||
+      values.academicGoals.trim() ||
+      values.resumeText.trim() ||
+      values.interests.length ||
+      values.skills.length,
   )
 }
 
@@ -48,7 +56,12 @@ export function validateProfile(values: ProfileFormValues): ProfileErrors {
   if (values.academicGoals.trim().length > PROFILE_LIMITS.goalsLength) {
     errors.academicGoals = `Keep it under ${PROFILE_LIMITS.goalsLength} characters.`
   }
-  if (!hasPreference(values)) errors.form = 'Tell us at least one thing: your major, an interest, a skill, or a goal.'
+  if (values.resumeText.trim().length > PROFILE_LIMITS.resumeLength) {
+    errors.resumeText = `Keep the resume paste under ${PROFILE_LIMITS.resumeLength} characters.`
+  }
+  if (!hasPreference(values)) {
+    errors.form = 'Tell us at least one thing: your major, an interest, a skill, a goal, or paste resume text.'
+  }
   return errors
 }
 
@@ -73,5 +86,6 @@ export function toRecommendationRequest(values: ProfileFormValues): Recommendati
     skills: values.skills,
     career_goals: text(values.careerGoals),
     academic_goals: text(values.academicGoals),
+    resume_text: text(values.resumeText),
   }
 }

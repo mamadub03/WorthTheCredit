@@ -29,6 +29,13 @@ export default function AboutYouCard({ form, busy, onMatch }: AboutYouCardProps)
     { label: 'Skills', value: values.skills.join(', '), always: true },
     { label: 'Career goal', value: values.careerGoals.trim(), always: true },
     { label: 'Academic goals', value: values.academicGoals.trim(), always: false },
+    {
+      label: 'Resume paste',
+      value: values.resumeText.trim()
+        ? `${values.resumeText.trim().slice(0, 80)}${values.resumeText.trim().length > 80 ? '…' : ''}`
+        : '',
+      always: false,
+    },
   ]
 
   return (
@@ -98,6 +105,16 @@ export default function AboutYouCard({ form, busy, onMatch }: AboutYouCardProps)
             maxLength={PROFILE_LIMITS.goalsLength}
             error={errors.academicGoals}
           />
+          <TextAreaField
+            id="profile-resumeText"
+            label="Paste resume text"
+            optional
+            hint="Paste plain text from your resume for this match only. We send it to Gemini with your request and do not store it on our servers."
+            value={values.resumeText}
+            onChange={(text) => form.setText('resumeText', text)}
+            maxLength={PROFILE_LIMITS.resumeLength}
+            error={errors.resumeText}
+          />
           <Button variant="secondary" className={styles.done} onClick={() => setEditing(false)} disabled={!filled}>
             Done
           </Button>
@@ -132,7 +149,8 @@ export default function AboutYouCard({ form, busy, onMatch }: AboutYouCardProps)
         Match me with courses
       </Button>
       <p className={styles.note}>
-        The advisor remembers this in this browser, so you don’t have to repeat it. Your answers go to Google Gemini to find matches.
+        The advisor remembers your profile in this browser, so you don’t have to repeat it. Resume paste is for this match only
+        and is not stored on our servers. Your answers go to Google Gemini to find matches.
       </p>
     </section>
   )

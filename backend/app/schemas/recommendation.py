@@ -64,8 +64,10 @@ class RecommendationRequest(BaseModel):
     skills: list[str] = Field(default_factory=list)
     career_goals: str | None = None
     academic_goals: str | None = None
+    # Optional resume paste for this request only. Never persisted by the API.
+    resume_text: str | None = Field(default=None, max_length=8000)
 
-    @field_validator("major", "career_goals", "academic_goals", mode="before")
+    @field_validator("major", "career_goals", "academic_goals", "resume_text", mode="before")
     @classmethod
     def empty_text_is_absent(cls, value: object) -> object:
         if isinstance(value, str):
@@ -80,10 +82,10 @@ class RecommendationRequest(BaseModel):
 
     @model_validator(mode="after")
     def has_a_preference(self) -> RecommendationRequest:
-        has_text = any((self.major, self.career_goals, self.academic_goals))
+        has_text = any((self.major, self.career_goals, self.academic_goals, self.resume_text))
         if not has_text and not self.interests and not self.skills:
             raise ValueError(
-                "Provide a major, interest, skill, career goal, or academic goal"
+                "Provide a major, interest, skill, career goal, academic goal, or resume text"
             )
         return self
 
