@@ -1,5 +1,6 @@
 import { Route } from 'react-router'
 import AuthCallbackPage from '../features/auth/AuthCallbackPage.tsx'
+import WriteReviewPage from '../features/reviewForm/WriteReviewPage.tsx'
 import { paths } from './paths.ts'
 
 /**
@@ -10,7 +11,8 @@ import { paths } from './paths.ts'
 export function fe2Routes() {
   return (
     <>
-      {/* #27 and #28: the review form route goes here */}
+      <Route path={paths.writeReview()} element={<WriteReviewPage />} />
+      {/* #27 and #28: review form route */}
       <Route path={paths.authCallback} element={<AuthCallbackPage />} />
       {/* #29 to #31: the recommendations route goes here */}
     </>

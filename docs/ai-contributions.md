@@ -94,3 +94,13 @@ The FE2 API layer was realigned to the merged backend contracts with Claude Code
 ### Suggested citation
 
 The frontend sign-in layer (Auth0 and dev sign-in) was generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.
+
+## 2026-11-07: Structured review form with a course picker (FE2, #27)
+
+- **Requested by:** Rameen Syed (Frontend Developer 2), on branch `fe2/27-review-form`.
+- **Tool:** Claude Code, model Claude Opus 5.5 (`claude-opus-5-5`).
+- **What the AI wrote:** the `/review` page and form (goals, Worth Score, skills, concept difficulty, weekly hours, and optional feedback, professor, and semester), a course picker that searches `GET /courses`, the form model with the product's validation rules and the exact `ReviewCreate` JSON, the form-state hook, FE2's form controls (`Field`, `ChoiceGroup`, `RatingScale`, `TagInput`), and tests.
+
+### Suggested citation
+
+The review form and course picker were generated with Claude Code (Claude Opus 5.5) on 7 November 2026, for review by the FE2 developer. See `docs/ai-contributions.md`.

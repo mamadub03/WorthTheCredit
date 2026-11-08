@@ -1,0 +1,260 @@
+/* Shared styles for FE2's form controls. Colors come from FE1's variables in index.css. */
+
+.field {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 24px;
+}
+
+.fieldset {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 24px;
+  padding: 0;
+  border: 0;
+}
+
+.label {
+  padding: 0;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.optional {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.9rem;
+  font-weight: 550;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.textarea {
+  min-height: 120px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.invalid {
+  border-color: #b42318;
+}
+
+.counter {
+  justify-self: end;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Checkbox choices */
+
+.choices {
+  display: grid;
+  gap: 8px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.choice:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choice:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.choice input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+/* Segmented single choice (ratings, hours) */
+
+.scale {
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  gap: 6px;
+}
+
+.scaleOption {
+  position: relative;
+}
+
+.scaleOption input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.scaleLabel {
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  min-height: 60px;
+  padding: 8px 4px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.scaleValue {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.scaleCaption {
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.scaleOption input:checked + .scaleLabel {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.scaleOption input:checked + .scaleLabel .scaleCaption {
+  color: #fff;
+}
+
+.scaleOption input:focus-visible + .scaleLabel {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Tags */
+
+.tagBox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.tagBox:focus-within {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 4px 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.tagRemove {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tagRemove:hover {
+  background: rgba(194, 65, 12, 0.15);
+}
+
+.tagRemove:focus-visible {
+  outline: 2px solid var(--accent);
+}
+
+.tagInput {
+  flex: 1 1 140px;
+  min-width: 120px;
+  padding: 6px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+
+.tagInput:focus {
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .scaleCaption {
+    font-size: 0.7rem;
+  }
+}
