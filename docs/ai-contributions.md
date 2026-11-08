@@ -95,3 +95,30 @@ Course/User/Review SQLAlchemy models and initial migration were generated with C
 - `backend/app/api/router.py`
 - `backend/README.md`
 - `docs/ai-contributions.md`
+
+## 2026-11-07 — Define review and recommendation contracts (Issue #10)
+
+- **Requested by:** Backend Developer 2 (`as5161`), on branch `as5161-dev-issue10` (based on `backend`).
+- **Tool:** Cursor Agent (Grok 4.7).
+- **Scope:** Pydantic request and response contracts for reviews, Community Worth Score insights, and Gemini recommendations. No routes, database queries, migrations, or Gemini calls.
+
+### Team sources the agent used (not written by the agent)
+
+- `docs/DATABASE_SCHEMA.md` — review columns, goal categories, weekly hour ranges, user/course relationships, check constraints, the Worth Score formula, and the Gemini input rules (sections 3–7 and 9).
+- `.cursor/rules/project.mdc` — MVP review rules, anonymity, descriptive match levels, and Backend Developer 2 ownership.
+- `backend/app/schemas/course.py` — `CourseSummary`, imported so a recommendation reuses Backend Developer 1's course card. That file was not edited.
+
+### Files the agent added or edited
+
+- `backend/app/schemas/review.py`
+- `backend/app/schemas/recommendation.py`
+- `backend/tests/test_issue10_contracts.py`
+- `docs/ai-contributions.md` (this entry)
+
+### Left unchanged on purpose
+
+Backend Developer 1 models, Alembic migrations, seed data, course routes, the API router, the course schema, `requirements.txt`, and `backend/README.md`.
+
+### Suggested citation
+
+Review and recommendation Pydantic contracts were generated with Cursor Agent on 7 November 2026 for GitHub Issue #10, encoding `docs/DATABASE_SCHEMA.md`. See `docs/ai-contributions.md`.
