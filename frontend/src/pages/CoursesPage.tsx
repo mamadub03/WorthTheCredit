@@ -75,15 +75,21 @@ export default function CoursesPage() {
   const results = search.state.status === 'success' ? search.state.data.results : []
   const inCollege = college ? results.filter((course) => collegeForName(course.college)?.key === college.key) : results
   const ids = inCollege.map((course) => course.id)
-  // Goal chips need every course's goals; otherwise only the cards on screen need them.
-  const { stats, goals } = useCourseInsights(ids, wanted.size > 0 ? ids : inCollege.slice(0, shown).map((course) => course.id))
+  // Every course's numbers, so the sort is right across the whole list.
+  const { stats } = useCourseInsights(
+    ids,
+    [],
+  )
+  const sorted = sortCourses(inCollege, stats, sort)
+  // Goal chips need every course's goals; otherwise only the cards on screen
+  // (in sorted order) need their "Top reason".
+  const { goals } = useCourseInsights(
+    [],
+    wanted.size > 0 ? ids : sorted.slice(0, shown).map((course) => course.id),
+  )
   const statsReady = inCollege.every((course) => course.id in stats)
   const goalsReady = wanted.size === 0 || inCollege.every((course) => course.id in goals)
-  const matches = sortCourses(
-    wanted.size > 0 ? inCollege.filter((course) => [...wanted].some((goal) => goals[course.id]?.goals.has(goal))) : inCollege,
-    stats,
-    sort,
-  )
+  const matches = wanted.size > 0 ? sorted.filter((course) => [...wanted].some((goal) => goals[course.id]?.goals.has(goal))) : sorted
   const visible = matches.slice(0, shown)
   const ready = search.state.status === 'success' && statsReady && goalsReady
 
