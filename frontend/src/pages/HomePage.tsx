@@ -12,8 +12,12 @@ import { paths } from '../routes/paths.ts'
 import CollegeCarousel from './home/CollegeCarousel.tsx'
 import styles from './HomePage.module.css'
 
-/** How many courses the "Loved by students" list looks through. */
-const SAMPLE_SIZE = 12
+/**
+ * How many courses the "Loved by students" list looks through: one API page,
+ * which is the whole demo catalog. The API can't sort by Worth Score yet, so
+ * each course's score is loaded and the top four are picked here.
+ */
+const SAMPLE_SIZE = 100
 
 /**
  * Home: the big question and the search bar, a way into AI matches (user
