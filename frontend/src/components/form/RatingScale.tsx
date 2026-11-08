@@ -28,6 +28,8 @@ interface RatingScaleProps<T extends string | number> {
   onChange: (value: T) => void
   error?: string
   icon?: RatingScaleIcon
+  /** Keep the legend as the group's accessible name but hide it, when the screen draws its own visible title. */
+  legendHidden?: boolean
 }
 
 /**
@@ -45,11 +47,12 @@ export default function RatingScale<T extends string | number>({
   onChange,
   error,
   icon,
+  legendHidden = false,
 }: RatingScaleProps<T>) {
   const describedBy = [hint ? `${id}-hint` : '', error ? `${id}-error` : ''].filter(Boolean).join(' ') || undefined
   return (
     <fieldset id={id} className={styles.fieldset} aria-describedby={describedBy}>
-      <legend className={styles.legend}>{legend}</legend>
+      <legend className={legendHidden ? 'wtc-sr' : styles.legend}>{legend}</legend>
       {hint ? (
         <p id={`${id}-hint`} className={styles.hint}>
           {hint}

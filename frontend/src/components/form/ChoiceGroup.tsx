@@ -9,6 +9,8 @@ interface ChoiceGroupProps<T extends string> {
   selected: readonly T[]
   onToggle: (key: T) => void
   error?: string
+  /** Keep the legend as the group's accessible name but hide it, when the screen draws its own visible title. */
+  legendHidden?: boolean
 }
 
 /**
@@ -17,11 +19,11 @@ interface ChoiceGroupProps<T extends string> {
  * Tab, Space and the checkbox role all work as before. A checked chip takes the
  * tint for its position (form.module.css cycles five) and an ink border. Owner: FE2 (#27).
  */
-export default function ChoiceGroup<T extends string>({ id, legend, hint, options, selected, onToggle, error }: ChoiceGroupProps<T>) {
+export default function ChoiceGroup<T extends string>({ id, legend, hint, options, selected, onToggle, error, legendHidden = false }: ChoiceGroupProps<T>) {
   const describedBy = [hint ? `${id}-hint` : '', error ? `${id}-error` : ''].filter(Boolean).join(' ') || undefined
   return (
     <fieldset id={id} className={styles.fieldset} aria-describedby={describedBy}>
-      <legend className={styles.legend}>{legend}</legend>
+      <legend className={legendHidden ? 'wtc-sr' : styles.legend}>{legend}</legend>
       {hint ? (
         <p id={`${id}-hint`} className={styles.hint}>
           {hint}

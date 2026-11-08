@@ -14,6 +14,8 @@ interface TagInputProps {
   error?: string
   optional?: boolean
   placeholder?: string
+  /** Keep the label as the box's accessible name but hide it, when the screen draws its own visible title. */
+  labelHidden?: boolean
 }
 
 /**
@@ -23,7 +25,7 @@ interface TagInputProps {
  * (five tints by position) that pops in, with a round remove button whose hit
  * area reaches 44 px. Owner: FE2 (#27).
  */
-export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, error, optional, placeholder }: TagInputProps) {
+export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, error, optional, placeholder, labelHidden = false }: TagInputProps) {
   const [draft, setDraft] = useState('')
   const describedBy = [hint ? `${id}-hint` : '', error ? `${id}-error` : '', `${id}-count`].filter(Boolean).join(' ')
 
@@ -42,7 +44,7 @@ export default function TagInput({ id, label, hint, tags, onAdd, onRemove, max, 
 
   return (
     <div className={styles.field}>
-      <label className={styles.label} htmlFor={id}>
+      <label className={labelHidden ? 'wtc-sr' : styles.label} htmlFor={id}>
         {label}
         {optional ? <span className={styles.optional}>optional</span> : null}
       </label>
