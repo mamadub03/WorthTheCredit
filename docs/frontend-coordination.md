@@ -21,7 +21,7 @@ FE2 keeps all of its code in these paths, so it never lands in yours:
 | `src/domain/reviewVocabulary.ts` | Goal, Worth Score, difficulty, weekly hours, semester, and match-level keys and labels (section 7) | #25 |
 | `src/routes/paths.ts`, `src/routes/fe2Routes.tsx` | URL helpers and FE2's routes (section 2) | #25 |
 
-FE1 owns everything else in `frontend/`: build config, `index.html`, `main.tsx`, `App.tsx`, `index.css`, `src/pages/`, layout and display components, and the course API module (`src/api/courses.ts`, which FE2 started with search and details for the review form's course picker). `src/api/reviews.ts` is shared: FE1 writes the review list call (#22, #23), FE2 writes the create and worth-score calls (#28, #30), and the types in it follow BE2's contract on main (section 7). `src/styles/exampleB.css` is shared too: FE2 added Example B's tokens there, either of us can add to it, and you decide when `index.css` adopts them (section 4).
+FE1 owns everything else in `frontend/`: build config, `index.html`, `main.tsx`, `App.tsx`, `index.css`, `src/pages/`, layout and display components, and the course API module (`src/api/courses.ts`, which FE2 started with search and details for the review form's course picker). `src/api/reviews.ts` is shared: FE1 writes the review list call (#22, #23), FE2 writes the create and worth-score calls (#28, #30), and the types in it follow BE2's contract on main (section 7). `src/styles/exampleB.css` is shared too: FE2 added Example B's tokens there, either of us can add to it, and you decide when `index.css` adopts them (section 4). So is the end-to-end suite, `e2e/` and `playwright.config.ts` (section 12).
 
 Editing the other person's paths needs their OK first (project.mdc: "Do not modify another developer's feature without approval"). The shared files are in section 3.
 
@@ -108,6 +108,7 @@ If #19 moves to a layout route with `<Outlet />`, put `{fe2Routes()}` inside it 
 - `@auth0/auth0-react` 2.30, the agreed auth provider. Its peer range covers React 19.3.
 - `zod` 4. One schema per payload gives the TypeScript type and a runtime check on API and Gemini responses (project.mdc: "Do not trust AI-generated responses without validation").
 - Dev only: `vitest` 5, `@testing-library/react`, `@testing-library/dom`, `@testing-library/user-event`, `jsdom`, and a `"test": "vitest run"` script. The scaffold has no test runner yet, so it's there for you too. Its config is a separate `vitest.config.ts`, so `vite.config.ts` stays yours.
+- Dev only, for #32: `@playwright/test` 1.64 with `"e2e"` and `"e2e:typecheck"` scripts, and Playwright's output folders in `.gitignore` (section 12).
 
 `package-lock.json`: never hand-merge it. On a conflict, take the base branch's copy and run `npm install`.
 
@@ -248,3 +249,13 @@ The event ends Sunday 4:30 PM per its MLH page; the submission deadline is proba
 - [ ] The `strictPort` line in `vite.config.ts`
 - [ ] You use `src/api/client.ts`, `useApiClient()`, and mock mode for #23
 - [ ] The Worth Score display rules
+
+## 12. End-to-end tests (#32)
+
+`npm run e2e` runs the Playwright suite in `frontend/e2e/`. It covers FE2's flows from the issue: signup and sign-in (including `?next=` and the verify-email step), review submission (the exact `ReviewCreate` JSON, the backend's 409, 401, and 422 answers, and drafts surviving a reload), recommendation requests (About you, follow-ups, typed questions, a Gemini failure and retry), and a recommendation card to the course page and Back without a second Gemini call.
+
+How it runs: Playwright starts `vite dev` on port 5174 with dev sign-in and the in-app mock off, and answers the app's API calls at the network boundary from `e2e/fakeBackend.ts`, which serves FE2's mock API (the contracts on main). The app makes real HTTP calls through the shared client, so a test can read request bodies and inject an error with `backend.respondOnce(...)`. Every test also gets Google Fonts answered locally and fails if the app logs an error to the console. Tests tagged `@phone` run again at a Pixel 7 size.
+
+For your pages: add specs in the same folder with `import { test, expect } from './fixtures.ts'`. The course page step only checks the URL until `/courses/:courseId` (#21) is on `frontend_v1`; then it can check the page itself.
+
+Not covered: the Auth0 redirect (needs the tenant; unit tests fake the SDK), the real backend (it rejects dev tokens), and Gemini itself.
