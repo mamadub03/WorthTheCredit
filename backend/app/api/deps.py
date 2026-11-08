@@ -21,6 +21,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.auth import Auth0Claims, verify_access_token
+from app.core.config import get_settings
 from app.db.models import User
 from app.db.session import get_session_factory
 
@@ -96,6 +97,9 @@ def require_verified_email(
     auth: AuthenticatedUser = Depends(get_current_user),
 ) -> AuthenticatedUser:
     """Require Auth0 email_verified for protected write actions."""
+    # Local testing switch (integration branch only); see Settings.skip_email_verification.
+    if get_settings().skip_email_verification:
+        return auth
     if not auth.claims.email_verified:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
