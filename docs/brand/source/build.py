@@ -1,6 +1,7 @@
 # AI-GENERATED (Claude Code, Claude Opus 5.5): WorthTheCredit logo generator. See docs/ai-contributions.md.
 """Build the WorthTheCredit logo pack: SVG masters, a PNG job list, and a preview sheet."""
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -19,8 +20,17 @@ files = {}
 
 
 def put(name, svg):
-    if not svg.startswith("<?xml"):
-        svg = svg.replace("<svg ", '<svg ', 1)
+    """Write an export: drop empty attributes and give the file an intrinsic size,
+    so slides, design tools and a bare <img> open it at a sensible size.
+    Lockups keep their drawn size; square marks, icons and the seal open at 512 px.
+    favicon.svg stays size-free, as browsers expect."""
+    svg = svg.replace(' style=""', "", 1)
+    root = svg.split(">", 1)[0]
+    if name != "favicon.svg" and ' width="' not in root:
+        vw, vh = (float(v) for v in re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', root).groups())
+        if abs(vw - vh) < 1e-6:
+            vw = vh = 512
+        svg = svg.replace("<svg ", f'<svg width="{fmt(vw)}" height="{fmt(vh)}" ', 1)
     (SVG / name).write_text(svg + "\n")
     files[name] = svg
 
