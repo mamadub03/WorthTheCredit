@@ -58,5 +58,6 @@ alembic upgrade head
 python scripts/seed_db.py
 ```
 
-The seed script is **idempotent** (re-run safe) and loads clearly fictional
-demo courses/users/reviews from `app/db/seed_data.py`.
+The seed script is **idempotent** (re-run safe) and loads **courses only**
+from `app/db/seed_data.py`. Users/reviews are not seeded — Worth Scores come
+later from the review submission flow (then Gemini uses those aggregates).

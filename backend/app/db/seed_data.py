@@ -2,36 +2,44 @@
 # Owned by Backend Developer 1 (mamadub03).
 # ---------------------------------------------------------------------------
 # FILE PURPOSE
-#   Static fixture data used by `scripts/seed_db.py` to populate Tiger Data
-#   with hackathon demo content. Nothing here is a live RIT SIS feed or a
-#   real student review.
+#   Static COURSE fixtures only for Tiger Data / local demos.
+#   Used by search, course details, and later Gemini candidate retrieval.
+#
+# MVP SCOPE (intentional)
+#   - Seed mock RIT-style courses (this file).
+#   - Do NOT seed users or reviews here.
+#   - Reviews / Worth Scores come later from the review submission flow
+#     (Backend Developer 2). Demo day can submit many review forms against
+#     these courses; Gemini then uses those live aggregates.
+#   - Students cannot add missing courses in the locked MVP.
 #
 # HOW TO USE
-#   Imported by `scripts/seed_db.py`. Do not connect to the DB from this file.
+#   Imported by `scripts/seed_db.py`. No DB connection in this module.
 #
 # AI ATTRIBUTION
 #   Whole-file Cursor Agent authorship for Issue #5 (file-level tag only).
 # ---------------------------------------------------------------------------
 
-"""Static mock RIT-style courses, demo users, and fictional reviews."""
+"""Static mock RIT-style course catalog (courses only — no users/reviews)."""
 
 from __future__ import annotations
 
 # =============================================================================
 # COMPONENT: MOCK_COURSES
 # -----------------------------------------------------------------------------
-# What: RIT-flavored elective/core-adjacent course rows for discovery demos.
-# Key:  `code` is unique (matches DB unique constraint) so seeding can upsert.
-# Shape: keys align with the Course model / docs/DATABASE_SCHEMA.md.
-# Note:  Descriptions include "DEMO DATA" so demo rows stay distinguishable.
+# What: Cross-college RIT-flavored electives/core-adjacent courses for demos.
+# Key:  `code` is unique so seeding upserts without duplicates.
+# Shape: matches Course model / docs/DATABASE_SCHEMA.md.
+# Note:  Descriptions include "DEMO DATA" and enough detail for Gemini ranking.
 # =============================================================================
 MOCK_COURSES: list[dict] = [
+    # --- Golisano (GCCIS) ---
     {
         "code": "GCIS-123",
         "title": "Software Development & Problem Solving I",
         "description": (
-            "Introduces programming fundamentals, problem decomposition, and "
-            "basic software design using Python. DEMO DATA — not a live SIS feed."
+            "Programming fundamentals, problem decomposition, and basic software "
+            "design using Python. Strong foundation for computing majors. DEMO DATA."
         ),
         "department": "GCIS",
         "college": "Golisano College of Computing and Information Sciences",
@@ -43,8 +51,8 @@ MOCK_COURSES: list[dict] = [
         "code": "GCIS-124",
         "title": "Software Development & Problem Solving II",
         "description": (
-            "Continues GCIS-123 with data structures, modular design, and "
-            "collaborative coding practices. DEMO DATA."
+            "Data structures, modular design, testing habits, and collaborative "
+            "coding practices continuing from GCIS-123. DEMO DATA."
         ),
         "department": "GCIS",
         "college": "Golisano College of Computing and Information Sciences",
@@ -56,8 +64,8 @@ MOCK_COURSES: list[dict] = [
         "code": "SWEN-261",
         "title": "Introduction to Software Engineering",
         "description": (
-            "Covers software process, requirements, design basics, and team "
-            "workflows for small projects. DEMO DATA."
+            "Software process, requirements, design basics, and team workflows for "
+            "small projects. Useful for career prep in engineering teams. DEMO DATA."
         ),
         "department": "SWEN",
         "college": "Golisano College of Computing and Information Sciences",
@@ -66,11 +74,24 @@ MOCK_COURSES: list[dict] = [
         "prerequisites": "GCIS-124",
     },
     {
+        "code": "SWEN-262",
+        "title": "Engineering of Software Subsystems",
+        "description": (
+            "Object-oriented design, design patterns, and subsystem interfaces with "
+            "emphasis on maintainable structure. DEMO DATA."
+        ),
+        "department": "SWEN",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "SWEN-261",
+    },
+    {
         "code": "CSCI-320",
         "title": "Principles of Data Management",
         "description": (
-            "Relational modeling, SQL, transactions, and intro to NoSQL tradeoffs. "
-            "DEMO DATA."
+            "Relational modeling, SQL, transactions, indexing intuition, and intro "
+            "NoSQL tradeoffs for application developers. DEMO DATA."
         ),
         "department": "CSCI",
         "college": "Golisano College of Computing and Information Sciences",
@@ -82,8 +103,21 @@ MOCK_COURSES: list[dict] = [
         "code": "CSCI-331",
         "title": "Introduction to Intelligent Systems",
         "description": (
-            "Search, knowledge representation, and introductory ML concepts for "
-            "intelligent applications. DEMO DATA."
+            "Search, knowledge representation, and introductory machine learning "
+            "concepts for building intelligent applications. DEMO DATA."
+        ),
+        "department": "CSCI",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "GCIS-124",
+    },
+    {
+        "code": "CSCI-344",
+        "title": "Programming Language Concepts",
+        "description": (
+            "Paradigms, syntax/semantics ideas, and comparative language features "
+            "to deepen how students reason about code. DEMO DATA."
         ),
         "department": "CSCI",
         "college": "Golisano College of Computing and Information Sciences",
@@ -95,8 +129,8 @@ MOCK_COURSES: list[dict] = [
         "code": "ISTE-230",
         "title": "Introduction to Database and Data Modeling",
         "description": (
-            "Entity-relationship modeling, normalization, and practical SQL for "
-            "information systems. DEMO DATA."
+            "ER modeling, normalization, and practical SQL for information systems "
+            "and IT-focused roles. DEMO DATA."
         ),
         "department": "ISTE",
         "college": "Golisano College of Computing and Information Sciences",
@@ -109,7 +143,7 @@ MOCK_COURSES: list[dict] = [
         "title": "Web & Mobile I",
         "description": (
             "HTML/CSS/JS fundamentals and responsive layouts for web and mobile "
-            "front ends. DEMO DATA."
+            "front ends. Good elective for UI-oriented goals. DEMO DATA."
         ),
         "department": "ISTE",
         "college": "Golisano College of Computing and Information Sciences",
@@ -118,11 +152,24 @@ MOCK_COURSES: list[dict] = [
         "prerequisites": None,
     },
     {
+        "code": "ISTE-340",
+        "title": "Client Programming",
+        "description": (
+            "Richer browser-side application patterns, APIs, and interactive UI "
+            "behavior beyond introductory web markup. DEMO DATA."
+        ),
+        "department": "ISTE",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "ISTE-240",
+    },
+    {
         "code": "NSSA-241",
         "title": "Introduction to Routing and Switching",
         "description": (
             "Networking fundamentals: addressing, switching, routing, and basic "
-            "lab topologies. DEMO DATA."
+            "lab topologies for infrastructure paths. DEMO DATA."
         ),
         "department": "NSSA",
         "college": "Golisano College of Computing and Information Sciences",
@@ -131,11 +178,90 @@ MOCK_COURSES: list[dict] = [
         "prerequisites": None,
     },
     {
+        "code": "NSSA-221",
+        "title": "Systems Administration I",
+        "description": (
+            "Linux/Windows admin basics, users/permissions, services, and "
+            "operational troubleshooting habits. DEMO DATA."
+        ),
+        "department": "NSSA",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "IGME-110",
+        "title": "Introduction to Interactive Media",
+        "description": (
+            "Creative coding and interactive media concepts for beginners exploring "
+            "games or new media. DEMO DATA."
+        ),
+        "department": "IGME",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "IGME-220",
+        "title": "Game Design & Development I",
+        "description": (
+            "Core game design loops, prototyping, and introductory development "
+            "practices for interactive experiences. DEMO DATA."
+        ),
+        "department": "IGME",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "IGME-110",
+    },
+    {
+        "code": "HCIN-610",
+        "title": "Foundations of Human-Computer Interaction",
+        "description": (
+            "Usability principles, user research basics, and interface evaluation "
+            "for product-minded electives. DEMO DATA."
+        ),
+        "department": "HCIN",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "CSEC-102",
+        "title": "Information Security & Privacy",
+        "description": (
+            "Security mindset, privacy tradeoffs, common threats, and defensive "
+            "basics for any computing student. DEMO DATA."
+        ),
+        "department": "CSEC",
+        "college": "Golisano College of Computing and Information Sciences",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    # --- College of Science ---
+    {
         "code": "MATH-190",
         "title": "Discrete Mathematics for Computing",
         "description": (
-            "Logic, sets, proofs, combinatorics, and graph basics for computing "
-            "majors. DEMO DATA."
+            "Logic, sets, proofs, combinatorics, and graph basics that underpin "
+            "algorithms and CS theory electives. DEMO DATA."
+        ),
+        "department": "MATH",
+        "college": "College of Science",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "MATH-241",
+        "title": "Linear Algebra",
+        "description": (
+            "Vectors, matrices, linear transforms, and eigenvalues with computing "
+            "and data applications in mind. DEMO DATA."
         ),
         "department": "MATH",
         "college": "College of Science",
@@ -147,8 +273,8 @@ MOCK_COURSES: list[dict] = [
         "code": "STAT-145",
         "title": "Introduction to Statistics I",
         "description": (
-            "Descriptive statistics, probability intro, and inference foundations. "
-            "DEMO DATA."
+            "Descriptive statistics, probability intro, and inference foundations "
+            "useful for analytics and research literacy. DEMO DATA."
         ),
         "department": "STAT",
         "college": "College of Science",
@@ -157,11 +283,77 @@ MOCK_COURSES: list[dict] = [
         "prerequisites": None,
     },
     {
+        "code": "STAT-205",
+        "title": "Applied Statistics",
+        "description": (
+            "Applied inference, regression intro, and interpreting statistical "
+            "results in real datasets. DEMO DATA."
+        ),
+        "department": "STAT",
+        "college": "College of Science",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "STAT-145",
+    },
+    {
+        "code": "PHYS-111",
+        "title": "College Physics I",
+        "description": (
+            "Mechanics-focused college physics with problem-solving emphasis for "
+            "STEM students. DEMO DATA."
+        ),
+        "department": "PHYS",
+        "college": "College of Science",
+        "campus": "Henrietta",
+        "credits": 4,
+        "prerequisites": None,
+    },
+    {
+        "code": "BIOL-101",
+        "title": "General Biology I",
+        "description": (
+            "Cell biology, genetics intro, and scientific reasoning for life "
+            "science exploration electives. DEMO DATA."
+        ),
+        "department": "BIOL",
+        "college": "College of Science",
+        "campus": "Henrietta",
+        "credits": 4,
+        "prerequisites": None,
+    },
+    {
+        "code": "CHEM-151",
+        "title": "General Chemistry I",
+        "description": (
+            "Atomic structure, bonding, stoichiometry, and lab-linked chemical "
+            "reasoning. DEMO DATA."
+        ),
+        "department": "CHEM",
+        "college": "College of Science",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    # --- College of Liberal Arts ---
+    {
         "code": "COMM-201",
         "title": "Public Speaking",
         "description": (
-            "Speech organization, delivery, and audience analysis for technical "
-            "and general contexts. DEMO DATA."
+            "Speech organization, delivery, and audience analysis—especially useful "
+            "for explaining technical work. DEMO DATA."
+        ),
+        "department": "COMM",
+        "college": "College of Liberal Arts",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "COMM-253",
+        "title": "Communication in Technical Organizations",
+        "description": (
+            "Writing and presenting in engineering/IT workplaces: docs, updates, "
+            "and stakeholder clarity. DEMO DATA."
         ),
         "department": "COMM",
         "college": "College of Liberal Arts",
@@ -173,8 +365,8 @@ MOCK_COURSES: list[dict] = [
         "code": "PSYC-101",
         "title": "Introduction to Psychology",
         "description": (
-            "Survey of major psychology topics with emphasis on cognition and "
-            "behavior. DEMO DATA."
+            "Survey of cognition, behavior, and social psychology foundations for "
+            "HCI and personal exploration. DEMO DATA."
         ),
         "department": "PSYC",
         "college": "College of Liberal Arts",
@@ -183,11 +375,77 @@ MOCK_COURSES: list[dict] = [
         "prerequisites": None,
     },
     {
+        "code": "PSYC-223",
+        "title": "Cognitive Psychology",
+        "description": (
+            "Attention, memory, and decision-making models relevant to UX and "
+            "learning-system thinking. DEMO DATA."
+        ),
+        "department": "PSYC",
+        "college": "College of Liberal Arts",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "PSYC-101",
+    },
+    {
+        "code": "ENGL-210",
+        "title": "Literature & Cultural Inquiry",
+        "description": (
+            "Close reading and cultural analysis electives that build writing depth "
+            "and perspective-taking. DEMO DATA."
+        ),
+        "department": "ENGL",
+        "college": "College of Liberal Arts",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "POLS-110",
+        "title": "American Politics",
+        "description": (
+            "Institutions, participation, and policy basics for civic literacy "
+            "electives. DEMO DATA."
+        ),
+        "department": "POLS",
+        "college": "College of Liberal Arts",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "SOCI-102",
+        "title": "Foundations of Sociology",
+        "description": (
+            "Social structures, inequality, and research framing useful for "
+            "product ethics and community context. DEMO DATA."
+        ),
+        "department": "SOCI",
+        "college": "College of Liberal Arts",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    # --- Saunders College of Business ---
+    {
         "code": "MGMT-215",
         "title": "Organizational Behavior",
         "description": (
-            "Individuals and teams in organizations: motivation, culture, and "
-            "leadership basics. DEMO DATA."
+            "Motivation, teams, culture, and leadership basics for career and "
+            "people-management goals. DEMO DATA."
+        ),
+        "department": "MGMT",
+        "college": "Saunders College of Business",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    {
+        "code": "MGMT-340",
+        "title": "Business Ethics & Corporate Social Responsibility",
+        "description": (
+            "Ethical frameworks and stakeholder impacts in business and tech "
+            "decision-making. DEMO DATA."
         ),
         "department": "MGMT",
         "college": "Saunders College of Business",
@@ -199,8 +457,8 @@ MOCK_COURSES: list[dict] = [
         "code": "FINC-220",
         "title": "Financial Management",
         "description": (
-            "Time value of money, capital budgeting intro, and financial "
-            "statement basics. DEMO DATA."
+            "Time value of money, capital budgeting intro, and reading financial "
+            "statements for product/business roles. DEMO DATA."
         ),
         "department": "FINC",
         "college": "Saunders College of Business",
@@ -209,199 +467,228 @@ MOCK_COURSES: list[dict] = [
         "prerequisites": None,
     },
     {
-        "code": "IGME-110",
-        "title": "Introduction to Interactive Media",
+        "code": "MKTG-230",
+        "title": "Principles of Marketing",
         "description": (
-            "Creative coding and interactive media concepts for beginners. "
-            "DEMO DATA."
+            "Customer segments, value propositions, and go-to-market basics useful "
+            "for startup and product electives. DEMO DATA."
         ),
-        "department": "IGME",
-        "college": "Golisano College of Computing and Information Sciences",
+        "department": "MKTG",
+        "college": "Saunders College of Business",
         "campus": "Henrietta",
         "credits": 3,
         "prerequisites": None,
     },
     {
-        "code": "HCIN-610",
-        "title": "Foundations of Human-Computer Interaction",
+        "code": "ACCT-110",
+        "title": "Financial Accounting",
         "description": (
-            "Usability principles, user research basics, and interface evaluation. "
-            "DEMO DATA — graduate-style elective for demo breadth."
+            "Accounting cycle and financial statement literacy for founders and "
+            "analysts. DEMO DATA."
         ),
-        "department": "HCIN",
-        "college": "Golisano College of Computing and Information Sciences",
+        "department": "ACCT",
+        "college": "Saunders College of Business",
         "campus": "Henrietta",
         "credits": 3,
         "prerequisites": None,
     },
-]
-
-# =============================================================================
-# COMPONENT: MOCK_USERS
-# -----------------------------------------------------------------------------
-# What: Fake student profiles linked to demo Auth0 subject strings.
-# Key:  `auth0_sub` is unique (matches DB). Prefix `demo|` marks them as fake.
-# Shape: keys align with the User model / docs/DATABASE_SCHEMA.md.
-# Note:  No passwords — Auth0 owns auth; we only store profile fields.
-# =============================================================================
-MOCK_USERS: list[dict] = [
+    # --- Kate Gleason College of Engineering ---
     {
-        "auth0_sub": "demo|worththecredit-seed-001",
-        "major": "Software Engineering",
-        "interests": ["web", "apis", "career_prep"],
-        "skills": ["python", "git"],
-        "career_goals": "Full-stack engineer (DEMO USER)",
+        "code": "EEEE-120",
+        "title": "Digital Devices",
+        "description": (
+            "Digital logic, binary systems, and introductory hardware reasoning "
+            "for EE/CE exploration. DEMO DATA."
+        ),
+        "department": "EEEE",
+        "college": "Kate Gleason College of Engineering",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-002",
-        "major": "Computer Science",
-        "interests": ["ai", "data"],
-        "skills": ["python", "sql"],
-        "career_goals": "ML-adjacent software role (DEMO USER)",
+        "code": "EEEE-281",
+        "title": "Circuits I",
+        "description": (
+            "Circuit laws, analysis techniques, and lab habits foundational to "
+            "electrical engineering paths. DEMO DATA."
+        ),
+        "department": "EEEE",
+        "college": "Kate Gleason College of Engineering",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-003",
-        "major": "Computing and Information Technologies",
-        "interests": ["networking", "systems"],
-        "skills": ["linux", "scripting"],
-        "career_goals": "IT / infrastructure (DEMO USER)",
+        "code": "CMPE-260",
+        "title": "Digital System Design",
+        "description": (
+            "Combinational/sequential design and HDL intro bridging software and "
+            "hardware thinking. DEMO DATA."
+        ),
+        "department": "CMPE",
+        "college": "Kate Gleason College of Engineering",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "EEEE-120",
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-004",
-        "major": "New Media Interactive Development",
-        "interests": ["ui", "creative_tech"],
-        "skills": ["javascript", "design_basics"],
-        "career_goals": "Interactive media developer (DEMO USER)",
-    },
-]
-
-# =============================================================================
-# COMPONENT: MOCK_REVIEWS
-# -----------------------------------------------------------------------------
-# What: Fictional Worth Score reviews for demo Community Worth Score math.
-# Join: Uses `auth0_sub` + `course_code` (resolved to UUIDs in seed_db.py).
-# Rules: goals / weekly_hours_range / scores follow docs/DATABASE_SCHEMA.md.
-# Note:  `feedback` always starts with [FICTIONAL DEMO REVIEW].
-# =============================================================================
-MOCK_REVIEWS: list[dict] = [
-    {
-        "auth0_sub": "demo|worththecredit-seed-001",
-        "course_code": "SWEN-261",
-        "goals": ["career_preparation", "skill_development"],
-        "worth_score": 5,
-        "concept_difficulty": 3,
-        "weekly_hours_range": "6-10",
-        "skills_gained": ["team process", "requirements writing"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Helped me practice real team workflows.",
-        "instructor_name": "Demo Instructor A",
-        "semester": "2025-Fall",
+        "code": "ISEE-120",
+        "title": "Fundamentals of Industrial Engineering",
+        "description": (
+            "Process improvement, efficiency metrics, and systems thinking for "
+            "operations-minded students. DEMO DATA."
+        ),
+        "department": "ISEE",
+        "college": "Kate Gleason College of Engineering",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-002",
-        "course_code": "SWEN-261",
-        "goals": ["academic_development"],
-        "worth_score": 4,
-        "concept_difficulty": 3,
-        "weekly_hours_range": "3-6",
-        "skills_gained": ["design diagrams"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Solid intro; workload was manageable.",
-        "instructor_name": None,
-        "semester": "2025-Spring",
+        "code": "MECE-104",
+        "title": "Engineering Design Tools",
+        "description": (
+            "CAD/design-tool literacy and structured engineering design process "
+            "exposure. DEMO DATA."
+        ),
+        "department": "MECE",
+        "college": "Kate Gleason College of Engineering",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-002",
-        "course_code": "CSCI-331",
-        "goals": ["skill_development", "personal_exploration"],
-        "worth_score": 5,
-        "concept_difficulty": 4,
-        "weekly_hours_range": "6-10",
-        "skills_gained": ["search algorithms", "basic ML framing"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Challenging but aligned with my AI interest.",
-        "instructor_name": "Demo Instructor B",
-        "semester": "2025-Fall",
+        "code": "CQAS-251",
+        "title": "Data Analysis for Engineers",
+        "description": (
+            "Applied data analysis techniques for engineering experiments and "
+            "quality contexts. DEMO DATA."
+        ),
+        "department": "CQAS",
+        "college": "Kate Gleason College of Engineering",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": "STAT-145",
+    },
+    # --- College of Art and Design ---
+    {
+        "code": "IDDE-201",
+        "title": "Design Drawing & Visualization",
+        "description": (
+            "Visual communication and sketching methods for product/experience "
+            "design exploration. DEMO DATA."
+        ),
+        "department": "IDDE",
+        "college": "College of Art and Design",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-001",
-        "course_code": "CSCI-320",
-        "goals": ["career_preparation", "degree_requirements"],
-        "worth_score": 4,
-        "concept_difficulty": 3,
-        "weekly_hours_range": "3-6",
-        "skills_gained": ["SQL", "schema design"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Directly useful for backend work.",
-        "instructor_name": None,
-        "semester": "2024-Fall",
+        "code": "GRDE-201",
+        "title": "Graphic Design Survey",
+        "description": (
+            "Typography, layout, and visual hierarchy fundamentals valuable for "
+            "UI-adjacent electives. DEMO DATA."
+        ),
+        "department": "GRDE",
+        "college": "College of Art and Design",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-003",
-        "course_code": "NSSA-241",
-        "goals": ["skill_development", "career_preparation"],
-        "worth_score": 4,
-        "concept_difficulty": 4,
-        "weekly_hours_range": "6-10",
-        "skills_gained": ["subnetting", "switch config basics"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Lab-heavy; worth it for networking path.",
-        "instructor_name": "Demo Instructor C",
-        "semester": "2025-Spring",
+        "code": "ILLM-206",
+        "title": "Digital Illustration Techniques",
+        "description": (
+            "Digital image-making workflows for creative portfolios and media "
+            "projects. DEMO DATA."
+        ),
+        "department": "ILLM",
+        "college": "College of Art and Design",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-004",
-        "course_code": "ISTE-240",
-        "goals": ["skill_development", "personal_exploration"],
-        "worth_score": 5,
-        "concept_difficulty": 2,
-        "weekly_hours_range": "3-6",
-        "skills_gained": ["responsive CSS", "DOM basics"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Great starter for front-end electives.",
-        "instructor_name": None,
-        "semester": "2025-Fall",
+        "code": "SOFA-101",
+        "title": "Introduction to Film & Animation Concepts",
+        "description": (
+            "Story structure and moving-image basics for students exploring media "
+            "production electives. DEMO DATA."
+        ),
+        "department": "SOFA",
+        "college": "College of Art and Design",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    # --- College of Health Sciences and Technology ---
+    {
+        "code": "HLTH-101",
+        "title": "Concepts in Health & Wellness",
+        "description": (
+            "Personal and community wellness frameworks useful for broader "
+            "personal-development electives. DEMO DATA."
+        ),
+        "department": "HLTH",
+        "college": "College of Health Sciences and Technology",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-004",
-        "course_code": "IGME-110",
-        "goals": ["personal_exploration"],
-        "worth_score": 3,
-        "concept_difficulty": 2,
-        "weekly_hours_range": "0-3",
-        "skills_gained": ["creative coding intro"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Fun survey; lighter on depth.",
-        "instructor_name": "Demo Instructor D",
-        "semester": "2024-Spring",
+        "code": "NUTR-215",
+        "title": "Contemporary Nutrition",
+        "description": (
+            "Nutrition science literacy and evidence evaluation for everyday and "
+            "clinical-adjacent interests. DEMO DATA."
+        ),
+        "department": "NUTR",
+        "college": "College of Health Sciences and Technology",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-001",
-        "course_code": "COMM-201",
-        "goals": ["career_preparation", "personal_exploration"],
-        "worth_score": 4,
-        "concept_difficulty": 2,
-        "weekly_hours_range": "3-6",
-        "skills_gained": ["presentation structure"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Improved how I explain technical work.",
-        "instructor_name": None,
-        "semester": "2025-Fall",
+        "code": "MEDG-101",
+        "title": "Medical Terminology & Health Systems Intro",
+        "description": (
+            "Terminology and system overview for students exploring health-tech "
+            "and clinical adjacent paths. DEMO DATA."
+        ),
+        "department": "MEDG",
+        "college": "College of Health Sciences and Technology",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
+    },
+    # --- NTID / accessibility-minded electives (demo breadth) ---
+    {
+        "code": "NCAR-100",
+        "title": "Career Exploration Seminar (Demo)",
+        "description": (
+            "Structured reflection on skills, interests, and career pathways—"
+            "useful personal-development elective for demos. DEMO DATA."
+        ),
+        "department": "NCAR",
+        "college": "National Technical Institute for the Deaf",
+        "campus": "Henrietta",
+        "credits": 1,
+        "prerequisites": None,
     },
     {
-        "auth0_sub": "demo|worththecredit-seed-002",
-        "course_code": "STAT-145",
-        "goals": ["academic_development", "degree_requirements"],
-        "worth_score": 3,
-        "concept_difficulty": 3,
-        "weekly_hours_range": "3-6",
-        "skills_gained": ["hypothesis testing intro"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Necessary foundation; average worth for me.",
-        "instructor_name": None,
-        "semester": "2024-Fall",
-    },
-    {
-        "auth0_sub": "demo|worththecredit-seed-003",
-        "course_code": "ISTE-230",
-        "goals": ["skill_development"],
-        "worth_score": 5,
-        "concept_difficulty": 3,
-        "weekly_hours_range": "3-6",
-        "skills_gained": ["ER modeling", "SQL joins"],
-        "feedback": "[FICTIONAL DEMO REVIEW] Clear modeling practice for IT courses.",
-        "instructor_name": "Demo Instructor E",
-        "semester": "2025-Spring",
+        "code": "NHSS-275",
+        "title": "Deaf Culture & Communication Perspectives (Demo)",
+        "description": (
+            "Cultural and communication perspectives that broaden inclusive design "
+            "and teamwork awareness. DEMO DATA."
+        ),
+        "department": "NHSS",
+        "college": "National Technical Institute for the Deaf",
+        "campus": "Henrietta",
+        "credits": 3,
+        "prerequisites": None,
     },
 ]

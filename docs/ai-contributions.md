@@ -81,11 +81,4 @@ Course/User/Review SQLAlchemy models and initial migration were generated with C
 
 - **Requested by:** Backend Developer 1 (`mamadub03`), on branch `mamadu-dev-issue5`.
 - **Tool:** Cursor Agent (Composer).
-- **Scope:** Idempotent seed script + fictional course/user/review fixtures marked as DEMO / FICTIONAL.
-
-### Files the agent added or substantially edited
-
-- `backend/app/db/seed_data.py`
-- `backend/scripts/seed_db.py`
-- `backend/README.md`
-- `docs/ai-contributions.md` (this file)
+- **Scope:** Idempotent **courses-only** seed across RIT colleges for search/Gemini. No seeded users/reviews (reviews come from the later review-form / Worth Score flow).
